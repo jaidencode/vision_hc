@@ -7,6 +7,8 @@ import net.minecraft.network.play.client.CPlayerPacket;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import org.main.vision.VisionClient;
+
 /**
  * Forcefully allows the player to fly by directly manipulating movement.
  */
@@ -17,18 +19,15 @@ public class FlyHack extends ActionBase {
      * Using 0.08 to roughly match Minecraft's gravity so
      * ascending and descending feel symmetrical.
      */
-    private static final double VERTICAL_SPEED = 0.5D;
 
     /**
      * Constant upward velocity applied every tick to counteract
      * gravity so the player can hover when no keys are pressed.
      */
-    private static final double HOVER_VELOCITY = 0.0D;
 
     /**
      * Horizontal speed applied when pressing WASD.
      */
-    private static final double HORIZONTAL_SPEED = 0.75D;
 
     @SubscribeEvent
     public void onTick(TickEvent.PlayerTickEvent event) {
@@ -40,14 +39,14 @@ public class FlyHack extends ActionBase {
         Minecraft mc = Minecraft.getInstance();
 
         // Start with a small upward push to negate gravity so the player hovers
-        double yMotion = HOVER_VELOCITY;
+        double yMotion = VisionClient.getSettings().flyHoverVelocity;
 
         // Modify the vertical motion based on input keys
         if (mc.options.keyJump.isDown()) {
-            yMotion += VERTICAL_SPEED;
+            yMotion += VisionClient.getSettings().flyVerticalSpeed;
         }
         if (mc.options.keyShift.isDown()) {
-            yMotion -= VERTICAL_SPEED;
+            yMotion -= VisionClient.getSettings().flyVerticalSpeed;
         }
 
         // Calculate horizontal velocity based on WASD input and player yaw
@@ -79,8 +78,9 @@ public class FlyHack extends ActionBase {
         // Normalize to keep diagonal movement consistent
         double mag = Math.sqrt(xMotion * xMotion + zMotion * zMotion);
         if (mag > 0.0D) {
-            xMotion = xMotion / mag * HORIZONTAL_SPEED;
-            zMotion = zMotion / mag * HORIZONTAL_SPEED;
+            double hs = VisionClient.getSettings().flyHorizontalSpeed;
+            xMotion = xMotion / mag * hs;
+            zMotion = zMotion / mag * hs;
         }
 
         // Apply the calculated velocity each tick for responsive flight

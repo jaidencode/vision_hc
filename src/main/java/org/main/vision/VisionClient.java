@@ -11,6 +11,7 @@ import org.main.vision.actions.JumpHack;
 import org.main.vision.actions.FlyHack;
 import org.main.vision.actions.JesusHack;
 import org.main.vision.actions.NoFallHack;
+import org.main.vision.config.HackSettings;
 
 /**
  * Handles client-only events.
@@ -22,9 +23,11 @@ public class VisionClient {
     private static final FlyHack FLY_HACK = new FlyHack();
     private static final JesusHack JESUS_HACK = new JesusHack();
     private static final NoFallHack NOFALL_HACK = new NoFallHack();
+    private static HackSettings SETTINGS;
 
     static void init() {
         VisionKeybind.register();
+        SETTINGS = HackSettings.load();
     }
 
     public static SpeedHack getSpeedHack() {
@@ -45,6 +48,17 @@ public class VisionClient {
 
     public static NoFallHack getNoFallHack() {
         return NOFALL_HACK;
+    }
+
+    public static HackSettings getSettings() {
+        return SETTINGS;
+    }
+
+    /** Persist current settings to disk. */
+    public static void saveSettings() {
+        if (SETTINGS != null) {
+            SETTINGS.save();
+        }
     }
 
     @SubscribeEvent

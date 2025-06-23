@@ -7,6 +7,8 @@ import org.main.vision.PurpleButton;
 import net.minecraft.util.text.StringTextComponent;
 import org.main.vision.config.UIState;
 import org.main.vision.actions.SpeedHack;
+import org.main.vision.VisionClient;
+import org.main.vision.HackSettingsScreen;
 
 /** Simple in-game menu with a draggable bar and dropdown for hacks. */
 public class VisionMenuScreen extends Screen {
@@ -17,8 +19,17 @@ public class VisionMenuScreen extends Screen {
     private PurpleButton flyButton;
     private PurpleButton jesusButton;
     private PurpleButton noFallButton;
+    private PurpleButton speedSettings;
+    private PurpleButton jumpSettings;
+    private PurpleButton flySettings;
+    private PurpleButton jesusSettings;
+    private PurpleButton noFallSettings;
+    private static final int BUTTON_WIDTH = 100;
+    private static final int BUTTON_HEIGHT = 20;
+    private static final int BAR_WIDTH = BUTTON_WIDTH + 25;
     private boolean dragging;
     private int dragOffsetX, dragOffsetY;
+    private int dragStartX, dragStartY;
     private float dropdownProgress;
     private boolean dropdownTarget;
 
@@ -31,19 +42,35 @@ public class VisionMenuScreen extends Screen {
 
     @Override
     protected void init() {
-        int width = 100;
-        int height = 20;
+        int width = BUTTON_WIDTH;
+        int height = BUTTON_HEIGHT;
         this.speedButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 20 + (int)(20 * dropdownProgress) - 20, width, height,
                 getSpeedLabel(), b -> toggleSpeed()));
+        this.speedSettings = addButton(new PurpleButton(state.miscBarX + width + 5, state.miscBarY + 20 + (int)(20 * dropdownProgress) - 20, 20, height,
+                new StringTextComponent("\u2699"), b -> openSpeedSettings()));
+
         this.jumpButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 40 + (int)(20 * dropdownProgress) - 20, width, height,
                 getJumpLabel(), b -> toggleJump()));
+        this.jumpSettings = addButton(new PurpleButton(state.miscBarX + width + 5, state.miscBarY + 40 + (int)(20 * dropdownProgress) - 20, 20, height,
+                new StringTextComponent("\u2699"), b -> openJumpSettings()));
+
         this.flyButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 60 + (int)(20 * dropdownProgress) - 20, width, height,
                 getFlyLabel(), b -> toggleFly()));
+        this.flySettings = addButton(new PurpleButton(state.miscBarX + width + 5, state.miscBarY + 60 + (int)(20 * dropdownProgress) - 20, 20, height,
+                new StringTextComponent("\u2699"), b -> openFlySettings()));
+
         this.jesusButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 80 + (int)(20 * dropdownProgress) - 20, width, height,
                 getJesusLabel(), b -> toggleJesus()));
+        this.jesusSettings = addButton(new PurpleButton(state.miscBarX + width + 5, state.miscBarY + 80 + (int)(20 * dropdownProgress) - 20, 20, height,
+                new StringTextComponent("\u2699"), b -> openJesusSettings()));
+
         this.noFallButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 100 + (int)(20 * dropdownProgress) - 20, width, height,
                 getNoFallLabel(), b -> toggleNoFall()));
+        this.noFallSettings = addButton(new PurpleButton(state.miscBarX + width + 5, state.miscBarY + 100 + (int)(20 * dropdownProgress) - 20, 20, height,
+                new StringTextComponent("\u2699"), b -> openNoFallSettings()));
+
         speedButton.visible = jumpButton.visible = flyButton.visible = jesusButton.visible = noFallButton.visible = dropdownProgress > 0.05f;
+        speedSettings.visible = jumpSettings.visible = flySettings.visible = jesusSettings.visible = noFallSettings.visible = dropdownProgress > 0.05f;
     }
 
     private void toggleSpeed() {
@@ -77,6 +104,31 @@ public class VisionMenuScreen extends Screen {
         state.save();
     }
 
+    private void openSpeedSettings() {
+        this.minecraft.setScreen(new HackSettingsScreen(this, "Speed", () -> (double)VisionClient.getSettings().speedMultiplier,
+                v -> {VisionClient.getSettings().speedMultiplier = v.floatValue();}, VisionClient::saveSettings));
+    }
+
+    private void openJumpSettings() {
+        this.minecraft.setScreen(new HackSettingsScreen(this, "Jump", () -> VisionClient.getSettings().jumpVelocity,
+                v -> {VisionClient.getSettings().jumpVelocity = v;}, VisionClient::saveSettings));
+    }
+
+    private void openFlySettings() {
+        this.minecraft.setScreen(new HackSettingsScreen(this, "FlySpeed", () -> VisionClient.getSettings().flyHorizontalSpeed,
+                v -> {VisionClient.getSettings().flyHorizontalSpeed = v;}, VisionClient::saveSettings));
+    }
+
+    private void openJesusSettings() {
+        this.minecraft.setScreen(new HackSettingsScreen(this, "Jesus", () -> 0.0D,
+                v -> {}, VisionClient::saveSettings));
+    }
+
+    private void openNoFallSettings() {
+        this.minecraft.setScreen(new HackSettingsScreen(this, "NoFall", () -> 0.0D,
+                v -> {}, VisionClient::saveSettings));
+    }
+
     private StringTextComponent getSpeedLabel() {
         return new StringTextComponent((VisionClient.getSpeedHack().isEnabled() ? "Disable" : "Enable") + " Speed");
     }
@@ -99,14 +151,12 @@ public class VisionMenuScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == 0 && mouseX >= state.miscBarX && mouseX <= state.miscBarX + 100 && mouseY >= state.miscBarY && mouseY <= state.miscBarY + 20) {
-            // click on bar toggles dropdown
-            state.hacksExpanded = !state.hacksExpanded;
-            dropdownTarget = state.hacksExpanded;
-            state.save();
+        if (button == 0 && mouseX >= state.miscBarX && mouseX <= state.miscBarX + BUTTON_WIDTH && mouseY >= state.miscBarY && mouseY <= state.miscBarY + 20) {
             dragging = true;
             dragOffsetX = (int)mouseX - state.miscBarX;
             dragOffsetY = (int)mouseY - state.miscBarY;
+            dragStartX = (int)mouseX;
+            dragStartY = (int)mouseY;
             return true;
         }
         return super.mouseClicked(mouseX, mouseY, button);
@@ -122,11 +172,22 @@ public class VisionMenuScreen extends Screen {
             flyButton.x = state.miscBarX;
             jesusButton.x = state.miscBarX;
             noFallButton.x = state.miscBarX;
+            speedSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
+            jumpSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
+            flySettings.x = state.miscBarX + BUTTON_WIDTH + 5;
+            jesusSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
+            noFallSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
+
             speedButton.y = state.miscBarY + 20 + (int)(20 * dropdownProgress) - 20;
             jumpButton.y = state.miscBarY + 40 + (int)(20 * dropdownProgress) - 20;
             flyButton.y = state.miscBarY + 60 + (int)(20 * dropdownProgress) - 20;
             jesusButton.y = state.miscBarY + 80 + (int)(20 * dropdownProgress) - 20;
             noFallButton.y = state.miscBarY + 100 + (int)(20 * dropdownProgress) - 20;
+            speedSettings.y = speedButton.y;
+            jumpSettings.y = jumpButton.y;
+            flySettings.y = flyButton.y;
+            jesusSettings.y = jesusButton.y;
+            noFallSettings.y = noFallButton.y;
             return true;
         }
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
@@ -136,6 +197,10 @@ public class VisionMenuScreen extends Screen {
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (dragging) {
             dragging = false;
+            if (Math.abs(mouseX - dragStartX) < 5 && Math.abs(mouseY - dragStartY) < 5) {
+                state.hacksExpanded = !state.hacksExpanded;
+                dropdownTarget = state.hacksExpanded;
+            }
             state.save();
             return true;
         }
@@ -145,7 +210,7 @@ public class VisionMenuScreen extends Screen {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrices);
-        fill(matrices, state.miscBarX, state.miscBarY, state.miscBarX + 100, state.miscBarY + 20, 0xAA5511AA);
+        fill(matrices, state.miscBarX, state.miscBarY, state.miscBarX + BAR_WIDTH, state.miscBarY + 20, 0xAA5511AA);
         drawCenteredString(matrices, font, "Misc", state.miscBarX + 50, state.miscBarY + 6, 0xFFFFFF);
         dropdownProgress += ((dropdownTarget ? 1.0f : 0.0f) - dropdownProgress) * 0.2f;
         dropdownProgress = Math.max(0.0f, Math.min(1.0f, dropdownProgress));
@@ -156,17 +221,36 @@ public class VisionMenuScreen extends Screen {
         flyButton.x = state.miscBarX;
         jesusButton.x = state.miscBarX;
         noFallButton.x = state.miscBarX;
+        speedSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
+        jumpSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
+        flySettings.x = state.miscBarX + BUTTON_WIDTH + 5;
+        jesusSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
+        noFallSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
+
         speedButton.y = state.miscBarY + 20 + offsetY - 20;
         jumpButton.y = state.miscBarY + 40 + offsetY - 20;
         flyButton.y = state.miscBarY + 60 + offsetY - 20;
         jesusButton.y = state.miscBarY + 80 + offsetY - 20;
         noFallButton.y = state.miscBarY + 100 + offsetY - 20;
-        speedButton.visible = jumpButton.visible = flyButton.visible = jesusButton.visible = noFallButton.visible = dropdownProgress > 0.05f;
+        speedSettings.y = speedButton.y;
+        jumpSettings.y = jumpButton.y;
+        flySettings.y = flyButton.y;
+        jesusSettings.y = jesusButton.y;
+        noFallSettings.y = noFallButton.y;
+
+        boolean vis = dropdownProgress > 0.05f;
+        speedButton.visible = jumpButton.visible = flyButton.visible = jesusButton.visible = noFallButton.visible = vis;
+        speedSettings.visible = jumpSettings.visible = flySettings.visible = jesusSettings.visible = noFallSettings.visible = vis;
         speedButton.setAlpha(dropdownProgress);
         jumpButton.setAlpha(dropdownProgress);
         flyButton.setAlpha(dropdownProgress);
         jesusButton.setAlpha(dropdownProgress);
         noFallButton.setAlpha(dropdownProgress);
+        speedSettings.setAlpha(dropdownProgress);
+        jumpSettings.setAlpha(dropdownProgress);
+        flySettings.setAlpha(dropdownProgress);
+        jesusSettings.setAlpha(dropdownProgress);
+        noFallSettings.setAlpha(dropdownProgress);
 
         super.render(matrices, mouseX, mouseY, partialTicks);
     }
