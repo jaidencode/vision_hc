@@ -12,7 +12,18 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  */
 public class FlyHack extends ActionBase {
 
-    private static final double VERTICAL_SPEED = 0.05D;
+    /**
+     * Up/down speed added when pressing jump or sneak.
+     * Using 0.08 to roughly match Minecraft's gravity so
+     * ascending and descending feel symmetrical.
+     */
+    private static final double VERTICAL_SPEED = 0.08D;
+
+    /**
+     * Constant upward velocity applied every tick to counteract
+     * gravity so the player can hover when no keys are pressed.
+     */
+    private static final double HOVER_VELOCITY = 0.08D;
 
     @SubscribeEvent
     public void onTick(TickEvent.PlayerTickEvent event) {
@@ -23,7 +34,10 @@ public class FlyHack extends ActionBase {
         ClientPlayerEntity player = (ClientPlayerEntity) event.player;
         Minecraft mc = Minecraft.getInstance();
 
-        double yMotion = 0.0D;
+        // Start with a small upward push to negate gravity so the player hovers
+        double yMotion = HOVER_VELOCITY;
+
+        // Modify the vertical motion based on input keys
         if (mc.options.keyJump.isDown()) {
             yMotion += VERTICAL_SPEED;
         }
@@ -31,10 +45,10 @@ public class FlyHack extends ActionBase {
             yMotion -= VERTICAL_SPEED;
         }
 
-        if (yMotion != 0.0D) {
-            player.setDeltaMovement(player.getDeltaMovement().x, yMotion, player.getDeltaMovement().z);
-            sendMovement(player);
-        }
+        // Apply the calculated vertical motion every tick so ascending and
+        // descending feel responsive and hovering is possible.
+        player.setDeltaMovement(player.getDeltaMovement().x, yMotion, player.getDeltaMovement().z);
+        sendMovement(player);
 
         player.fallDistance = 0.0f;
     }
