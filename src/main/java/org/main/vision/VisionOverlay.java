@@ -1,2 +1,28 @@
-package org.main.vision;public class VisionOverlay {
+package org.main.vision;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
+/** Overlay that displays active hacks in the top right corner. */
+@Mod.EventBusSubscriber(modid = "vision", value = Dist.CLIENT)
+public class VisionOverlay {
+    @SubscribeEvent
+    public static void onRenderOverlay(RenderGameOverlayEvent.Post event) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.options.hideGui) return;
+        MatrixStack ms = event.getMatrixStack();
+        int width = mc.getWindow().getGuiScaledWidth();
+        int y = 5;
+        if (VisionClient.getSpeedHack().isEnabled()) {
+            String text = "SpeedHack";
+            int w = mc.font.width(text);
+            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
+            y += mc.font.lineHeight;
+        }
+    }
 }
