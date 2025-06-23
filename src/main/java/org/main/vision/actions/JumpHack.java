@@ -13,6 +13,10 @@ public class JumpHack extends ActionBase {
 
     private static final double JUMP_VELOCITY = 1.2D;
 
+    /** Tracks whether the jump key was pressed last tick to
+     *  detect rising-edge presses for consistent boosting. */
+    private boolean wasJumping = false;
+
     @SubscribeEvent
     public void onTick(TickEvent.PlayerTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
@@ -20,10 +24,16 @@ public class JumpHack extends ActionBase {
         if (!(event.player instanceof ClientPlayerEntity)) return;
 
         ClientPlayerEntity player = (ClientPlayerEntity) event.player;
-        if (player.input != null && player.input.jumping && player.isOnGround()) {
+
+        boolean jumping = player.input != null && player.input.jumping;
+
+        // Trigger the boosted jump on the rising edge of the jump key
+        if (jumping && !wasJumping) {
             player.setDeltaMovement(player.getDeltaMovement().x, JUMP_VELOCITY, player.getDeltaMovement().z);
             sendMovement(player);
         }
+
+        wasJumping = jumping;
     }
 
     private void sendMovement(ClientPlayerEntity player) {
