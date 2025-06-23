@@ -17,18 +17,18 @@ public class FlyHack extends ActionBase {
      * Using 0.08 to roughly match Minecraft's gravity so
      * ascending and descending feel symmetrical.
      */
-    private static final double VERTICAL_SPEED = 0.15D;
+    private static final double VERTICAL_SPEED = 0.5D;
 
     /**
      * Constant upward velocity applied every tick to counteract
      * gravity so the player can hover when no keys are pressed.
      */
-    private static final double HOVER_VELOCITY = 0.08D;
+    private static final double HOVER_VELOCITY = 0.0D;
 
     /**
      * Horizontal speed applied when pressing WASD.
      */
-    private static final double HORIZONTAL_SPEED = 0.4D;
+    private static final double HORIZONTAL_SPEED = 0.75D;
 
     @SubscribeEvent
     public void onTick(TickEvent.PlayerTickEvent event) {
