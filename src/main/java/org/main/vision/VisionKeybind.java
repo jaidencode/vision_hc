@@ -9,9 +9,12 @@ import org.lwjgl.glfw.GLFW;
  */
 public class VisionKeybind {
     public static KeyBinding speedKey;
+    public static KeyBinding menuKey;
 
     static void register() {
-        speedKey = new KeyBinding("key.vision.speed", GLFW.GLFW_KEY_O, "key.categories.vision");
+        speedKey = new KeyBinding("key.vision.speed", GLFW.GLFW_KEY_G, "key.categories.vision");
+        menuKey = new KeyBinding("key.vision.menu", GLFW.GLFW_KEY_BACKSLASH, "key.categories.vision");
         ClientRegistry.registerKeyBinding(speedKey);
+        ClientRegistry.registerKeyBinding(menuKey);
     }
 }

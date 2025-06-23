@@ -4,6 +4,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraft.client.Minecraft;
 import org.main.vision.actions.SpeedHack;
 
 /**
@@ -25,6 +26,9 @@ public class VisionClient {
     public static void onKeyInput(InputEvent.KeyInputEvent event) {
         if (VisionKeybind.speedKey.isDown()) {
             SPEED_HACK.toggle();
+        }
+        if (VisionKeybind.menuKey.isDown()) {
+            Minecraft.getInstance().setScreen(new VisionMenuScreen());
         }
     }
 }
