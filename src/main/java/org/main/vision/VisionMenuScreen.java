@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screen.Screen;
 import org.main.vision.PurpleButton;
 import net.minecraft.util.text.StringTextComponent;
 import org.main.vision.config.UIState;
+import org.main.vision.actions.SpeedHack;
 
 /** Simple in-game menu with a draggable bar and dropdown for hacks. */
 public class VisionMenuScreen extends Screen {
