@@ -8,6 +8,10 @@ import net.minecraftforge.common.MinecraftForge;
 public abstract class ActionBase {
     private boolean enabled;
 
+    public ActionBase() {
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
     /** Toggle the action on or off. */
     public void toggle() {
         setEnabled(!enabled);
@@ -20,10 +24,8 @@ public abstract class ActionBase {
         }
         this.enabled = enable;
         if (enable) {
-            MinecraftForge.EVENT_BUS.register(this);
             onEnable();
         } else {
-            MinecraftForge.EVENT_BUS.unregister(this);
             onDisable();
         }
     }

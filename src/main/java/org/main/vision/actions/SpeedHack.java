@@ -43,7 +43,7 @@ public class SpeedHack extends ActionBase {
     private void apply(PlayerEntity player) {
         ModifiableAttributeInstance attr = player.getAttribute(Attributes.MOVEMENT_SPEED);
         if (attr != null && attr.getModifier(MODIFIER_ID) == null) {
-            attr.addPermanentModifier(new AttributeModifier(MODIFIER_ID, "SpeedHack", SPEED_MULTIPLIER - 1.0D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            attr.addTransientModifier(new AttributeModifier(MODIFIER_ID, "SpeedHack", SPEED_MULTIPLIER - 1.0D, AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
         if (player instanceof ClientPlayerEntity) {
             sendBurstPackets((ClientPlayerEntity) player);
