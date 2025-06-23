@@ -1,7 +1,7 @@
 package org.main.vision.actions;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraftforge.client.event.FOVModifierEvent;
+import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -53,7 +53,7 @@ public class SpeedHack extends ActionBase {
     }
 
     @SubscribeEvent
-    public void onFov(FOVModifierEvent event) {
+    public void onFov(FOVUpdateEvent event) {
         if (isEnabled()) {
             event.setNewfov(event.getFov() * FOV_MULTIPLIER);
         }
