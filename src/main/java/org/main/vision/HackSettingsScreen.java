@@ -26,7 +26,9 @@ public class HackSettingsScreen extends Screen {
 
     @Override
     protected void init() {
-        field = new TextFieldWidget(this.font, this.width / 2 - 40, this.height / 2 - 10, 80, 20, new StringTextComponent(label));
+        int fieldWidth = 120;
+        field = new TextFieldWidget(this.font, this.width / 2 - fieldWidth / 2, this.height / 2 - 10, fieldWidth, 20, new StringTextComponent(label));
+        field.setMaxLength(32);
         field.setValue(Double.toString(getter.get()));
         this.addWidget(field);
         this.addButton(new PurpleButton(this.width / 2 - 50, this.height / 2 + 20, 100, 20, new StringTextComponent("Back"), b -> onClose()));

@@ -39,9 +39,11 @@ public class XRaySettingsScreen extends Screen {
             this.addButton(cb);
         }
 
-        field = new TextFieldWidget(this.font, x, startY + COMMON_ORES.length * 20 + 5, 140, 20, new StringTextComponent("block id"));
+        int fieldWidth = 180;
+        field = new TextFieldWidget(this.font, x, startY + COMMON_ORES.length * 20 + 5, fieldWidth, 20, new StringTextComponent("block id"));
+        field.setMaxLength(64);
         this.addWidget(field);
-        this.addButton(new PurpleButton(x + 145, startY + COMMON_ORES.length * 20 + 5, 55, 20, new StringTextComponent("Add"), b -> addCustomBlock()));
+        this.addButton(new PurpleButton(x + fieldWidth + 5, startY + COMMON_ORES.length * 20 + 5, 55, 20, new StringTextComponent("Add"), b -> addCustomBlock()));
         this.addButton(new PurpleButton(this.width / 2 - 50, this.height - 30, 100, 20, new StringTextComponent("Back"), b -> onClose()));
     }
 
