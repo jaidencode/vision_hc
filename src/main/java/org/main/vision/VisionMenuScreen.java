@@ -3,17 +3,17 @@ package org.main.vision;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
 import org.main.vision.PurpleButton;
 import net.minecraft.util.text.StringTextComponent;
-import org.main.vision.actions.SpeedHack;
 import org.main.vision.config.UIState;
 
 /** Simple in-game menu with a draggable bar and dropdown for hacks. */
 public class VisionMenuScreen extends Screen {
     private final Minecraft mc = Minecraft.getInstance();
     private final UIState state;
-    private Button hackButton;
+    private PurpleButton speedButton;
+    private PurpleButton jumpButton;
+    private PurpleButton flyButton;
     private boolean dragging;
     private int dragOffsetX, dragOffsetY;
     private float dropdownProgress;
@@ -30,20 +30,44 @@ public class VisionMenuScreen extends Screen {
     protected void init() {
         int width = 100;
         int height = 20;
-        this.hackButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 20 + (int)(20 * dropdownProgress) - 20, width, height,
-                getHackLabel(), b -> toggleHack()));
-        hackButton.visible = dropdownProgress > 0.05f;
+        this.speedButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 20 + (int)(20 * dropdownProgress) - 20, width, height,
+                getSpeedLabel(), b -> toggleSpeed()));
+        this.jumpButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 40 + (int)(20 * dropdownProgress) - 20, width, height,
+                getJumpLabel(), b -> toggleJump()));
+        this.flyButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 60 + (int)(20 * dropdownProgress) - 20, width, height,
+                getFlyLabel(), b -> toggleFly()));
+        speedButton.visible = jumpButton.visible = flyButton.visible = dropdownProgress > 0.05f;
     }
 
-    private void toggleHack() {
+    private void toggleSpeed() {
         SpeedHack hack = VisionClient.getSpeedHack();
         hack.toggle();
-        hackButton.setMessage(getHackLabel());
+        speedButton.setMessage(getSpeedLabel());
         state.save();
     }
 
-    private StringTextComponent getHackLabel() {
+    private void toggleJump() {
+        VisionClient.getJumpHack().toggle();
+        jumpButton.setMessage(getJumpLabel());
+        state.save();
+    }
+
+    private void toggleFly() {
+        VisionClient.getFlyHack().toggle();
+        flyButton.setMessage(getFlyLabel());
+        state.save();
+    }
+
+    private StringTextComponent getSpeedLabel() {
         return new StringTextComponent((VisionClient.getSpeedHack().isEnabled() ? "Disable" : "Enable") + " Speed");
+    }
+
+    private StringTextComponent getJumpLabel() {
+        return new StringTextComponent((VisionClient.getJumpHack().isEnabled() ? "Disable" : "Enable") + " Jump");
+    }
+
+    private StringTextComponent getFlyLabel() {
+        return new StringTextComponent((VisionClient.getFlyHack().isEnabled() ? "Disable" : "Enable") + " Fly");
     }
 
     @Override
@@ -66,8 +90,12 @@ public class VisionMenuScreen extends Screen {
         if (dragging) {
             state.miscBarX = (int)mouseX - dragOffsetX;
             state.miscBarY = (int)mouseY - dragOffsetY;
-            hackButton.x = state.miscBarX;
-            hackButton.y = state.miscBarY + 20 + (int)(20 * dropdownProgress) - 20;
+            speedButton.x = state.miscBarX;
+            jumpButton.x = state.miscBarX;
+            flyButton.x = state.miscBarX;
+            speedButton.y = state.miscBarY + 20 + (int)(20 * dropdownProgress) - 20;
+            jumpButton.y = state.miscBarY + 40 + (int)(20 * dropdownProgress) - 20;
+            flyButton.y = state.miscBarY + 60 + (int)(20 * dropdownProgress) - 20;
             return true;
         }
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
@@ -92,9 +120,16 @@ public class VisionMenuScreen extends Screen {
         dropdownProgress = Math.max(0.0f, Math.min(1.0f, dropdownProgress));
 
         int offsetY = (int)(20 * dropdownProgress);
-        hackButton.x = state.miscBarX;
-        hackButton.y = state.miscBarY + 20 + offsetY - 20;
-        hackButton.visible = dropdownProgress > 0.05f;
+        speedButton.x = state.miscBarX;
+        jumpButton.x = state.miscBarX;
+        flyButton.x = state.miscBarX;
+        speedButton.y = state.miscBarY + 20 + offsetY - 20;
+        jumpButton.y = state.miscBarY + 40 + offsetY - 20;
+        flyButton.y = state.miscBarY + 60 + offsetY - 20;
+        speedButton.visible = jumpButton.visible = flyButton.visible = dropdownProgress > 0.05f;
+        speedButton.setAlpha(dropdownProgress);
+        jumpButton.setAlpha(dropdownProgress);
+        flyButton.setAlpha(dropdownProgress);
 
         super.render(matrices, mouseX, mouseY, partialTicks);
     }
