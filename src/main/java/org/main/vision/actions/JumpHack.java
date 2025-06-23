@@ -1,44 +1,37 @@
 package org.main.vision.actions;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
+import net.minecraft.network.play.client.CPlayerPacket;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
- * Gives the player a constant jump boost effect while enabled.
+ * Applies a high jump velocity when the jump key is pressed.
  */
 public class JumpHack extends ActionBase {
-    @Override
-    protected void onEnable() {
-        PlayerEntity player = net.minecraft.client.Minecraft.getInstance().player;
-        if (player != null) {
-            apply(player);
-        }
-    }
 
-    @Override
-    protected void onDisable() {
-        PlayerEntity player = net.minecraft.client.Minecraft.getInstance().player;
-        if (player != null) {
-            remove(player);
-        }
-    }
-
-    private void apply(PlayerEntity player) {
-        player.addEffect(new EffectInstance(Effects.JUMP, 2, 4, false, false));
-    }
-
-    private void remove(PlayerEntity player) {
-        player.removeEffect(Effects.JUMP);
-    }
+    private static final double JUMP_VELOCITY = 1.2D;
 
     @SubscribeEvent
     public void onTick(TickEvent.PlayerTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
-        if (isEnabled()) {
-            apply(event.player);
+        if (!isEnabled()) return;
+        if (!(event.player instanceof ClientPlayerEntity)) return;
+
+        ClientPlayerEntity player = (ClientPlayerEntity) event.player;
+        if (player.input != null && player.input.jumping && player.isOnGround()) {
+            player.setDeltaMovement(player.getDeltaMovement().x, JUMP_VELOCITY, player.getDeltaMovement().z);
+            sendMovement(player);
+        }
+    }
+
+    private void sendMovement(ClientPlayerEntity player) {
+        ClientPlayNetHandler conn = player.connection;
+        if (conn != null) {
+            conn.send(new CPlayerPacket.PositionRotationPacket(
+                    player.getX(), player.getY(), player.getZ(),
+                    player.yRot, player.xRot, player.isOnGround()));
         }
     }
 }
