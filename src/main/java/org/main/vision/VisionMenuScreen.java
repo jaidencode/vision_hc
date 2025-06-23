@@ -15,6 +15,8 @@ public class VisionMenuScreen extends Screen {
     private PurpleButton speedButton;
     private PurpleButton jumpButton;
     private PurpleButton flyButton;
+    private PurpleButton jesusButton;
+    private PurpleButton noFallButton;
     private boolean dragging;
     private int dragOffsetX, dragOffsetY;
     private float dropdownProgress;
@@ -37,7 +39,11 @@ public class VisionMenuScreen extends Screen {
                 getJumpLabel(), b -> toggleJump()));
         this.flyButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 60 + (int)(20 * dropdownProgress) - 20, width, height,
                 getFlyLabel(), b -> toggleFly()));
-        speedButton.visible = jumpButton.visible = flyButton.visible = dropdownProgress > 0.05f;
+        this.jesusButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 80 + (int)(20 * dropdownProgress) - 20, width, height,
+                getJesusLabel(), b -> toggleJesus()));
+        this.noFallButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 100 + (int)(20 * dropdownProgress) - 20, width, height,
+                getNoFallLabel(), b -> toggleNoFall()));
+        speedButton.visible = jumpButton.visible = flyButton.visible = jesusButton.visible = noFallButton.visible = dropdownProgress > 0.05f;
     }
 
     private void toggleSpeed() {
@@ -59,6 +65,18 @@ public class VisionMenuScreen extends Screen {
         state.save();
     }
 
+    private void toggleJesus() {
+        VisionClient.getJesusHack().toggle();
+        jesusButton.setMessage(getJesusLabel());
+        state.save();
+    }
+
+    private void toggleNoFall() {
+        VisionClient.getNoFallHack().toggle();
+        noFallButton.setMessage(getNoFallLabel());
+        state.save();
+    }
+
     private StringTextComponent getSpeedLabel() {
         return new StringTextComponent((VisionClient.getSpeedHack().isEnabled() ? "Disable" : "Enable") + " Speed");
     }
@@ -69,6 +87,14 @@ public class VisionMenuScreen extends Screen {
 
     private StringTextComponent getFlyLabel() {
         return new StringTextComponent((VisionClient.getFlyHack().isEnabled() ? "Disable" : "Enable") + " Fly");
+    }
+
+    private StringTextComponent getJesusLabel() {
+        return new StringTextComponent((VisionClient.getJesusHack().isEnabled() ? "Disable" : "Enable") + " Jesus");
+    }
+
+    private StringTextComponent getNoFallLabel() {
+        return new StringTextComponent((VisionClient.getNoFallHack().isEnabled() ? "Disable" : "Enable") + " NoFall");
     }
 
     @Override
@@ -94,9 +120,13 @@ public class VisionMenuScreen extends Screen {
             speedButton.x = state.miscBarX;
             jumpButton.x = state.miscBarX;
             flyButton.x = state.miscBarX;
+            jesusButton.x = state.miscBarX;
+            noFallButton.x = state.miscBarX;
             speedButton.y = state.miscBarY + 20 + (int)(20 * dropdownProgress) - 20;
             jumpButton.y = state.miscBarY + 40 + (int)(20 * dropdownProgress) - 20;
             flyButton.y = state.miscBarY + 60 + (int)(20 * dropdownProgress) - 20;
+            jesusButton.y = state.miscBarY + 80 + (int)(20 * dropdownProgress) - 20;
+            noFallButton.y = state.miscBarY + 100 + (int)(20 * dropdownProgress) - 20;
             return true;
         }
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
@@ -124,13 +154,19 @@ public class VisionMenuScreen extends Screen {
         speedButton.x = state.miscBarX;
         jumpButton.x = state.miscBarX;
         flyButton.x = state.miscBarX;
+        jesusButton.x = state.miscBarX;
+        noFallButton.x = state.miscBarX;
         speedButton.y = state.miscBarY + 20 + offsetY - 20;
         jumpButton.y = state.miscBarY + 40 + offsetY - 20;
         flyButton.y = state.miscBarY + 60 + offsetY - 20;
-        speedButton.visible = jumpButton.visible = flyButton.visible = dropdownProgress > 0.05f;
+        jesusButton.y = state.miscBarY + 80 + offsetY - 20;
+        noFallButton.y = state.miscBarY + 100 + offsetY - 20;
+        speedButton.visible = jumpButton.visible = flyButton.visible = jesusButton.visible = noFallButton.visible = dropdownProgress > 0.05f;
         speedButton.setAlpha(dropdownProgress);
         jumpButton.setAlpha(dropdownProgress);
         flyButton.setAlpha(dropdownProgress);
+        jesusButton.setAlpha(dropdownProgress);
+        noFallButton.setAlpha(dropdownProgress);
 
         super.render(matrices, mouseX, mouseY, partialTicks);
     }

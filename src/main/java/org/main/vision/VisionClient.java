@@ -9,6 +9,8 @@ import org.lwjgl.glfw.GLFW;
 import org.main.vision.actions.SpeedHack;
 import org.main.vision.actions.JumpHack;
 import org.main.vision.actions.FlyHack;
+import org.main.vision.actions.JesusHack;
+import org.main.vision.actions.NoFallHack;
 
 /**
  * Handles client-only events.
@@ -18,6 +20,8 @@ public class VisionClient {
     private static final SpeedHack SPEED_HACK = new SpeedHack();
     private static final JumpHack JUMP_HACK = new JumpHack();
     private static final FlyHack FLY_HACK = new FlyHack();
+    private static final JesusHack JESUS_HACK = new JesusHack();
+    private static final NoFallHack NOFALL_HACK = new NoFallHack();
 
     static void init() {
         VisionKeybind.register();
@@ -35,6 +39,14 @@ public class VisionClient {
         return FLY_HACK;
     }
 
+    public static JesusHack getJesusHack() {
+        return JESUS_HACK;
+    }
+
+    public static NoFallHack getNoFallHack() {
+        return NOFALL_HACK;
+    }
+
     @SubscribeEvent
     public static void onKeyInput(InputEvent.KeyInputEvent event) {
         if (event.getKey() == VisionKeybind.speedKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
@@ -45,6 +57,12 @@ public class VisionClient {
         }
         if (event.getKey() == VisionKeybind.flyKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             FLY_HACK.toggle();
+        }
+        if (event.getKey() == VisionKeybind.jesusKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            JESUS_HACK.toggle();
+        }
+        if (event.getKey() == VisionKeybind.noFallKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            NOFALL_HACK.toggle();
         }
         if (event.getKey() == VisionKeybind.menuKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
             Minecraft.getInstance().setScreen(new VisionMenuScreen());
