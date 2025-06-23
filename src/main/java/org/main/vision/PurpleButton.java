@@ -13,8 +13,9 @@ public class PurpleButton extends Button {
 
     @Override
     public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-        int color = isHovered ? 0xFFAA55FF : 0xCC7722AA;
-        fill(ms, x, y, x + width, y + height, color);
+        int start = isHovered ? 0xFFAA55FF : 0xCC7722AA;
+        int end = isHovered ? 0xFF7744FF : 0xAA5511AA;
+        fillGradient(ms, x, y, x + width, y + height, start, end);
         drawCenteredString(ms, Minecraft.getInstance().font, getMessage(), x + width / 2, y + (height - 8) / 2, 0xFFFFFF);
     }
 }

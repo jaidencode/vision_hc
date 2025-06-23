@@ -5,6 +5,7 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraft.client.Minecraft;
+import org.lwjgl.glfw.GLFW;
 import org.main.vision.actions.SpeedHack;
 
 /**
@@ -24,10 +25,10 @@ public class VisionClient {
 
     @SubscribeEvent
     public static void onKeyInput(InputEvent.KeyInputEvent event) {
-        if (event.getKey() == VisionKeybind.speedKey.getKey().getValue() && event.getAction() == 1) {
+        if (event.getKey() == VisionKeybind.speedKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             SPEED_HACK.toggle();
         }
-        if (event.getKey() == VisionKeybind.menuKey.getKey().getValue() && event.getAction() == 1) {
+        if (event.getKey() == VisionKeybind.menuKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
             Minecraft.getInstance().setScreen(new VisionMenuScreen());
         }
     }
