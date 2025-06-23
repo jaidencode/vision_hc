@@ -1,21 +1,17 @@
 package org.main.vision.actions;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.network.play.client.CPlayerPacket;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
- * Applies a high jump velocity when the jump key is pressed.
+ * Allows the player to stand and walk on water blocks as if they were solid.
  */
-public class JumpHack extends ActionBase {
-
-    private static final double JUMP_VELOCITY = 1.2D;
-
-    /** Tracks whether the jump key was pressed last tick to
-     *  detect rising-edge presses for consistent boosting. */
-    private boolean wasJumping = false;
+public class JesusHack extends ActionBase {
 
     @SubscribeEvent
     public void onTick(TickEvent.PlayerTickEvent event) {
@@ -25,16 +21,14 @@ public class JumpHack extends ActionBase {
 
         ClientPlayerEntity player = (ClientPlayerEntity) event.player;
 
-        boolean jumping = player.input != null && player.input.jumping;
-
-        // Trigger the boosted jump on the rising edge of the jump key
-        // only when the player is on the ground to avoid mid-air boosts
-        if (jumping && !wasJumping && player.isOnGround()) {
-            player.setDeltaMovement(player.getDeltaMovement().x, JUMP_VELOCITY, player.getDeltaMovement().z);
+        BlockPos below = new BlockPos(player.getX(), player.getY() - 0.1D, player.getZ());
+        if (player.level.getBlockState(below).getBlock() == Blocks.WATER) {
+            if (player.getDeltaMovement().y < 0.0D) {
+                player.setDeltaMovement(player.getDeltaMovement().x, 0.0D, player.getDeltaMovement().z);
+            }
+            player.fallDistance = 0.0f;
             sendMovement(player);
         }
-
-        wasJumping = jumping;
     }
 
     private void sendMovement(ClientPlayerEntity player) {
@@ -42,7 +36,7 @@ public class JumpHack extends ActionBase {
         if (conn != null) {
             conn.send(new CPlayerPacket.PositionRotationPacket(
                     player.getX(), player.getY(), player.getZ(),
-                    player.yRot, player.xRot, player.isOnGround()));
+                    player.yRot, player.xRot, true));
         }
     }
 }
