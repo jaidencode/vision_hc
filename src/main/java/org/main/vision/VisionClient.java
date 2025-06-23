@@ -11,7 +11,7 @@ import org.main.vision.actions.JumpHack;
 import org.main.vision.actions.FlyHack;
 import org.main.vision.actions.JesusHack;
 import org.main.vision.actions.NoFallHack;
-import org.main.vision.actions.NoDamageHack;
+import org.main.vision.actions.XRayHack;
 import org.main.vision.config.HackSettings;
 
 /**
@@ -24,7 +24,7 @@ public class VisionClient {
     private static final FlyHack FLY_HACK = new FlyHack();
     private static final JesusHack JESUS_HACK = new JesusHack();
     private static final NoFallHack NOFALL_HACK = new NoFallHack();
-    private static final NoDamageHack NODAMAGE_HACK = new NoDamageHack();
+    private static final XRayHack XRAY_HACK = new XRayHack();
     private static HackSettings SETTINGS;
 
     static void init() {
@@ -52,8 +52,8 @@ public class VisionClient {
         return NOFALL_HACK;
     }
 
-    public static NoDamageHack getNoDamageHack() {
-        return NODAMAGE_HACK;
+    public static XRayHack getXRayHack() {
+        return XRAY_HACK;
     }
 
     public static HackSettings getSettings() {
@@ -84,8 +84,8 @@ public class VisionClient {
         if (event.getKey() == VisionKeybind.noFallKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             NOFALL_HACK.toggle();
         }
-        if (event.getKey() == VisionKeybind.noDamageKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
-            NODAMAGE_HACK.toggle();
+        if (event.getKey() == VisionKeybind.xrayKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            XRAY_HACK.toggle();
         }
         if (event.getKey() == VisionKeybind.menuKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
             Minecraft.getInstance().setScreen(new VisionMenuScreen());

@@ -23,6 +23,19 @@ public class HackSettings {
     public double flyVerticalSpeed = 0.5D;
     /** Hover velocity for FlyHack. */
     public double flyHoverVelocity = 0.0D;
+    /** Buoyancy applied when walking on water for JesusHack. */
+    public double jesusBuoyancy = 0.0D;
+    /** Fall distance threshold before NoFall activates. */
+    public double noFallThreshold = 2.0D;
+    /** List of block ids highlighted by XRayHack. */
+    public java.util.List<String> xrayBlocks = new java.util.ArrayList<>();
+
+    /** Helper to check if a block should be highlighted. */
+    public boolean isXrayTarget(net.minecraft.block.Block block) {
+        if (block == null) return false;
+        String id = block.getRegistryName().toString();
+        return xrayBlocks.contains(id);
+    }
 
     /** Load settings from disk. */
     public static HackSettings load() {

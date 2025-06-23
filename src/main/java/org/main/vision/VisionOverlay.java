@@ -48,8 +48,8 @@ public class VisionOverlay {
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
         }
-        if (VisionClient.getNoDamageHack().isEnabled()) {
-            String text = "NoDamage";
+        if (VisionClient.getXRayHack().isEnabled()) {
+            String text = "XRay";
             int w = mc.font.width(text);
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
