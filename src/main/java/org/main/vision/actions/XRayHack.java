@@ -42,6 +42,9 @@ public class XRayHack extends ActionBase {
         }
 
         IRenderTypeBuffer.Impl buffer = mc.renderBuffers().bufferSource();
+
+        // Render outlines with depth testing disabled so they remain visible through walls
+        com.mojang.blaze3d.systems.RenderSystem.disableDepthTest();
         for (BlockPos pos : highlightCache) {
             AxisAlignedBB box = world.getBlockState(pos).getShape(world, pos).bounds()
                     .move(pos).inflate(0.002D)
@@ -49,5 +52,6 @@ public class XRayHack extends ActionBase {
             WorldRenderer.renderLineBox(ms, buffer.getBuffer(RenderType.lines()), box, 0.0f, 1.0f, 0.0f, 1.0f);
         }
         buffer.endBatch(RenderType.lines());
+        com.mojang.blaze3d.systems.RenderSystem.enableDepthTest();
     }
 }

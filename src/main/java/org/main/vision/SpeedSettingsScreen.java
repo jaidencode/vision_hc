@@ -24,9 +24,12 @@ public class SpeedSettingsScreen extends Screen {
         HackSettings cfg = VisionClient.getSettings();
         int centerX = this.width / 2;
         int centerY = this.height / 2;
-        multiplierField = new TextFieldWidget(this.font, centerX - 40, centerY - 20, 80, 20, new StringTextComponent("Multiplier"));
+        int fieldWidth = 120;
+        multiplierField = new TextFieldWidget(this.font, centerX - fieldWidth / 2, centerY - 20, fieldWidth, 20, new StringTextComponent("Multiplier"));
+        multiplierField.setMaxLength(32);
         multiplierField.setValue(Float.toString(cfg.speedMultiplier));
-        burstField = new TextFieldWidget(this.font, centerX - 40, centerY + 5, 80, 20, new StringTextComponent("Packets"));
+        burstField = new TextFieldWidget(this.font, centerX - fieldWidth / 2, centerY + 5, fieldWidth, 20, new StringTextComponent("Packets"));
+        burstField.setMaxLength(32);
         burstField.setValue(Integer.toString(VisionClient.getSpeedHack().getPacketBurst()));
         addWidget(multiplierField);
         addWidget(burstField);
