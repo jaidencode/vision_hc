@@ -1,5 +1,6 @@
 package org.main.vision;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.util.text.StringTextComponent;
@@ -29,6 +30,14 @@ public class HackSettingsScreen extends Screen {
         field.setValue(Double.toString(getter.get()));
         this.addWidget(field);
         this.addButton(new PurpleButton(this.width / 2 - 50, this.height / 2 + 20, 100, 20, new StringTextComponent("Back"), b -> onClose()));
+    }
+
+    @Override
+    public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(ms);
+        drawCenteredString(ms, this.font, new StringTextComponent(label + ":"), this.width / 2, this.height / 2 - 25, 0xFFFFFF);
+        field.render(ms, mouseX, mouseY, partialTicks);
+        super.render(ms, mouseX, mouseY, partialTicks);
     }
 
     @Override
