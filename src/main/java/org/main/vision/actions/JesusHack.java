@@ -8,6 +8,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import org.main.vision.VisionClient;
+
 /**
  * Allows the player to stand and walk on water blocks as if they were solid.
  */
@@ -23,7 +25,8 @@ public class JesusHack extends ActionBase {
 
         BlockPos below = new BlockPos(player.getX(), player.getY() - 0.1D, player.getZ());
         if (player.level.getBlockState(below).getBlock() == Blocks.WATER) {
-            if (player.getDeltaMovement().y < 0.0D) {
+            player.setOnGround(true);
+            if (player.getDeltaMovement().y < 0.0D && !player.input.jumping) {
                 player.setDeltaMovement(player.getDeltaMovement().x, 0.0D, player.getDeltaMovement().z);
             }
             player.fallDistance = 0.0f;

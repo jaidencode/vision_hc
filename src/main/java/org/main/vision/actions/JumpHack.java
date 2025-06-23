@@ -6,12 +6,13 @@ import net.minecraft.network.play.client.CPlayerPacket;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import org.main.vision.VisionClient;
+
 /**
  * Applies a high jump velocity when the jump key is pressed.
  */
 public class JumpHack extends ActionBase {
 
-    private static final double JUMP_VELOCITY = 1.2D;
 
     /** Tracks whether the jump key was pressed last tick to
      *  detect rising-edge presses for consistent boosting. */
@@ -30,7 +31,8 @@ public class JumpHack extends ActionBase {
         // Trigger the boosted jump on the rising edge of the jump key
         // only when the player is on the ground to avoid mid-air boosts
         if (jumping && !wasJumping && player.isOnGround()) {
-            player.setDeltaMovement(player.getDeltaMovement().x, JUMP_VELOCITY, player.getDeltaMovement().z);
+            double vel = VisionClient.getSettings().jumpVelocity;
+            player.setDeltaMovement(player.getDeltaMovement().x, vel, player.getDeltaMovement().z);
             sendMovement(player);
         }
 

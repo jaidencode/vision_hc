@@ -11,6 +11,8 @@ import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import org.main.vision.VisionClient;
+
 import java.util.UUID;
 
 /**
@@ -19,7 +21,6 @@ import java.util.UUID;
 public class SpeedHack extends ActionBase {
 
     private static final UUID MODIFIER_ID = UUID.fromString("96d899a2-1e4c-4e03-b1d0-596bcabc0123");
-    private static final double SPEED_MULTIPLIER = 1.5D;
     private static final float FOV_MULTIPLIER = 1.2F;
 
     private int packetBurst = 2; // number of additional movement packets per tick
@@ -42,8 +43,9 @@ public class SpeedHack extends ActionBase {
 
     private void apply(PlayerEntity player) {
         ModifiableAttributeInstance attr = player.getAttribute(Attributes.MOVEMENT_SPEED);
+        double multiplier = VisionClient.getSettings().speedMultiplier;
         if (attr != null && attr.getModifier(MODIFIER_ID) == null) {
-            attr.addTransientModifier(new AttributeModifier(MODIFIER_ID, "SpeedHack", SPEED_MULTIPLIER - 1.0D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            attr.addTransientModifier(new AttributeModifier(MODIFIER_ID, "SpeedHack", multiplier - 1.0D, AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
         if (player instanceof ClientPlayerEntity) {
             sendBurstPackets((ClientPlayerEntity) player);
