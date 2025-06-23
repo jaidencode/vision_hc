@@ -46,8 +46,9 @@ public class Vision {
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-        // do something that can only be done on the client
+        // client only setup
         LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().options);
+        VisionClient.init();
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
