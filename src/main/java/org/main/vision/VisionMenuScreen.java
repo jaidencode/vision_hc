@@ -9,6 +9,7 @@ import org.main.vision.config.UIState;
 import org.main.vision.actions.SpeedHack;
 import org.main.vision.VisionClient;
 import org.main.vision.HackSettingsScreen;
+import org.main.vision.SpeedSettingsScreen;
 
 /** Simple in-game menu with a draggable bar and dropdown for hacks. */
 public class VisionMenuScreen extends Screen {
@@ -118,8 +119,7 @@ public class VisionMenuScreen extends Screen {
     }
 
     private void openSpeedSettings() {
-        this.minecraft.setScreen(new HackSettingsScreen(this, "Speed", () -> (double)VisionClient.getSettings().speedMultiplier,
-                v -> {VisionClient.getSettings().speedMultiplier = v.floatValue();}, VisionClient::saveSettings));
+        this.minecraft.setScreen(new SpeedSettingsScreen(this));
     }
 
     private void openJumpSettings() {

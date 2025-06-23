@@ -25,6 +25,16 @@ public class SpeedHack extends ActionBase {
 
     private int packetBurst = 2; // number of additional movement packets per tick
 
+    /** @return number of extra movement packets sent each tick. */
+    public int getPacketBurst() {
+        return packetBurst;
+    }
+
+    /** Set the number of extra movement packets sent each tick. */
+    public void setPacketBurst(int burst) {
+        packetBurst = Math.max(0, burst);
+    }
+
     @Override
     protected void onEnable() {
         PlayerEntity player = net.minecraft.client.Minecraft.getInstance().player;
