@@ -1,12 +1,15 @@
 package org.main.vision.actions;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraftforge.client.event.FOVUpdateEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.play.client.CPlayerPacket;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
+import net.minecraftforge.client.event.FOVUpdateEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.UUID;
 
@@ -25,6 +28,10 @@ public class SpeedHack extends ActionBase {
 
     @Override
     protected void onDisable() {
+        PlayerEntity player = net.minecraft.client.Minecraft.getInstance().player;
+        if (player != null) {
+            remove(player);
+        }
     }
 
     private void apply(PlayerEntity player) {
@@ -32,12 +39,22 @@ public class SpeedHack extends ActionBase {
         if (attr != null && attr.getModifier(MODIFIER_ID) == null) {
             attr.addPermanentModifier(new AttributeModifier(MODIFIER_ID, "SpeedHack", SPEED_MULTIPLIER - 1.0D, AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
+        if (player instanceof ClientPlayerEntity) {
+            sendExtraPacket((ClientPlayerEntity) player);
+        }
     }
 
     private void remove(PlayerEntity player) {
         ModifiableAttributeInstance attr = player.getAttribute(Attributes.MOVEMENT_SPEED);
         if (attr != null && attr.getModifier(MODIFIER_ID) != null) {
             attr.removeModifier(MODIFIER_ID);
+        }
+    }
+
+    private void sendExtraPacket(ClientPlayerEntity player) {
+        ClientPlayNetHandler conn = player.connection;
+        if (conn != null) {
+            conn.send(new CPlayerPacket.PositionRotationPacket(player.getX(), player.getY(), player.getZ(), player.yRot, player.xRot, player.isOnGround()));
         }
     }
 
