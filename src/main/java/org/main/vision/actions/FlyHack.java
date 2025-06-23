@@ -17,13 +17,18 @@ public class FlyHack extends ActionBase {
      * Using 0.08 to roughly match Minecraft's gravity so
      * ascending and descending feel symmetrical.
      */
-    private static final double VERTICAL_SPEED = 0.08D;
+    private static final double VERTICAL_SPEED = 0.15D;
 
     /**
      * Constant upward velocity applied every tick to counteract
      * gravity so the player can hover when no keys are pressed.
      */
     private static final double HOVER_VELOCITY = 0.08D;
+
+    /**
+     * Horizontal speed applied when pressing WASD.
+     */
+    private static final double HORIZONTAL_SPEED = 0.4D;
 
     @SubscribeEvent
     public void onTick(TickEvent.PlayerTickEvent event) {
@@ -45,9 +50,41 @@ public class FlyHack extends ActionBase {
             yMotion -= VERTICAL_SPEED;
         }
 
-        // Apply the calculated vertical motion every tick so ascending and
-        // descending feel responsive and hovering is possible.
-        player.setDeltaMovement(player.getDeltaMovement().x, yMotion, player.getDeltaMovement().z);
+        // Calculate horizontal velocity based on WASD input and player yaw
+        double xMotion = 0.0D;
+        double zMotion = 0.0D;
+        float yawRad = (float) Math.toRadians(player.yRot);
+        double forwardX = -Math.sin(yawRad);
+        double forwardZ = Math.cos(yawRad);
+        double strafeX = Math.cos(yawRad);
+        double strafeZ = Math.sin(yawRad);
+
+        if (mc.options.keyUp.isDown()) {
+            xMotion += forwardX;
+            zMotion += forwardZ;
+        }
+        if (mc.options.keyDown.isDown()) {
+            xMotion -= forwardX;
+            zMotion -= forwardZ;
+        }
+        if (mc.options.keyLeft.isDown()) {
+            xMotion += strafeX;
+            zMotion += strafeZ;
+        }
+        if (mc.options.keyRight.isDown()) {
+            xMotion -= strafeX;
+            zMotion -= strafeZ;
+        }
+
+        // Normalize to keep diagonal movement consistent
+        double mag = Math.sqrt(xMotion * xMotion + zMotion * zMotion);
+        if (mag > 0.0D) {
+            xMotion = xMotion / mag * HORIZONTAL_SPEED;
+            zMotion = zMotion / mag * HORIZONTAL_SPEED;
+        }
+
+        // Apply the calculated velocity each tick for responsive flight
+        player.setDeltaMovement(xMotion, yMotion, zMotion);
         sendMovement(player);
 
         player.fallDistance = 0.0f;
