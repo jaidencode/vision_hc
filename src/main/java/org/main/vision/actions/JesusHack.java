@@ -27,7 +27,8 @@ public class JesusHack extends ActionBase {
         if (player.level.getBlockState(below).getBlock() == Blocks.WATER) {
             player.setOnGround(true);
             if (player.getDeltaMovement().y < 0.0D && !player.input.jumping) {
-                player.setDeltaMovement(player.getDeltaMovement().x, 0.0D, player.getDeltaMovement().z);
+                double buoy = VisionClient.getSettings().jesusBuoyancy;
+                player.setDeltaMovement(player.getDeltaMovement().x, buoy, player.getDeltaMovement().z);
             }
             player.fallDistance = 0.0f;
             sendMovement(player);
