@@ -19,11 +19,13 @@ public class VisionMenuScreen extends Screen {
     private PurpleButton flyButton;
     private PurpleButton jesusButton;
     private PurpleButton noFallButton;
+    private PurpleButton noDamageButton;
     private PurpleButton speedSettings;
     private PurpleButton jumpSettings;
     private PurpleButton flySettings;
     private PurpleButton jesusSettings;
     private PurpleButton noFallSettings;
+    private PurpleButton noDamageSettings;
     private static final int BUTTON_WIDTH = 100;
     private static final int BUTTON_HEIGHT = 20;
     private static final int BAR_WIDTH = BUTTON_WIDTH + 25;
@@ -69,8 +71,13 @@ public class VisionMenuScreen extends Screen {
         this.noFallSettings = addButton(new PurpleButton(state.miscBarX + width + 5, state.miscBarY + 100 + (int)(20 * dropdownProgress) - 20, 20, height,
                 new StringTextComponent("\u2699"), b -> openNoFallSettings()));
 
-        speedButton.visible = jumpButton.visible = flyButton.visible = jesusButton.visible = noFallButton.visible = dropdownProgress > 0.05f;
-        speedSettings.visible = jumpSettings.visible = flySettings.visible = jesusSettings.visible = noFallSettings.visible = dropdownProgress > 0.05f;
+        this.noDamageButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 120 + (int)(20 * dropdownProgress) - 20, width, height,
+                getNoDamageLabel(), b -> toggleNoDamage()));
+        this.noDamageSettings = addButton(new PurpleButton(state.miscBarX + width + 5, state.miscBarY + 120 + (int)(20 * dropdownProgress) - 20, 20, height,
+                new StringTextComponent("\u2699"), b -> openNoDamageSettings()));
+
+        speedButton.visible = jumpButton.visible = flyButton.visible = jesusButton.visible = noFallButton.visible = noDamageButton.visible = dropdownProgress > 0.05f;
+        speedSettings.visible = jumpSettings.visible = flySettings.visible = jesusSettings.visible = noFallSettings.visible = noDamageSettings.visible = dropdownProgress > 0.05f;
     }
 
     private void toggleSpeed() {
@@ -104,6 +111,12 @@ public class VisionMenuScreen extends Screen {
         state.save();
     }
 
+    private void toggleNoDamage() {
+        VisionClient.getNoDamageHack().toggle();
+        noDamageButton.setMessage(getNoDamageLabel());
+        state.save();
+    }
+
     private void openSpeedSettings() {
         this.minecraft.setScreen(new HackSettingsScreen(this, "Speed", () -> (double)VisionClient.getSettings().speedMultiplier,
                 v -> {VisionClient.getSettings().speedMultiplier = v.floatValue();}, VisionClient::saveSettings));
@@ -129,6 +142,11 @@ public class VisionMenuScreen extends Screen {
                 v -> {}, VisionClient::saveSettings));
     }
 
+    private void openNoDamageSettings() {
+        this.minecraft.setScreen(new HackSettingsScreen(this, "NoDamage", () -> 0.0D,
+                v -> {}, VisionClient::saveSettings));
+    }
+
     private StringTextComponent getSpeedLabel() {
         return new StringTextComponent((VisionClient.getSpeedHack().isEnabled() ? "Disable" : "Enable") + " Speed");
     }
@@ -147,6 +165,10 @@ public class VisionMenuScreen extends Screen {
 
     private StringTextComponent getNoFallLabel() {
         return new StringTextComponent((VisionClient.getNoFallHack().isEnabled() ? "Disable" : "Enable") + " NoFall");
+    }
+
+    private StringTextComponent getNoDamageLabel() {
+        return new StringTextComponent((VisionClient.getNoDamageHack().isEnabled() ? "Disable" : "Enable") + " NoDamage");
     }
 
     @Override
@@ -172,22 +194,26 @@ public class VisionMenuScreen extends Screen {
             flyButton.x = state.miscBarX;
             jesusButton.x = state.miscBarX;
             noFallButton.x = state.miscBarX;
+            noDamageButton.x = state.miscBarX;
             speedSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
             jumpSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
             flySettings.x = state.miscBarX + BUTTON_WIDTH + 5;
             jesusSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
             noFallSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
+            noDamageSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
 
             speedButton.y = state.miscBarY + 20 + (int)(20 * dropdownProgress) - 20;
             jumpButton.y = state.miscBarY + 40 + (int)(20 * dropdownProgress) - 20;
             flyButton.y = state.miscBarY + 60 + (int)(20 * dropdownProgress) - 20;
             jesusButton.y = state.miscBarY + 80 + (int)(20 * dropdownProgress) - 20;
             noFallButton.y = state.miscBarY + 100 + (int)(20 * dropdownProgress) - 20;
+            noDamageButton.y = state.miscBarY + 120 + (int)(20 * dropdownProgress) - 20;
             speedSettings.y = speedButton.y;
             jumpSettings.y = jumpButton.y;
             flySettings.y = flyButton.y;
             jesusSettings.y = jesusButton.y;
             noFallSettings.y = noFallButton.y;
+            noDamageSettings.y = noDamageButton.y;
             return true;
         }
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
@@ -221,36 +247,42 @@ public class VisionMenuScreen extends Screen {
         flyButton.x = state.miscBarX;
         jesusButton.x = state.miscBarX;
         noFallButton.x = state.miscBarX;
+        noDamageButton.x = state.miscBarX;
         speedSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
         jumpSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
         flySettings.x = state.miscBarX + BUTTON_WIDTH + 5;
         jesusSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
         noFallSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
+        noDamageSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
 
         speedButton.y = state.miscBarY + 20 + offsetY - 20;
         jumpButton.y = state.miscBarY + 40 + offsetY - 20;
         flyButton.y = state.miscBarY + 60 + offsetY - 20;
         jesusButton.y = state.miscBarY + 80 + offsetY - 20;
         noFallButton.y = state.miscBarY + 100 + offsetY - 20;
+        noDamageButton.y = state.miscBarY + 120 + offsetY - 20;
         speedSettings.y = speedButton.y;
         jumpSettings.y = jumpButton.y;
         flySettings.y = flyButton.y;
         jesusSettings.y = jesusButton.y;
         noFallSettings.y = noFallButton.y;
+        noDamageSettings.y = noDamageButton.y;
 
         boolean vis = dropdownProgress > 0.05f;
-        speedButton.visible = jumpButton.visible = flyButton.visible = jesusButton.visible = noFallButton.visible = vis;
-        speedSettings.visible = jumpSettings.visible = flySettings.visible = jesusSettings.visible = noFallSettings.visible = vis;
+        speedButton.visible = jumpButton.visible = flyButton.visible = jesusButton.visible = noFallButton.visible = noDamageButton.visible = vis;
+        speedSettings.visible = jumpSettings.visible = flySettings.visible = jesusSettings.visible = noFallSettings.visible = noDamageSettings.visible = vis;
         speedButton.setAlpha(dropdownProgress);
         jumpButton.setAlpha(dropdownProgress);
         flyButton.setAlpha(dropdownProgress);
         jesusButton.setAlpha(dropdownProgress);
         noFallButton.setAlpha(dropdownProgress);
+        noDamageButton.setAlpha(dropdownProgress);
         speedSettings.setAlpha(dropdownProgress);
         jumpSettings.setAlpha(dropdownProgress);
         flySettings.setAlpha(dropdownProgress);
         jesusSettings.setAlpha(dropdownProgress);
         noFallSettings.setAlpha(dropdownProgress);
+        noDamageSettings.setAlpha(dropdownProgress);
 
         super.render(matrices, mouseX, mouseY, partialTicks);
     }
