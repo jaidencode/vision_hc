@@ -24,10 +24,10 @@ public class VisionClient {
 
     @SubscribeEvent
     public static void onKeyInput(InputEvent.KeyInputEvent event) {
-        if (VisionKeybind.speedKey.isDown()) {
+        if (event.getKey() == VisionKeybind.speedKey.getKey().getValue() && event.getAction() == 1) {
             SPEED_HACK.toggle();
         }
-        if (VisionKeybind.menuKey.isDown()) {
+        if (event.getKey() == VisionKeybind.menuKey.getKey().getValue() && event.getAction() == 1) {
             Minecraft.getInstance().setScreen(new VisionMenuScreen());
         }
     }

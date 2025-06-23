@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
+import org.main.vision.PurpleButton;
 import net.minecraft.util.text.StringTextComponent;
 import org.main.vision.actions.SpeedHack;
 import org.main.vision.config.UIState;
@@ -25,7 +26,7 @@ public class VisionMenuScreen extends Screen {
     protected void init() {
         int width = 100;
         int height = 20;
-        this.hackButton = addButton(new Button(state.miscBarX, state.miscBarY + 20, width, height,
+        this.hackButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 20, width, height,
                 getHackLabel(), b -> toggleHack()));
         hackButton.visible = state.hacksExpanded;
     }
@@ -81,7 +82,7 @@ public class VisionMenuScreen extends Screen {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrices);
-        fill(matrices, state.miscBarX, state.miscBarY, state.miscBarX + 100, state.miscBarY + 20, 0x80000000);
+        fill(matrices, state.miscBarX, state.miscBarY, state.miscBarX + 100, state.miscBarY + 20, 0xAA5511AA);
         drawCenteredString(matrices, font, "Misc", state.miscBarX + 50, state.miscBarY + 6, 0xFFFFFF);
         if (state.hacksExpanded) {
             hackButton.visible = true;

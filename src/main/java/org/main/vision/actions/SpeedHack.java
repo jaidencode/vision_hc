@@ -22,8 +22,14 @@ public class SpeedHack extends ActionBase {
     private static final double SPEED_MULTIPLIER = 1.5D;
     private static final float FOV_MULTIPLIER = 1.2F;
 
+    private int packetBurst = 2; // number of additional movement packets per tick
+
     @Override
     protected void onEnable() {
+        PlayerEntity player = net.minecraft.client.Minecraft.getInstance().player;
+        if (player != null) {
+            apply(player);
+        }
     }
 
     @Override
@@ -40,7 +46,7 @@ public class SpeedHack extends ActionBase {
             attr.addPermanentModifier(new AttributeModifier(MODIFIER_ID, "SpeedHack", SPEED_MULTIPLIER - 1.0D, AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
         if (player instanceof ClientPlayerEntity) {
-            sendExtraPacket((ClientPlayerEntity) player);
+            sendBurstPackets((ClientPlayerEntity) player);
         }
     }
 
@@ -51,10 +57,12 @@ public class SpeedHack extends ActionBase {
         }
     }
 
-    private void sendExtraPacket(ClientPlayerEntity player) {
+    private void sendBurstPackets(ClientPlayerEntity player) {
         ClientPlayNetHandler conn = player.connection;
         if (conn != null) {
-            conn.send(new CPlayerPacket.PositionRotationPacket(player.getX(), player.getY(), player.getZ(), player.yRot, player.xRot, player.isOnGround()));
+            for (int i = 0; i < packetBurst; i++) {
+                conn.send(new CPlayerPacket.PositionRotationPacket(player.getX(), player.getY(), player.getZ(), player.yRot, player.xRot, player.isOnGround()));
+            }
         }
     }
 
