@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.main.vision.VisionClient;
 
-/** Adds a collision box to water when Jesus hack is enabled. */
+/** Adds a collision box to liquid blocks when Jesus hack is enabled. */
 @Mixin(FlowingFluidBlock.class)
 public abstract class MixinFlowingFluidBlock {
     @Inject(method = "getCollisionShape", at = @At("HEAD"), cancellable = true)
