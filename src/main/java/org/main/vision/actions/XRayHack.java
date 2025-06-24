@@ -1,10 +1,7 @@
 package org.main.vision.actions;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
+import org.lwjgl.opengl.GL11;
 import net.minecraft.block.Block;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.world.ClientWorld;
@@ -48,9 +45,8 @@ public class XRayHack extends ActionBase {
         ClientWorld world = mc.level;
         if (world == null) return;
 
-        MatrixStack ms = event.getMatrixStack();
         Vector3d cam = mc.gameRenderer.getMainCamera().getPosition();
-        int radius = Minecraft.getInstance().options.renderDistance * 16;
+        int radius = 16;
         highlightCache.clear();
         BlockPos start = new BlockPos(cam.x - radius, cam.y - radius, cam.z - radius);
         BlockPos end = new BlockPos(cam.x + radius, cam.y + radius, cam.z + radius);
@@ -59,8 +55,6 @@ public class XRayHack extends ActionBase {
                 highlightCache.add(pos.immutable());
             }
         }
-
-        IRenderTypeBuffer.Impl buffer = mc.renderBuffers().bufferSource();
 
         // Render outlines with depth testing and culling disabled so they remain visible through walls
         RenderSystem.disableDepthTest();
@@ -72,12 +66,58 @@ public class XRayHack extends ActionBase {
                     .move(pos).inflate(0.002D)
                     .move(-cam.x, -cam.y, -cam.z);
             float[] col = getColor(world.getBlockState(pos).getBlock());
-            WorldRenderer.renderLineBox(ms, buffer.getBuffer(RenderType.lines()), box, col[0], col[1], col[2], 1.0f);
+            drawOutline(box, col);
         }
-        buffer.endBatch(RenderType.lines());
         RenderSystem.depthMask(true);
         RenderSystem.lineWidth(1.0F);
         RenderSystem.enableCull();
         RenderSystem.enableDepthTest();
+    }
+
+    /** Draws a colored outline around the given bounding box using OpenGL. */
+    private static void drawOutline(AxisAlignedBB box, float[] color) {
+        GL11.glColor3f(color[0], color[1], color[2]);
+        GL11.glBegin(GL11.GL_LINES);
+
+        // Bottom face
+        GL11.glVertex3d(box.minX, box.minY, box.minZ);
+        GL11.glVertex3d(box.maxX, box.minY, box.minZ);
+
+        GL11.glVertex3d(box.maxX, box.minY, box.minZ);
+        GL11.glVertex3d(box.maxX, box.minY, box.maxZ);
+
+        GL11.glVertex3d(box.maxX, box.minY, box.maxZ);
+        GL11.glVertex3d(box.minX, box.minY, box.maxZ);
+
+        GL11.glVertex3d(box.minX, box.minY, box.maxZ);
+        GL11.glVertex3d(box.minX, box.minY, box.minZ);
+
+        // Top face
+        GL11.glVertex3d(box.minX, box.maxY, box.minZ);
+        GL11.glVertex3d(box.maxX, box.maxY, box.minZ);
+
+        GL11.glVertex3d(box.maxX, box.maxY, box.minZ);
+        GL11.glVertex3d(box.maxX, box.maxY, box.maxZ);
+
+        GL11.glVertex3d(box.maxX, box.maxY, box.maxZ);
+        GL11.glVertex3d(box.minX, box.maxY, box.maxZ);
+
+        GL11.glVertex3d(box.minX, box.maxY, box.maxZ);
+        GL11.glVertex3d(box.minX, box.maxY, box.minZ);
+
+        // Vertical edges
+        GL11.glVertex3d(box.minX, box.minY, box.minZ);
+        GL11.glVertex3d(box.minX, box.maxY, box.minZ);
+
+        GL11.glVertex3d(box.maxX, box.minY, box.minZ);
+        GL11.glVertex3d(box.maxX, box.maxY, box.minZ);
+
+        GL11.glVertex3d(box.maxX, box.minY, box.maxZ);
+        GL11.glVertex3d(box.maxX, box.maxY, box.maxZ);
+
+        GL11.glVertex3d(box.minX, box.minY, box.maxZ);
+        GL11.glVertex3d(box.minX, box.maxY, box.maxZ);
+
+        GL11.glEnd();
     }
 }
