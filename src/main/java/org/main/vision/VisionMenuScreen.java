@@ -7,6 +7,7 @@ import org.main.vision.PurpleButton;
 import net.minecraft.util.text.StringTextComponent;
 import org.main.vision.config.UIState;
 import org.main.vision.actions.SpeedHack;
+import org.main.vision.actions.WallWarp;
 import org.main.vision.VisionClient;
 import org.main.vision.HackSettingsScreen;
 import org.main.vision.SpeedSettingsScreen;
@@ -30,7 +31,7 @@ public class VisionMenuScreen extends Screen {
     private PurpleButton fullBrightButton;
     private PurpleButton chestButton;
     private PurpleButton blinkButton;
-    private PurpleButton noclipButton;
+    private PurpleButton wallWarpButton;
     private static final int BUTTON_WIDTH = 100;
     private static final int BUTTON_HEIGHT = 20;
     private static final int BAR_WIDTH = BUTTON_WIDTH + 25;
@@ -93,10 +94,10 @@ public class VisionMenuScreen extends Screen {
 
         this.blinkButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 120 + (int)(20 * dropdownProgress) - 20, width, height,
                 getBlinkLabel(), b -> toggleBlink()));
-        this.noclipButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 140 + (int)(20 * dropdownProgress) - 20, width, height,
-                getNoclipLabel(), b -> toggleNoclip()));
+        this.wallWarpButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 140 + (int)(20 * dropdownProgress) - 20, width, height,
+                new StringTextComponent("WallWarp"), b -> activateWallWarp()));
 
-        speedButton.visible = jumpButton.visible = flyButton.visible = jesusButton.visible = noFallButton.visible = blinkButton.visible = noclipButton.visible = dropdownProgress > 0.05f;
+        speedButton.visible = jumpButton.visible = flyButton.visible = jesusButton.visible = noFallButton.visible = blinkButton.visible = wallWarpButton.visible = dropdownProgress > 0.05f;
         speedSettings.visible = jumpSettings.visible = flySettings.visible = jesusSettings.visible = noFallSettings.visible = dropdownProgress > 0.05f;
 
         // Render bar
@@ -161,10 +162,8 @@ public class VisionMenuScreen extends Screen {
         state.save();
     }
 
-    private void toggleNoclip() {
-        VisionClient.getNoclipHack().toggle();
-        noclipButton.setMessage(getNoclipLabel());
-        state.save();
+    private void activateWallWarp() {
+        WallWarp.warp();
     }
 
     private void toggleFullBright() {
@@ -235,9 +234,6 @@ public class VisionMenuScreen extends Screen {
         return new StringTextComponent((VisionClient.getBlinkHack().isEnabled() ? "Disable" : "Enable") + " Blink");
     }
 
-    private StringTextComponent getNoclipLabel() {
-        return new StringTextComponent((VisionClient.getNoclipHack().isEnabled() ? "Disable" : "Enable") + " Noclip");
-    }
 
     private StringTextComponent getFullBrightLabel() {
         return new StringTextComponent((VisionClient.getFullBrightHack().isEnabled() ? "Disable" : "Enable") + " FullBright");
@@ -287,7 +283,7 @@ public class VisionMenuScreen extends Screen {
             jesusButton.x = state.miscBarX;
             noFallButton.x = state.miscBarX;
             blinkButton.x = state.miscBarX;
-            noclipButton.x = state.miscBarX;
+            wallWarpButton.x = state.miscBarX;
             speedSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
             jumpSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
             flySettings.x = state.miscBarX + BUTTON_WIDTH + 5;
@@ -300,7 +296,7 @@ public class VisionMenuScreen extends Screen {
             jesusButton.y = state.miscBarY + 80 + (int)(20 * dropdownProgress) - 20;
             noFallButton.y = state.miscBarY + 100 + (int)(20 * dropdownProgress) - 20;
             blinkButton.y = state.miscBarY + 120 + (int)(20 * dropdownProgress) - 20;
-            noclipButton.y = state.miscBarY + 140 + (int)(20 * dropdownProgress) - 20;
+            wallWarpButton.y = state.miscBarY + 140 + (int)(20 * dropdownProgress) - 20;
             speedSettings.y = speedButton.y;
             jumpSettings.y = jumpButton.y;
             flySettings.y = flyButton.y;
@@ -386,7 +382,7 @@ public class VisionMenuScreen extends Screen {
         jesusButton.x = state.miscBarX;
         noFallButton.x = state.miscBarX;
         blinkButton.x = state.miscBarX;
-        noclipButton.x = state.miscBarX;
+        wallWarpButton.x = state.miscBarX;
         speedSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
         jumpSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
         flySettings.x = state.miscBarX + BUTTON_WIDTH + 5;
@@ -402,7 +398,7 @@ public class VisionMenuScreen extends Screen {
         jesusButton.y = state.miscBarY + 80 + offsetY - 20;
         noFallButton.y = state.miscBarY + 100 + offsetY - 20;
         blinkButton.y = state.miscBarY + 120 + offsetY - 20;
-        noclipButton.y = state.miscBarY + 140 + offsetY - 20;
+        wallWarpButton.y = state.miscBarY + 140 + offsetY - 20;
         speedSettings.y = speedButton.y;
         jumpSettings.y = jumpButton.y;
         flySettings.y = flyButton.y;
@@ -417,7 +413,7 @@ public class VisionMenuScreen extends Screen {
         boolean vis = dropdownProgress > 0.05f;
         boolean visR = renderDropdownProgress > 0.05f;
         boolean visU = utilDropdownProgress > 0.05f;
-        speedButton.visible = jumpButton.visible = flyButton.visible = jesusButton.visible = noFallButton.visible = blinkButton.visible = noclipButton.visible = vis;
+        speedButton.visible = jumpButton.visible = flyButton.visible = jesusButton.visible = noFallButton.visible = blinkButton.visible = wallWarpButton.visible = vis;
         speedSettings.visible = jumpSettings.visible = flySettings.visible = jesusSettings.visible = noFallSettings.visible = vis;
         xrayButton.visible = fullBrightButton.visible = visR;
         xraySettings.visible = visR;
@@ -428,7 +424,7 @@ public class VisionMenuScreen extends Screen {
         jesusButton.setAlpha(dropdownProgress);
         noFallButton.setAlpha(dropdownProgress);
         blinkButton.setAlpha(dropdownProgress);
-        noclipButton.setAlpha(dropdownProgress);
+        wallWarpButton.setAlpha(dropdownProgress);
         speedSettings.setAlpha(dropdownProgress);
         jumpSettings.setAlpha(dropdownProgress);
         flySettings.setAlpha(dropdownProgress);
