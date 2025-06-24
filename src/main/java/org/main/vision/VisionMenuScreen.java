@@ -31,6 +31,7 @@ public class VisionMenuScreen extends Screen {
     private PurpleButton forceCritButton;
     private PurpleButton antiVanishButton;
     private PurpleButton blinkButton;
+    private PurpleButton arrowDeflectButton;
     private static final int BUTTON_WIDTH = 100;
     private static final int BUTTON_HEIGHT = 20;
     private static final int BAR_WIDTH = BUTTON_WIDTH + 25;
@@ -114,8 +115,10 @@ public class VisionMenuScreen extends Screen {
                 getForceCritLabel(), b -> toggleForceCrit()));
         this.antiVanishButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20, width, height,
                 getAntiVanishLabel(), b -> toggleAntiVanish()));
+        this.arrowDeflectButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20, width, height,
+                getArrowDeflectLabel(), b -> toggleArrowDeflect()));
 
-        forceCritButton.visible = antiVanishButton.visible = utilDropdownProgress > 0.05f;
+        forceCritButton.visible = antiVanishButton.visible = arrowDeflectButton.visible = utilDropdownProgress > 0.05f;
     }
 
     private void toggleSpeed() {
@@ -176,6 +179,12 @@ public class VisionMenuScreen extends Screen {
     private void toggleAntiVanish() {
         VisionClient.getAntiVanishHack().toggle();
         antiVanishButton.setMessage(getAntiVanishLabel());
+        state.save();
+    }
+
+    private void toggleArrowDeflect() {
+        VisionClient.getArrowDeflectHack().toggle();
+        arrowDeflectButton.setMessage(getArrowDeflectLabel());
         state.save();
     }
 
@@ -247,6 +256,10 @@ public class VisionMenuScreen extends Screen {
 
     private StringTextComponent getAntiVanishLabel() {
         return new StringTextComponent((VisionClient.getAntiVanishHack().isEnabled() ? "Disable" : "Enable") + " AntiVanish");
+    }
+
+    private StringTextComponent getArrowDeflectLabel() {
+        return new StringTextComponent((VisionClient.getArrowDeflectHack().isEnabled() ? "Disable" : "Enable") + " ArrowDeflect");
     }
 
     @Override
@@ -324,8 +337,10 @@ public class VisionMenuScreen extends Screen {
             state.utilBarY = (int)mouseY - utilDragOffsetY;
             forceCritButton.x = state.utilBarX;
             antiVanishButton.x = state.utilBarX;
+            arrowDeflectButton.x = state.utilBarX;
             forceCritButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
             antiVanishButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
+            arrowDeflectButton.y = state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20;
             return true;
         }
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
@@ -413,8 +428,10 @@ public class VisionMenuScreen extends Screen {
         xraySettings.y = xrayButton.y;
         forceCritButton.x = state.utilBarX;
         antiVanishButton.x = state.utilBarX;
+        arrowDeflectButton.x = state.utilBarX;
         forceCritButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
         antiVanishButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
+        arrowDeflectButton.y = state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20;
 
         boolean vis = dropdownProgress > 0.05f;
         boolean visR = renderDropdownProgress > 0.05f;
@@ -423,7 +440,7 @@ public class VisionMenuScreen extends Screen {
         speedSettings.visible = jumpSettings.visible = flySettings.visible = jesusSettings.visible = noFallSettings.visible = vis;
         xrayButton.visible = fullBrightButton.visible = visR;
         xraySettings.visible = visR;
-        forceCritButton.visible = antiVanishButton.visible = visU;
+        forceCritButton.visible = antiVanishButton.visible = arrowDeflectButton.visible = visU;
         speedButton.setAlpha(dropdownProgress);
         jumpButton.setAlpha(dropdownProgress);
         flyButton.setAlpha(dropdownProgress);
@@ -440,6 +457,7 @@ public class VisionMenuScreen extends Screen {
         xraySettings.setAlpha(renderDropdownProgress);
         forceCritButton.setAlpha(utilDropdownProgress);
         antiVanishButton.setAlpha(utilDropdownProgress);
+        arrowDeflectButton.setAlpha(utilDropdownProgress);
 
         super.render(matrices, mouseX, mouseY, partialTicks);
     }

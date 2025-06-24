@@ -18,6 +18,7 @@ public class VisionKeybind {
     public static KeyBinding forceCritKey;
     public static KeyBinding antiVanishKey;
     public static KeyBinding blinkKey;
+    public static KeyBinding arrowDeflectKey;
     public static KeyBinding menuKey;
 
     static void register() {
@@ -31,6 +32,7 @@ public class VisionKeybind {
         forceCritKey = new KeyBinding("key.vision.forcecrit", GLFW.GLFW_KEY_P, "key.categories.vision");
         antiVanishKey = new KeyBinding("key.vision.antivanish", GLFW.GLFW_KEY_I, "key.categories.vision");
         blinkKey = new KeyBinding("key.vision.blink", GLFW.GLFW_KEY_O, "key.categories.vision");
+        arrowDeflectKey = new KeyBinding("key.vision.arrowdeflect", GLFW.GLFW_KEY_M, "key.categories.vision");
         menuKey = new KeyBinding("key.vision.menu", GLFW.GLFW_KEY_BACKSLASH, "key.categories.vision");
         ClientRegistry.registerKeyBinding(speedKey);
         ClientRegistry.registerKeyBinding(jumpKey);
@@ -42,6 +44,7 @@ public class VisionKeybind {
         ClientRegistry.registerKeyBinding(forceCritKey);
         ClientRegistry.registerKeyBinding(antiVanishKey);
         ClientRegistry.registerKeyBinding(blinkKey);
+        ClientRegistry.registerKeyBinding(arrowDeflectKey);
         ClientRegistry.registerKeyBinding(menuKey);
     }
 }
