@@ -19,6 +19,8 @@ import org.main.vision.actions.BlinkHack;
 import org.main.vision.actions.AntiKnockbackHack;
 import org.main.vision.actions.AutoToolHack;
 import org.main.vision.actions.SafeWalkHack;
+import org.main.vision.actions.AutoSprintHack;
+import org.main.vision.actions.AutoRespawnHack;
 import org.main.vision.network.PacketPredictor;
 import org.main.vision.config.HackSettings;
 
@@ -40,6 +42,8 @@ public class VisionClient {
     private static final AntiKnockbackHack ANTIKNOCKBACK_HACK = new AntiKnockbackHack();
     private static final AutoToolHack AUTOTOOL_HACK = new AutoToolHack();
     private static final SafeWalkHack SAFEWALK_HACK = new SafeWalkHack();
+    private static final AutoSprintHack AUTOSPRINT_HACK = new AutoSprintHack();
+    private static final AutoRespawnHack AUTORESPAWN_HACK = new AutoRespawnHack();
     private static final PacketPredictor PREDICTOR = PacketPredictor.getInstance();
     private static HackSettings SETTINGS;
 
@@ -100,6 +104,14 @@ public class VisionClient {
         return SAFEWALK_HACK;
     }
 
+    public static AutoSprintHack getAutoSprintHack() {
+        return AUTOSPRINT_HACK;
+    }
+
+    public static AutoRespawnHack getAutoRespawnHack() {
+        return AUTORESPAWN_HACK;
+    }
+
 
     public static HackSettings getSettings() {
         return SETTINGS;
@@ -152,6 +164,12 @@ public class VisionClient {
         }
         if (event.getKey() == VisionKeybind.safeWalkKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             SAFEWALK_HACK.toggle();
+        }
+        if (event.getKey() == VisionKeybind.autoSprintKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            AUTOSPRINT_HACK.toggle();
+        }
+        if (event.getKey() == VisionKeybind.autoRespawnKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            AUTORESPAWN_HACK.toggle();
         }
         if (event.getKey() == VisionKeybind.menuKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
             Minecraft.getInstance().setScreen(new VisionMenuScreen());

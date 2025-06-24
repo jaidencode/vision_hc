@@ -21,6 +21,8 @@ public class VisionKeybind {
     public static KeyBinding antiKnockbackKey;
     public static KeyBinding autoToolKey;
     public static KeyBinding safeWalkKey;
+    public static KeyBinding autoSprintKey;
+    public static KeyBinding autoRespawnKey;
     public static KeyBinding menuKey;
 
     static void register() {
@@ -37,6 +39,8 @@ public class VisionKeybind {
         antiKnockbackKey = new KeyBinding("key.vision.antiknockback", GLFW.GLFW_KEY_M, "key.categories.vision");
         autoToolKey = new KeyBinding("key.vision.autotool", GLFW.GLFW_KEY_B, "key.categories.vision");
         safeWalkKey = new KeyBinding("key.vision.safewalk", GLFW.GLFW_KEY_V, "key.categories.vision");
+        autoSprintKey = new KeyBinding("key.vision.autosprint", GLFW.GLFW_KEY_C, "key.categories.vision");
+        autoRespawnKey = new KeyBinding("key.vision.autorespawn", GLFW.GLFW_KEY_R, "key.categories.vision");
         menuKey = new KeyBinding("key.vision.menu", GLFW.GLFW_KEY_BACKSLASH, "key.categories.vision");
         ClientRegistry.registerKeyBinding(speedKey);
         ClientRegistry.registerKeyBinding(jumpKey);
@@ -51,6 +55,8 @@ public class VisionKeybind {
         ClientRegistry.registerKeyBinding(antiKnockbackKey);
         ClientRegistry.registerKeyBinding(autoToolKey);
         ClientRegistry.registerKeyBinding(safeWalkKey);
+        ClientRegistry.registerKeyBinding(autoSprintKey);
+        ClientRegistry.registerKeyBinding(autoRespawnKey);
         ClientRegistry.registerKeyBinding(menuKey);
     }
 }

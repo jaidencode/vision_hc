@@ -34,6 +34,8 @@ public class VisionMenuScreen extends Screen {
     private PurpleButton antiKnockbackButton;
     private PurpleButton autoToolButton;
     private PurpleButton safeWalkButton;
+    private PurpleButton autoSprintButton;
+    private PurpleButton autoRespawnButton;
     private static final int BUTTON_WIDTH = 100;
     private static final int BUTTON_HEIGHT = 20;
     private static final int BAR_WIDTH = BUTTON_WIDTH + 25;
@@ -123,8 +125,12 @@ public class VisionMenuScreen extends Screen {
                 getAutoToolLabel(), b -> toggleAutoTool()));
         this.safeWalkButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 100 + (int)(20 * utilDropdownProgress) - 20, width, height,
                 getSafeWalkLabel(), b -> toggleSafeWalk()));
+        this.autoSprintButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 120 + (int)(20 * utilDropdownProgress) - 20, width, height,
+                getAutoSprintLabel(), b -> toggleAutoSprint()));
+        this.autoRespawnButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 140 + (int)(20 * utilDropdownProgress) - 20, width, height,
+                getAutoRespawnLabel(), b -> toggleAutoRespawn()));
 
-        forceCritButton.visible = antiVanishButton.visible = antiKnockbackButton.visible = autoToolButton.visible = safeWalkButton.visible = utilDropdownProgress > 0.05f;
+        forceCritButton.visible = antiVanishButton.visible = antiKnockbackButton.visible = autoToolButton.visible = safeWalkButton.visible = autoSprintButton.visible = autoRespawnButton.visible = utilDropdownProgress > 0.05f;
     }
 
     private void toggleSpeed() {
@@ -203,6 +209,18 @@ public class VisionMenuScreen extends Screen {
     private void toggleSafeWalk() {
         VisionClient.getSafeWalkHack().toggle();
         safeWalkButton.setMessage(getSafeWalkLabel());
+        state.save();
+    }
+
+    private void toggleAutoSprint() {
+        VisionClient.getAutoSprintHack().toggle();
+        autoSprintButton.setMessage(getAutoSprintLabel());
+        state.save();
+    }
+
+    private void toggleAutoRespawn() {
+        VisionClient.getAutoRespawnHack().toggle();
+        autoRespawnButton.setMessage(getAutoRespawnLabel());
         state.save();
     }
 
@@ -290,6 +308,14 @@ public class VisionMenuScreen extends Screen {
         return new StringTextComponent((VisionClient.getSafeWalkHack().isEnabled() ? "Disable" : "Enable") + " SafeWalk");
     }
 
+    private StringTextComponent getAutoSprintLabel() {
+        return new StringTextComponent((VisionClient.getAutoSprintHack().isEnabled() ? "Disable" : "Enable") + " AutoSprint");
+    }
+
+    private StringTextComponent getAutoRespawnLabel() {
+        return new StringTextComponent((VisionClient.getAutoRespawnHack().isEnabled() ? "Disable" : "Enable") + " AutoRespawn");
+    }
+
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == 0 && mouseX >= state.miscBarX && mouseX <= state.miscBarX + BUTTON_WIDTH && mouseY >= state.miscBarY && mouseY <= state.miscBarY + 20) {
@@ -368,11 +394,15 @@ public class VisionMenuScreen extends Screen {
             antiKnockbackButton.x = state.utilBarX;
             autoToolButton.x = state.utilBarX;
             safeWalkButton.x = state.utilBarX;
+            autoSprintButton.x = state.utilBarX;
+            autoRespawnButton.x = state.utilBarX;
             forceCritButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
             antiVanishButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
             antiKnockbackButton.y = state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20;
             autoToolButton.y = state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20;
             safeWalkButton.y = state.utilBarY + 100 + (int)(20 * utilDropdownProgress) - 20;
+            autoSprintButton.y = state.utilBarY + 120 + (int)(20 * utilDropdownProgress) - 20;
+            autoRespawnButton.y = state.utilBarY + 140 + (int)(20 * utilDropdownProgress) - 20;
             return true;
         }
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
@@ -463,11 +493,15 @@ public class VisionMenuScreen extends Screen {
         antiKnockbackButton.x = state.utilBarX;
         autoToolButton.x = state.utilBarX;
         safeWalkButton.x = state.utilBarX;
+        autoSprintButton.x = state.utilBarX;
+        autoRespawnButton.x = state.utilBarX;
         forceCritButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
         antiVanishButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
         antiKnockbackButton.y = state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20;
         autoToolButton.y = state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20;
         safeWalkButton.y = state.utilBarY + 100 + (int)(20 * utilDropdownProgress) - 20;
+        autoSprintButton.y = state.utilBarY + 120 + (int)(20 * utilDropdownProgress) - 20;
+        autoRespawnButton.y = state.utilBarY + 140 + (int)(20 * utilDropdownProgress) - 20;
 
         boolean vis = dropdownProgress > 0.05f;
         boolean visR = renderDropdownProgress > 0.05f;
@@ -476,7 +510,7 @@ public class VisionMenuScreen extends Screen {
         speedSettings.visible = jumpSettings.visible = flySettings.visible = jesusSettings.visible = noFallSettings.visible = vis;
         xrayButton.visible = fullBrightButton.visible = visR;
         xraySettings.visible = visR;
-        forceCritButton.visible = antiVanishButton.visible = antiKnockbackButton.visible = autoToolButton.visible = safeWalkButton.visible = visU;
+        forceCritButton.visible = antiVanishButton.visible = antiKnockbackButton.visible = autoToolButton.visible = safeWalkButton.visible = autoSprintButton.visible = autoRespawnButton.visible = visU;
         speedButton.setAlpha(dropdownProgress);
         jumpButton.setAlpha(dropdownProgress);
         flyButton.setAlpha(dropdownProgress);
@@ -496,6 +530,8 @@ public class VisionMenuScreen extends Screen {
         antiKnockbackButton.setAlpha(utilDropdownProgress);
         autoToolButton.setAlpha(utilDropdownProgress);
         safeWalkButton.setAlpha(utilDropdownProgress);
+        autoSprintButton.setAlpha(utilDropdownProgress);
+        autoRespawnButton.setAlpha(utilDropdownProgress);
 
         super.render(matrices, mouseX, mouseY, partialTicks);
     }
