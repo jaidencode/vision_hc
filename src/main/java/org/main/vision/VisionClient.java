@@ -16,6 +16,7 @@ import org.main.vision.actions.FullBrightHack;
 import org.main.vision.actions.ForceCritHack;
 import org.main.vision.actions.AntiVanishHack;
 import org.main.vision.actions.BlinkHack;
+import org.main.vision.actions.ArrowDeflectHack;
 import org.main.vision.config.HackSettings;
 
 /**
@@ -33,6 +34,7 @@ public class VisionClient {
     private static final ForceCritHack FORCECRIT_HACK = new ForceCritHack();
     private static final AntiVanishHack ANTIVANISH_HACK = new AntiVanishHack();
     private static final BlinkHack BLINK_HACK = new BlinkHack();
+    private static final ArrowDeflectHack ARROWDEFLECT_HACK = new ArrowDeflectHack();
     private static HackSettings SETTINGS;
 
     static void init() {
@@ -80,6 +82,10 @@ public class VisionClient {
         return BLINK_HACK;
     }
 
+    public static ArrowDeflectHack getArrowDeflectHack() {
+        return ARROWDEFLECT_HACK;
+    }
+
 
     public static HackSettings getSettings() {
         return SETTINGS;
@@ -123,6 +129,9 @@ public class VisionClient {
         }
         if (event.getKey() == VisionKeybind.blinkKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             BLINK_HACK.toggle();
+        }
+        if (event.getKey() == VisionKeybind.arrowDeflectKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            ARROWDEFLECT_HACK.toggle();
         }
         if (event.getKey() == VisionKeybind.menuKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
             Minecraft.getInstance().setScreen(new VisionMenuScreen());
