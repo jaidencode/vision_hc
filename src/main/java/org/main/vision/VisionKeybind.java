@@ -17,6 +17,7 @@ public class VisionKeybind {
     public static KeyBinding fullBrightKey;
     public static KeyBinding chestKey;
     public static KeyBinding blinkKey;
+    public static KeyBinding noclipKey;
     public static KeyBinding menuKey;
 
     static void register() {
@@ -29,6 +30,7 @@ public class VisionKeybind {
         fullBrightKey = new KeyBinding("key.vision.fullbright", GLFW.GLFW_KEY_APOSTROPHE, "key.categories.vision");
         chestKey = new KeyBinding("key.vision.chest", GLFW.GLFW_KEY_P, "key.categories.vision");
         blinkKey = new KeyBinding("key.vision.blink", GLFW.GLFW_KEY_O, "key.categories.vision");
+        noclipKey = new KeyBinding("key.vision.noclip", GLFW.GLFW_KEY_I, "key.categories.vision");
         menuKey = new KeyBinding("key.vision.menu", GLFW.GLFW_KEY_BACKSLASH, "key.categories.vision");
         ClientRegistry.registerKeyBinding(speedKey);
         ClientRegistry.registerKeyBinding(jumpKey);
@@ -39,6 +41,7 @@ public class VisionKeybind {
         ClientRegistry.registerKeyBinding(fullBrightKey);
         ClientRegistry.registerKeyBinding(chestKey);
         ClientRegistry.registerKeyBinding(blinkKey);
+        ClientRegistry.registerKeyBinding(noclipKey);
         ClientRegistry.registerKeyBinding(menuKey);
     }
 }

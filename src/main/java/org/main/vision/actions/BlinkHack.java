@@ -48,9 +48,26 @@ public class BlinkHack extends ActionBase {
 
     @Override
     protected void onDisable() {
-        // Begin flushing queued packets gradually. They will be sent during
-        // client ticks to avoid overwhelming the server with a sudden burst.
-        flushing = true;
+        // Remove the client-side clone immediately for responsiveness
+        ClientWorld world = Minecraft.getInstance().level;
+        if (world != null && clonePlayer != null) {
+            world.removeEntity(cloneId);
+            clonePlayer = null;
+        }
+
+        // Flush the queued packets right away. If some remain due to
+        // connection issues they will continue flushing during ticks.
+        flushQueue();
+        flushing = !queue.isEmpty();
+    }
+
+    /** Send all queued packets to the server. */
+    private void flushQueue() {
+        if (queue.isEmpty()) return;
+        NetworkManager nm = Minecraft.getInstance().getConnection().getConnection();
+        while (!queue.isEmpty()) {
+            nm.send(queue.poll());
+        }
     }
 
     /**
@@ -68,19 +85,8 @@ public class BlinkHack extends ActionBase {
         }
 
         if (flushing) {
-            NetworkManager nm = Minecraft.getInstance().getConnection().getConnection();
-            // Send a variable number of packets based on the remaining queue size
-            int batch = Math.max(1, queue.size() / 10);
-            for (int i = 0; i < batch && !queue.isEmpty(); i++) {
-                nm.send(queue.poll());
-            }
+            flushQueue();
             if (queue.isEmpty()) {
-                // Remove the clone once all packets are flushed
-                ClientWorld world = Minecraft.getInstance().level;
-                if (world != null && clonePlayer != null) {
-                    world.removeEntity(cloneId);
-                    clonePlayer = null;
-                }
                 flushing = false;
             }
         }
