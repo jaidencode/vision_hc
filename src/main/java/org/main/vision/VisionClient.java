@@ -15,7 +15,7 @@ import org.main.vision.actions.XRayHack;
 import org.main.vision.actions.FullBrightHack;
 import org.main.vision.actions.ChestInteractHack;
 import org.main.vision.actions.BlinkHack;
-import org.main.vision.actions.NoclipHack;
+import org.main.vision.actions.WallWarp;
 import org.main.vision.config.HackSettings;
 
 /**
@@ -32,7 +32,6 @@ public class VisionClient {
     private static final FullBrightHack FULLBRIGHT_HACK = new FullBrightHack();
     private static final ChestInteractHack CHEST_HACK = new ChestInteractHack();
     private static final BlinkHack BLINK_HACK = new BlinkHack();
-    private static final NoclipHack NOCLIP_HACK = new NoclipHack();
     private static HackSettings SETTINGS;
 
     static void init() {
@@ -76,9 +75,6 @@ public class VisionClient {
         return BLINK_HACK;
     }
 
-    public static NoclipHack getNoclipHack() {
-        return NOCLIP_HACK;
-    }
 
     public static HackSettings getSettings() {
         return SETTINGS;
@@ -120,8 +116,8 @@ public class VisionClient {
         if (event.getKey() == VisionKeybind.blinkKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             BLINK_HACK.toggle();
         }
-        if (event.getKey() == VisionKeybind.noclipKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
-            NOCLIP_HACK.toggle();
+        if (event.getKey() == VisionKeybind.wallWarpKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            WallWarp.warp();
         }
         if (event.getKey() == VisionKeybind.menuKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
             Minecraft.getInstance().setScreen(new VisionMenuScreen());
