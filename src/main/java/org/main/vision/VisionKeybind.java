@@ -14,6 +14,9 @@ public class VisionKeybind {
     public static KeyBinding jesusKey;
     public static KeyBinding noFallKey;
     public static KeyBinding xrayKey;
+    public static KeyBinding fullBrightKey;
+    public static KeyBinding chestKey;
+    public static KeyBinding blinkKey;
     public static KeyBinding menuKey;
 
     static void register() {
@@ -23,6 +26,9 @@ public class VisionKeybind {
         jesusKey = new KeyBinding("key.vision.jesus", GLFW.GLFW_KEY_K, "key.categories.vision");
         noFallKey = new KeyBinding("key.vision.nofall", GLFW.GLFW_KEY_L, "key.categories.vision");
         xrayKey = new KeyBinding("key.vision.xray", GLFW.GLFW_KEY_SEMICOLON, "key.categories.vision");
+        fullBrightKey = new KeyBinding("key.vision.fullbright", GLFW.GLFW_KEY_APOSTROPHE, "key.categories.vision");
+        chestKey = new KeyBinding("key.vision.chest", GLFW.GLFW_KEY_P, "key.categories.vision");
+        blinkKey = new KeyBinding("key.vision.blink", GLFW.GLFW_KEY_O, "key.categories.vision");
         menuKey = new KeyBinding("key.vision.menu", GLFW.GLFW_KEY_BACKSLASH, "key.categories.vision");
         ClientRegistry.registerKeyBinding(speedKey);
         ClientRegistry.registerKeyBinding(jumpKey);
@@ -30,6 +36,9 @@ public class VisionKeybind {
         ClientRegistry.registerKeyBinding(jesusKey);
         ClientRegistry.registerKeyBinding(noFallKey);
         ClientRegistry.registerKeyBinding(xrayKey);
+        ClientRegistry.registerKeyBinding(fullBrightKey);
+        ClientRegistry.registerKeyBinding(chestKey);
+        ClientRegistry.registerKeyBinding(blinkKey);
         ClientRegistry.registerKeyBinding(menuKey);
     }
 }

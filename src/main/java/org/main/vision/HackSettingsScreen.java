@@ -38,11 +38,14 @@ public class HackSettingsScreen extends Screen {
         field.setValue(Double.toString(originalValue));
         this.addWidget(field);
         int centerX = this.width / 2;
-        this.applyButton = this.addButton(new PurpleButton(centerX - 95, this.height / 2 + 20, 60, 20,
+        int y = this.height / 2 + 20;
+        this.applyButton = this.addButton(new PurpleButton(centerX - 60, y, 120, 20,
                 new StringTextComponent("Apply"), b -> apply()));
-        this.addButton(new PurpleButton(centerX - 30, this.height / 2 + 20, 60, 20,
+        y += 24;
+        this.addButton(new PurpleButton(centerX - 60, y, 120, 20,
                 new StringTextComponent("Reset"), b -> reset()));
-        this.addButton(new PurpleButton(centerX + 35, this.height / 2 + 20, 60, 20,
+        y += 24;
+        this.addButton(new PurpleButton(centerX - 60, y, 120, 20,
                 new StringTextComponent("Back"), b -> onClose()));
     }
 

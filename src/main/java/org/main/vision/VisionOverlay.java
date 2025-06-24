@@ -54,5 +54,23 @@ public class VisionOverlay {
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
         }
+        if (VisionClient.getFullBrightHack().isEnabled()) {
+            String text = "FullBright";
+            int w = mc.font.width(text);
+            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
+            y += mc.font.lineHeight;
+        }
+        if (VisionClient.getBlinkHack().isEnabled()) {
+            String text = "Blink";
+            int w = mc.font.width(text);
+            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
+            y += mc.font.lineHeight;
+        }
+        if (VisionClient.getChestHack().isEnabled()) {
+            String text = "ChestInteract";
+            int w = mc.font.width(text);
+            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
+            y += mc.font.lineHeight;
+        }
     }
 }

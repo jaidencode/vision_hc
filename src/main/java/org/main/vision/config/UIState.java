@@ -16,6 +16,15 @@ public class UIState {
     public int miscBarY = 10;
     public boolean hacksExpanded = false;
 
+    // Additional bars for categorizing hacks
+    public int renderBarX = 120;
+    public int renderBarY = 10;
+    public boolean renderExpanded = false;
+
+    public int utilBarX = 230;
+    public int utilBarY = 10;
+    public boolean utilExpanded = false;
+
     /** Load state from disk. */
     public static UIState load() {
         if (Files.exists(FILE)) {

@@ -12,6 +12,9 @@ import org.main.vision.actions.FlyHack;
 import org.main.vision.actions.JesusHack;
 import org.main.vision.actions.NoFallHack;
 import org.main.vision.actions.XRayHack;
+import org.main.vision.actions.FullBrightHack;
+import org.main.vision.actions.ChestInteractHack;
+import org.main.vision.actions.BlinkHack;
 import org.main.vision.config.HackSettings;
 
 /**
@@ -25,6 +28,9 @@ public class VisionClient {
     private static final JesusHack JESUS_HACK = new JesusHack();
     private static final NoFallHack NOFALL_HACK = new NoFallHack();
     private static final XRayHack XRAY_HACK = new XRayHack();
+    private static final FullBrightHack FULLBRIGHT_HACK = new FullBrightHack();
+    private static final ChestInteractHack CHEST_HACK = new ChestInteractHack();
+    private static final BlinkHack BLINK_HACK = new BlinkHack();
     private static HackSettings SETTINGS;
 
     static void init() {
@@ -54,6 +60,18 @@ public class VisionClient {
 
     public static XRayHack getXRayHack() {
         return XRAY_HACK;
+    }
+
+    public static FullBrightHack getFullBrightHack() {
+        return FULLBRIGHT_HACK;
+    }
+
+    public static ChestInteractHack getChestHack() {
+        return CHEST_HACK;
+    }
+
+    public static BlinkHack getBlinkHack() {
+        return BLINK_HACK;
     }
 
     public static HackSettings getSettings() {
@@ -86,6 +104,15 @@ public class VisionClient {
         }
         if (event.getKey() == VisionKeybind.xrayKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             XRAY_HACK.toggle();
+        }
+        if (event.getKey() == VisionKeybind.fullBrightKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            FULLBRIGHT_HACK.toggle();
+        }
+        if (event.getKey() == VisionKeybind.chestKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            CHEST_HACK.toggle();
+        }
+        if (event.getKey() == VisionKeybind.blinkKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            BLINK_HACK.toggle();
         }
         if (event.getKey() == VisionKeybind.menuKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
             Minecraft.getInstance().setScreen(new VisionMenuScreen());
