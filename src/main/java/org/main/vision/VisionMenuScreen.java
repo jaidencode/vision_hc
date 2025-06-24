@@ -31,7 +31,9 @@ public class VisionMenuScreen extends Screen {
     private PurpleButton forceCritButton;
     private PurpleButton antiVanishButton;
     private PurpleButton blinkButton;
-    private PurpleButton arrowDeflectButton;
+    private PurpleButton antiKnockbackButton;
+    private PurpleButton reachButton;
+    private PurpleButton reachSettings;
     private static final int BUTTON_WIDTH = 100;
     private static final int BUTTON_HEIGHT = 20;
     private static final int BAR_WIDTH = BUTTON_WIDTH + 25;
@@ -115,10 +117,14 @@ public class VisionMenuScreen extends Screen {
                 getForceCritLabel(), b -> toggleForceCrit()));
         this.antiVanishButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20, width, height,
                 getAntiVanishLabel(), b -> toggleAntiVanish()));
-        this.arrowDeflectButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20, width, height,
-                getArrowDeflectLabel(), b -> toggleArrowDeflect()));
+        this.antiKnockbackButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20, width, height,
+                getAntiKnockbackLabel(), b -> toggleAntiKnockback()));
+        this.reachButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20, width, height,
+                getReachLabel(), b -> toggleReach()));
+        this.reachSettings = addButton(new PurpleButton(state.utilBarX + width + 5, state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20, 20, height,
+                new StringTextComponent("\u2699"), b -> openReachSettings()));
 
-        forceCritButton.visible = antiVanishButton.visible = arrowDeflectButton.visible = utilDropdownProgress > 0.05f;
+        forceCritButton.visible = antiVanishButton.visible = antiKnockbackButton.visible = reachButton.visible = reachSettings.visible = utilDropdownProgress > 0.05f;
     }
 
     private void toggleSpeed() {
@@ -182,9 +188,15 @@ public class VisionMenuScreen extends Screen {
         state.save();
     }
 
-    private void toggleArrowDeflect() {
-        VisionClient.getArrowDeflectHack().toggle();
-        arrowDeflectButton.setMessage(getArrowDeflectLabel());
+    private void toggleAntiKnockback() {
+        VisionClient.getAntiKnockbackHack().toggle();
+        antiKnockbackButton.setMessage(getAntiKnockbackLabel());
+        state.save();
+    }
+
+    private void toggleReach() {
+        VisionClient.getReachHack().toggle();
+        reachButton.setMessage(getReachLabel());
         state.save();
     }
 
@@ -214,6 +226,11 @@ public class VisionMenuScreen extends Screen {
 
     private void openXRaySettings() {
         this.minecraft.setScreen(new XRaySettingsScreen(this));
+    }
+
+    private void openReachSettings() {
+        this.minecraft.setScreen(new HackSettingsScreen(this, "Reach", () -> VisionClient.getSettings().reachDistance,
+                v -> {VisionClient.getSettings().reachDistance = v;}, VisionClient::saveSettings, 6.0D));
     }
 
 
@@ -258,8 +275,12 @@ public class VisionMenuScreen extends Screen {
         return new StringTextComponent((VisionClient.getAntiVanishHack().isEnabled() ? "Disable" : "Enable") + " AntiVanish");
     }
 
-    private StringTextComponent getArrowDeflectLabel() {
-        return new StringTextComponent((VisionClient.getArrowDeflectHack().isEnabled() ? "Disable" : "Enable") + " ArrowDeflect");
+    private StringTextComponent getAntiKnockbackLabel() {
+        return new StringTextComponent((VisionClient.getAntiKnockbackHack().isEnabled() ? "Disable" : "Enable") + " AntiKnockback");
+    }
+
+    private StringTextComponent getReachLabel() {
+        return new StringTextComponent((VisionClient.getReachHack().isEnabled() ? "Disable" : "Enable") + " Reach");
     }
 
     @Override
@@ -337,10 +358,14 @@ public class VisionMenuScreen extends Screen {
             state.utilBarY = (int)mouseY - utilDragOffsetY;
             forceCritButton.x = state.utilBarX;
             antiVanishButton.x = state.utilBarX;
-            arrowDeflectButton.x = state.utilBarX;
+            antiKnockbackButton.x = state.utilBarX;
+            reachButton.x = state.utilBarX;
+            reachSettings.x = state.utilBarX + BUTTON_WIDTH + 5;
             forceCritButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
             antiVanishButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
-            arrowDeflectButton.y = state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20;
+            antiKnockbackButton.y = state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20;
+            reachButton.y = state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20;
+            reachSettings.y = reachButton.y;
             return true;
         }
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
@@ -428,10 +453,14 @@ public class VisionMenuScreen extends Screen {
         xraySettings.y = xrayButton.y;
         forceCritButton.x = state.utilBarX;
         antiVanishButton.x = state.utilBarX;
-        arrowDeflectButton.x = state.utilBarX;
+        antiKnockbackButton.x = state.utilBarX;
+        reachButton.x = state.utilBarX;
+        reachSettings.x = state.utilBarX + BUTTON_WIDTH + 5;
         forceCritButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
         antiVanishButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
-        arrowDeflectButton.y = state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20;
+        antiKnockbackButton.y = state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20;
+        reachButton.y = state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20;
+        reachSettings.y = reachButton.y;
 
         boolean vis = dropdownProgress > 0.05f;
         boolean visR = renderDropdownProgress > 0.05f;
@@ -440,7 +469,7 @@ public class VisionMenuScreen extends Screen {
         speedSettings.visible = jumpSettings.visible = flySettings.visible = jesusSettings.visible = noFallSettings.visible = vis;
         xrayButton.visible = fullBrightButton.visible = visR;
         xraySettings.visible = visR;
-        forceCritButton.visible = antiVanishButton.visible = arrowDeflectButton.visible = visU;
+        forceCritButton.visible = antiVanishButton.visible = antiKnockbackButton.visible = reachButton.visible = reachSettings.visible = visU;
         speedButton.setAlpha(dropdownProgress);
         jumpButton.setAlpha(dropdownProgress);
         flyButton.setAlpha(dropdownProgress);
@@ -457,7 +486,9 @@ public class VisionMenuScreen extends Screen {
         xraySettings.setAlpha(renderDropdownProgress);
         forceCritButton.setAlpha(utilDropdownProgress);
         antiVanishButton.setAlpha(utilDropdownProgress);
-        arrowDeflectButton.setAlpha(utilDropdownProgress);
+        antiKnockbackButton.setAlpha(utilDropdownProgress);
+        reachButton.setAlpha(utilDropdownProgress);
+        reachSettings.setAlpha(utilDropdownProgress);
 
         super.render(matrices, mouseX, mouseY, partialTicks);
     }
