@@ -49,4 +49,38 @@ public class UsernameOverride {
         } catch (Exception ignored) {
         }
     }
+
+    /**
+     * Modify incoming packets to ensure the server acknowledges the spoofed
+     * username when login succeeds.
+     */
+    public static void handleIncomingPacket(IPacket<?> packet) {
+        if (!(packet instanceof net.minecraft.network.login.server.SLoginSuccessPacket)) return;
+
+        HackSettings cfg = VisionClient.getSettings();
+        if (!cfg.usernameOverrideEnabled) return;
+
+        String overrideName = cfg.customUsername;
+        if (overrideName == null || overrideName.isEmpty()) return;
+
+        try {
+            Field f = ObfuscationReflectionHelper.findField(net.minecraft.network.login.server.SLoginSuccessPacket.class, "field_149602_a");
+            f.setAccessible(true);
+            GameProfile profile = (GameProfile) f.get(packet);
+            if (profile != null && !overrideName.equals(profile.getName())) {
+                GameProfile replaced = new GameProfile(profile.getId(), overrideName);
+                f.set(packet, replaced);
+                Field userField = ObfuscationReflectionHelper.findField(Minecraft.class, "field_71449_j");
+                userField.setAccessible(true);
+                Object user = userField.get(Minecraft.getInstance());
+                if (user != null) {
+                    @SuppressWarnings("unchecked")
+                    Field nameField = ObfuscationReflectionHelper.findField((Class<Object>) user.getClass(), "field_152554_a");
+                    nameField.setAccessible(true);
+                    nameField.set(user, overrideName);
+                }
+            }
+        } catch (Exception ignored) {
+        }
+    }
 }
