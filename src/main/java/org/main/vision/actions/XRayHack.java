@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.block.Block;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import org.lwjgl.opengl.GL11;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -60,13 +61,10 @@ public class XRayHack extends ActionBase {
             }
         }
 
-        // Render outlines with depth testing and culling disabled so they remain visible through walls
-        RenderSystem.disableDepthTest();
-        RenderSystem.disableCull();
-        RenderSystem.lineWidth(2.0F);
-        RenderSystem.depthMask(false);
         MatrixStack ms = event.getMatrixStack();
         IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+
+        // First render using Minecraft's normal line renderer with depth testing
         for (BlockPos pos : highlightCache) {
             AxisAlignedBB box = world.getBlockState(pos).getShape(world, pos).bounds()
                     .move(pos).inflate(0.002D)
@@ -75,6 +73,19 @@ public class XRayHack extends ActionBase {
             drawOutline(ms, buffer, box, col);
         }
         buffer.endBatch(RenderType.lines());
+
+        // Then render outlines again with depth disabled so they show through walls
+        RenderSystem.disableDepthTest();
+        RenderSystem.disableCull();
+        RenderSystem.lineWidth(2.0F);
+        RenderSystem.depthMask(false);
+        for (BlockPos pos : highlightCache) {
+            AxisAlignedBB box = world.getBlockState(pos).getShape(world, pos).bounds()
+                    .move(pos).inflate(0.002D)
+                    .move(-cam.x, -cam.y, -cam.z);
+            float[] col = getColor(world.getBlockState(pos).getBlock());
+            drawOutlineGL(ms, box, col);
+        }
         RenderSystem.depthMask(true);
         RenderSystem.lineWidth(1.0F);
         RenderSystem.enableCull();
@@ -85,5 +96,58 @@ public class XRayHack extends ActionBase {
     private static void drawOutline(MatrixStack ms, IRenderTypeBuffer buffer, AxisAlignedBB box, float[] color) {
         IVertexBuilder builder = buffer.getBuffer(RenderType.lines());
         WorldRenderer.renderLineBox(ms, builder, box, color[0], color[1], color[2], 1.0F);
+    }
+
+    /**
+     * Draw the given bounding box using raw OpenGL so that depth testing can
+     * be disabled, keeping the outline visible through walls.
+     */
+    private static void drawOutlineGL(MatrixStack ms, AxisAlignedBB box, float[] color) {
+        RenderSystem.pushMatrix();
+        RenderSystem.multMatrix(ms.last().pose());
+        GL11.glColor4f(color[0], color[1], color[2], 1.0f);
+        GL11.glBegin(GL11.GL_LINES);
+
+        // bottom rectangle
+        GL11.glVertex3d(box.minX, box.minY, box.minZ);
+        GL11.glVertex3d(box.maxX, box.minY, box.minZ);
+
+        GL11.glVertex3d(box.maxX, box.minY, box.minZ);
+        GL11.glVertex3d(box.maxX, box.minY, box.maxZ);
+
+        GL11.glVertex3d(box.maxX, box.minY, box.maxZ);
+        GL11.glVertex3d(box.minX, box.minY, box.maxZ);
+
+        GL11.glVertex3d(box.minX, box.minY, box.maxZ);
+        GL11.glVertex3d(box.minX, box.minY, box.minZ);
+
+        // top rectangle
+        GL11.glVertex3d(box.minX, box.maxY, box.minZ);
+        GL11.glVertex3d(box.maxX, box.maxY, box.minZ);
+
+        GL11.glVertex3d(box.maxX, box.maxY, box.minZ);
+        GL11.glVertex3d(box.maxX, box.maxY, box.maxZ);
+
+        GL11.glVertex3d(box.maxX, box.maxY, box.maxZ);
+        GL11.glVertex3d(box.minX, box.maxY, box.maxZ);
+
+        GL11.glVertex3d(box.minX, box.maxY, box.maxZ);
+        GL11.glVertex3d(box.minX, box.maxY, box.minZ);
+
+        // vertical lines
+        GL11.glVertex3d(box.minX, box.minY, box.minZ);
+        GL11.glVertex3d(box.minX, box.maxY, box.minZ);
+
+        GL11.glVertex3d(box.maxX, box.minY, box.minZ);
+        GL11.glVertex3d(box.maxX, box.maxY, box.minZ);
+
+        GL11.glVertex3d(box.maxX, box.minY, box.maxZ);
+        GL11.glVertex3d(box.maxX, box.maxY, box.maxZ);
+
+        GL11.glVertex3d(box.minX, box.minY, box.maxZ);
+        GL11.glVertex3d(box.minX, box.maxY, box.maxZ);
+
+        GL11.glEnd();
+        RenderSystem.popMatrix();
     }
 }
