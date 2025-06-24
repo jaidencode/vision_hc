@@ -10,8 +10,6 @@ import org.main.vision.actions.SpeedHack;
 import org.main.vision.VisionClient;
 import org.main.vision.HackSettingsScreen;
 import org.main.vision.SpeedSettingsScreen;
-import org.main.vision.config.HackSettings;
-import org.main.vision.UsernameSettingsScreen;
 
 /** Simple in-game menu with a draggable bar and dropdown for hacks. */
 public class VisionMenuScreen extends Screen {
@@ -30,10 +28,8 @@ public class VisionMenuScreen extends Screen {
     private PurpleButton noFallSettings;
     private PurpleButton xraySettings;
     private PurpleButton fullBrightButton;
-    private PurpleButton chestButton;
+    private PurpleButton noDrownButton;
     private PurpleButton blinkButton;
-    private PurpleButton usernameButton;
-    private PurpleButton usernameSettings;
     private static final int BUTTON_WIDTH = 100;
     private static final int BUTTON_HEIGHT = 20;
     private static final int BAR_WIDTH = BUTTON_WIDTH + 25;
@@ -113,15 +109,10 @@ public class VisionMenuScreen extends Screen {
         xraySettings.visible = renderDropdownProgress > 0.05f;
 
         // Utility bar
-        this.chestButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20, width, height,
-                getChestLabel(), b -> toggleChest()));
-        this.usernameButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20, width, height,
-                getUsernameLabel(), b -> toggleUsername()));
-        this.usernameSettings = addButton(new PurpleButton(state.utilBarX + width + 5, state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20, 20, height,
-                new StringTextComponent("\u2699"), b -> openUsernameSettings()));
+        this.noDrownButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20, width, height,
+                getNoDrownLabel(), b -> toggleNoDrown()));
 
-        chestButton.visible = usernameButton.visible = utilDropdownProgress > 0.05f;
-        usernameSettings.visible = utilDropdownProgress > 0.05f;
+        noDrownButton.visible = utilDropdownProgress > 0.05f;
     }
 
     private void toggleSpeed() {
@@ -173,17 +164,10 @@ public class VisionMenuScreen extends Screen {
         state.save();
     }
 
-    private void toggleChest() {
-        VisionClient.getChestHack().toggle();
-        chestButton.setMessage(getChestLabel());
+    private void toggleNoDrown() {
+        VisionClient.getNoDrownHack().toggle();
+        noDrownButton.setMessage(getNoDrownLabel());
         state.save();
-    }
-
-    private void toggleUsername() {
-        HackSettings cfg = VisionClient.getSettings();
-        cfg.usernameOverrideEnabled = !cfg.usernameOverrideEnabled;
-        usernameButton.setMessage(getUsernameLabel());
-        VisionClient.saveSettings();
     }
 
     private void openSpeedSettings() {
@@ -214,9 +198,6 @@ public class VisionMenuScreen extends Screen {
         this.minecraft.setScreen(new XRaySettingsScreen(this));
     }
 
-    private void openUsernameSettings() {
-        this.minecraft.setScreen(new UsernameSettingsScreen(this));
-    }
 
     private StringTextComponent getSpeedLabel() {
         return new StringTextComponent((VisionClient.getSpeedHack().isEnabled() ? "Disable" : "Enable") + " Speed");
@@ -251,13 +232,8 @@ public class VisionMenuScreen extends Screen {
         return new StringTextComponent((VisionClient.getFullBrightHack().isEnabled() ? "Disable" : "Enable") + " FullBright");
     }
 
-    private StringTextComponent getUsernameLabel() {
-        boolean enabled = VisionClient.getSettings().usernameOverrideEnabled;
-        return new StringTextComponent((enabled ? "Disable" : "Enable") + " CustomName");
-    }
-
-    private StringTextComponent getChestLabel() {
-        return new StringTextComponent((VisionClient.getChestHack().isEnabled() ? "Disable" : "Enable") + " ChestLoot");
+    private StringTextComponent getNoDrownLabel() {
+        return new StringTextComponent((VisionClient.getNoDrownHack().isEnabled() ? "Disable" : "Enable") + " NoDrown");
     }
 
     @Override
@@ -333,12 +309,8 @@ public class VisionMenuScreen extends Screen {
         if (draggingUtil) {
             state.utilBarX = (int)mouseX - utilDragOffsetX;
             state.utilBarY = (int)mouseY - utilDragOffsetY;
-            chestButton.x = state.utilBarX;
-            chestButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
-            usernameButton.x = state.utilBarX;
-            usernameButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
-            usernameSettings.x = state.utilBarX + BUTTON_WIDTH + 5;
-            usernameSettings.y = usernameButton.y;
+            noDrownButton.x = state.utilBarX;
+            noDrownButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
             return true;
         }
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
@@ -424,12 +396,8 @@ public class VisionMenuScreen extends Screen {
         xrayButton.y = state.renderBarY + 20 + (int)(20 * renderDropdownProgress) - 20;
         fullBrightButton.y = state.renderBarY + 40 + (int)(20 * renderDropdownProgress) - 20;
         xraySettings.y = xrayButton.y;
-        chestButton.x = state.utilBarX;
-        chestButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
-        usernameButton.x = state.utilBarX;
-        usernameButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
-        usernameSettings.x = state.utilBarX + BUTTON_WIDTH + 5;
-        usernameSettings.y = usernameButton.y;
+        noDrownButton.x = state.utilBarX;
+        noDrownButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
 
         boolean vis = dropdownProgress > 0.05f;
         boolean visR = renderDropdownProgress > 0.05f;
@@ -438,8 +406,7 @@ public class VisionMenuScreen extends Screen {
         speedSettings.visible = jumpSettings.visible = flySettings.visible = jesusSettings.visible = noFallSettings.visible = vis;
         xrayButton.visible = fullBrightButton.visible = visR;
         xraySettings.visible = visR;
-        chestButton.visible = usernameButton.visible = visU;
-        usernameSettings.visible = visU;
+        noDrownButton.visible = visU;
         speedButton.setAlpha(dropdownProgress);
         jumpButton.setAlpha(dropdownProgress);
         flyButton.setAlpha(dropdownProgress);
@@ -454,9 +421,7 @@ public class VisionMenuScreen extends Screen {
         xrayButton.setAlpha(renderDropdownProgress);
         fullBrightButton.setAlpha(renderDropdownProgress);
         xraySettings.setAlpha(renderDropdownProgress);
-        chestButton.setAlpha(utilDropdownProgress);
-        usernameButton.setAlpha(utilDropdownProgress);
-        usernameSettings.setAlpha(utilDropdownProgress);
+        noDrownButton.setAlpha(utilDropdownProgress);
 
         super.render(matrices, mouseX, mouseY, partialTicks);
     }

@@ -15,11 +15,6 @@ public class MixinNetworkManager {
             ci.cancel();
             return;
         }
-        org.main.vision.UsernameOverride.handleOutgoingPacket(packet);
     }
 
-    @Inject(method = "channelRead0", at = @At("HEAD"))
-    private void vision$channelRead0(io.netty.channel.ChannelHandlerContext ctx, IPacket<?> packet, CallbackInfo ci) {
-        org.main.vision.UsernameOverride.handleIncomingPacket(packet);
-    }
 }
