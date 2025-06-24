@@ -84,20 +84,8 @@ public class VisionOverlay {
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
         }
-        if (VisionClient.getAutoToolHack().isEnabled()) {
-            String text = "AutoTool";
-            int w = mc.font.width(text);
-            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
-            y += mc.font.lineHeight;
-        }
-        if (VisionClient.getStepHack().isEnabled()) {
-            String text = "Step";
-            int w = mc.font.width(text);
-            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
-            y += mc.font.lineHeight;
-        }
-        if (VisionClient.getReachHack().isEnabled()) {
-            String text = "Reach";
+        if (VisionClient.getAntiCheatHack().isEnabled()) {
+            String text = "AntiCheat";
             int w = mc.font.width(text);
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
