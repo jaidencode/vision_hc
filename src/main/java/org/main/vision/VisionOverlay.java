@@ -84,8 +84,14 @@ public class VisionOverlay {
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
         }
-        if (VisionClient.getAntiCheatHack().isEnabled()) {
-            String text = "AntiCheat";
+        if (VisionClient.getAutoToolHack().isEnabled()) {
+            String text = "AutoTool";
+            int w = mc.font.width(text);
+            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
+            y += mc.font.lineHeight;
+        }
+        if (VisionClient.getSafeWalkHack().isEnabled()) {
+            String text = "SafeWalk";
             int w = mc.font.width(text);
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;

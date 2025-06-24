@@ -19,7 +19,8 @@ public class VisionKeybind {
     public static KeyBinding antiVanishKey;
     public static KeyBinding blinkKey;
     public static KeyBinding antiKnockbackKey;
-    public static KeyBinding antiCheatKey;
+    public static KeyBinding autoToolKey;
+    public static KeyBinding safeWalkKey;
     public static KeyBinding menuKey;
 
     static void register() {
@@ -34,7 +35,8 @@ public class VisionKeybind {
         antiVanishKey = new KeyBinding("key.vision.antivanish", GLFW.GLFW_KEY_I, "key.categories.vision");
         blinkKey = new KeyBinding("key.vision.blink", GLFW.GLFW_KEY_O, "key.categories.vision");
         antiKnockbackKey = new KeyBinding("key.vision.antiknockback", GLFW.GLFW_KEY_M, "key.categories.vision");
-        antiCheatKey = new KeyBinding("key.vision.anticheat", GLFW.GLFW_KEY_N, "key.categories.vision");
+        autoToolKey = new KeyBinding("key.vision.autotool", GLFW.GLFW_KEY_B, "key.categories.vision");
+        safeWalkKey = new KeyBinding("key.vision.safewalk", GLFW.GLFW_KEY_V, "key.categories.vision");
         menuKey = new KeyBinding("key.vision.menu", GLFW.GLFW_KEY_BACKSLASH, "key.categories.vision");
         ClientRegistry.registerKeyBinding(speedKey);
         ClientRegistry.registerKeyBinding(jumpKey);
@@ -47,7 +49,8 @@ public class VisionKeybind {
         ClientRegistry.registerKeyBinding(antiVanishKey);
         ClientRegistry.registerKeyBinding(blinkKey);
         ClientRegistry.registerKeyBinding(antiKnockbackKey);
-        ClientRegistry.registerKeyBinding(antiCheatKey);
+        ClientRegistry.registerKeyBinding(autoToolKey);
+        ClientRegistry.registerKeyBinding(safeWalkKey);
         ClientRegistry.registerKeyBinding(menuKey);
     }
 }

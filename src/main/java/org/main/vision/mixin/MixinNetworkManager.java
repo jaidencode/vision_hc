@@ -2,6 +2,7 @@ package org.main.vision.mixin;
 
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.IPacket;
+import io.netty.channel.ChannelHandlerContext;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,6 +16,16 @@ public class MixinNetworkManager {
             ci.cancel();
             return;
         }
+    }
+
+    @Inject(method = "send", at = @At("TAIL"))
+    private void vision$predictSend(IPacket<?> packet, CallbackInfo ci) {
+        org.main.vision.network.PacketPredictor.getInstance().onSend(packet);
+    }
+
+    @Inject(method = "channelRead0", at = @At("HEAD"))
+    private void vision$predictReceive(ChannelHandlerContext ctx, IPacket<?> packet, CallbackInfo ci) {
+        org.main.vision.network.PacketPredictor.getInstance().onReceive(packet);
     }
 
 }
