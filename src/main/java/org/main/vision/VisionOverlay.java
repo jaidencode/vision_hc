@@ -66,6 +66,12 @@ public class VisionOverlay {
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
         }
+        if (VisionClient.getNoclipHack().isEnabled()) {
+            String text = "Noclip";
+            int w = mc.font.width(text);
+            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
+            y += mc.font.lineHeight;
+        }
         if (VisionClient.getChestHack().isEnabled()) {
             String text = "ChestInteract";
             int w = mc.font.width(text);
