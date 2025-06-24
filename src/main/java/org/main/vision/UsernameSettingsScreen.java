@@ -23,6 +23,8 @@ public class UsernameSettingsScreen extends Screen {
 
     @Override
     protected void init() {
+        this.buttons.clear();
+        this.children.clear();
         HackSettings cfg = VisionClient.getSettings();
         int centerX = this.width / 2;
         int centerY = this.height / 2;
