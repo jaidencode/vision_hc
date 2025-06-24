@@ -5,6 +5,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.block.Block;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -21,6 +23,23 @@ import java.util.List;
  */
 public class XRayHack extends ActionBase {
     private final List<BlockPos> highlightCache = new ArrayList<>();
+    private static final java.util.Map<String, float[]> COLOR_MAP = new java.util.HashMap<>();
+
+    static {
+        COLOR_MAP.put("minecraft:diamond_ore", new float[]{0.0f, 0.7f, 1.0f});
+        COLOR_MAP.put("minecraft:emerald_ore", new float[]{0.0f, 1.0f, 0.0f});
+        COLOR_MAP.put("minecraft:gold_ore", new float[]{1.0f, 0.84f, 0.0f});
+        COLOR_MAP.put("minecraft:iron_ore", new float[]{0.8f, 0.8f, 0.8f});
+        COLOR_MAP.put("minecraft:coal_ore", new float[]{0.1f, 0.1f, 0.1f});
+        COLOR_MAP.put("minecraft:lapis_ore", new float[]{0.25f, 0.5f, 1.0f});
+        COLOR_MAP.put("minecraft:redstone_ore", new float[]{1.0f, 0.0f, 0.0f});
+        COLOR_MAP.put("minecraft:ancient_debris", new float[]{0.55f, 0.27f, 0.07f});
+    }
+
+    private static float[] getColor(Block block) {
+        if (block == null || block.getRegistryName() == null) return new float[]{1.0f, 1.0f, 1.0f};
+        return COLOR_MAP.getOrDefault(block.getRegistryName().toString(), new float[]{1.0f, 1.0f, 1.0f});
+    }
 
     @SubscribeEvent
     public void onRenderWorldLast(RenderWorldLastEvent event) {
@@ -44,14 +63,17 @@ public class XRayHack extends ActionBase {
         IRenderTypeBuffer.Impl buffer = mc.renderBuffers().bufferSource();
 
         // Render outlines with depth testing disabled so they remain visible through walls
-        com.mojang.blaze3d.systems.RenderSystem.disableDepthTest();
+        RenderSystem.disableDepthTest();
+        RenderSystem.depthMask(false);
         for (BlockPos pos : highlightCache) {
             AxisAlignedBB box = world.getBlockState(pos).getShape(world, pos).bounds()
                     .move(pos).inflate(0.002D)
                     .move(-cam.x, -cam.y, -cam.z);
-            WorldRenderer.renderLineBox(ms, buffer.getBuffer(RenderType.lines()), box, 0.0f, 1.0f, 0.0f, 1.0f);
+            float[] col = getColor(world.getBlockState(pos).getBlock());
+            WorldRenderer.renderLineBox(ms, buffer.getBuffer(RenderType.lines()), box, col[0], col[1], col[2], 1.0f);
         }
         buffer.endBatch(RenderType.lines());
-        com.mojang.blaze3d.systems.RenderSystem.enableDepthTest();
+        RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
     }
 }
