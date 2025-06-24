@@ -40,7 +40,9 @@ public class ArrowDeflectHack extends ActionBase {
                 player.getBoundingBox().inflate(DEFLECT_RADIUS));
 
         for (AbstractArrowEntity arrow : arrows) {
-            if (!arrow.isAlive()) continue;
+            // Ignore arrows that the server hasn't acknowledged yet to
+            // avoid sending interaction packets for invalid entities.
+            if (!arrow.isAlive() || arrow.tickCount < 5 || arrow.getId() <= 0) continue;
             Vector3d motion = arrow.getDeltaMovement();
             Vector3d toPlayer = player.position().subtract(arrow.position());
             if (motion.dot(toPlayer) <= 0) continue; // Not heading toward the player
