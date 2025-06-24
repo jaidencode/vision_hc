@@ -32,7 +32,8 @@ public class VisionMenuScreen extends Screen {
     private PurpleButton antiVanishButton;
     private PurpleButton blinkButton;
     private PurpleButton antiKnockbackButton;
-    private PurpleButton antiCheatButton;
+    private PurpleButton autoToolButton;
+    private PurpleButton safeWalkButton;
     private static final int BUTTON_WIDTH = 100;
     private static final int BUTTON_HEIGHT = 20;
     private static final int BAR_WIDTH = BUTTON_WIDTH + 25;
@@ -118,10 +119,12 @@ public class VisionMenuScreen extends Screen {
                 getAntiVanishLabel(), b -> toggleAntiVanish()));
         this.antiKnockbackButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20, width, height,
                 getAntiKnockbackLabel(), b -> toggleAntiKnockback()));
-        this.antiCheatButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20, width, height,
-                getAntiCheatLabel(), b -> toggleAntiCheat()));
+        this.autoToolButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20, width, height,
+                getAutoToolLabel(), b -> toggleAutoTool()));
+        this.safeWalkButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 100 + (int)(20 * utilDropdownProgress) - 20, width, height,
+                getSafeWalkLabel(), b -> toggleSafeWalk()));
 
-        forceCritButton.visible = antiVanishButton.visible = antiKnockbackButton.visible = antiCheatButton.visible = utilDropdownProgress > 0.05f;
+        forceCritButton.visible = antiVanishButton.visible = antiKnockbackButton.visible = autoToolButton.visible = safeWalkButton.visible = utilDropdownProgress > 0.05f;
     }
 
     private void toggleSpeed() {
@@ -191,9 +194,15 @@ public class VisionMenuScreen extends Screen {
         state.save();
     }
 
-    private void toggleAntiCheat() {
-        VisionClient.getAntiCheatHack().toggle();
-        antiCheatButton.setMessage(getAntiCheatLabel());
+    private void toggleAutoTool() {
+        VisionClient.getAutoToolHack().toggle();
+        autoToolButton.setMessage(getAutoToolLabel());
+        state.save();
+    }
+
+    private void toggleSafeWalk() {
+        VisionClient.getSafeWalkHack().toggle();
+        safeWalkButton.setMessage(getSafeWalkLabel());
         state.save();
     }
 
@@ -273,8 +282,12 @@ public class VisionMenuScreen extends Screen {
         return new StringTextComponent((VisionClient.getAntiKnockbackHack().isEnabled() ? "Disable" : "Enable") + " AntiKnockback");
     }
 
-    private StringTextComponent getAntiCheatLabel() {
-        return new StringTextComponent((VisionClient.getAntiCheatHack().isEnabled() ? "Disable" : "Enable") + " AntiCheat");
+    private StringTextComponent getAutoToolLabel() {
+        return new StringTextComponent((VisionClient.getAutoToolHack().isEnabled() ? "Disable" : "Enable") + " AutoTool");
+    }
+
+    private StringTextComponent getSafeWalkLabel() {
+        return new StringTextComponent((VisionClient.getSafeWalkHack().isEnabled() ? "Disable" : "Enable") + " SafeWalk");
     }
 
     @Override
@@ -353,11 +366,13 @@ public class VisionMenuScreen extends Screen {
             forceCritButton.x = state.utilBarX;
             antiVanishButton.x = state.utilBarX;
             antiKnockbackButton.x = state.utilBarX;
-            antiCheatButton.x = state.utilBarX;
+            autoToolButton.x = state.utilBarX;
+            safeWalkButton.x = state.utilBarX;
             forceCritButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
             antiVanishButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
             antiKnockbackButton.y = state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20;
-            antiCheatButton.y = state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20;
+            autoToolButton.y = state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20;
+            safeWalkButton.y = state.utilBarY + 100 + (int)(20 * utilDropdownProgress) - 20;
             return true;
         }
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
@@ -446,11 +461,13 @@ public class VisionMenuScreen extends Screen {
         forceCritButton.x = state.utilBarX;
         antiVanishButton.x = state.utilBarX;
         antiKnockbackButton.x = state.utilBarX;
-        antiCheatButton.x = state.utilBarX;
+        autoToolButton.x = state.utilBarX;
+        safeWalkButton.x = state.utilBarX;
         forceCritButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
         antiVanishButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
         antiKnockbackButton.y = state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20;
-        antiCheatButton.y = state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20;
+        autoToolButton.y = state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20;
+        safeWalkButton.y = state.utilBarY + 100 + (int)(20 * utilDropdownProgress) - 20;
 
         boolean vis = dropdownProgress > 0.05f;
         boolean visR = renderDropdownProgress > 0.05f;
@@ -459,7 +476,7 @@ public class VisionMenuScreen extends Screen {
         speedSettings.visible = jumpSettings.visible = flySettings.visible = jesusSettings.visible = noFallSettings.visible = vis;
         xrayButton.visible = fullBrightButton.visible = visR;
         xraySettings.visible = visR;
-        forceCritButton.visible = antiVanishButton.visible = antiKnockbackButton.visible = antiCheatButton.visible = visU;
+        forceCritButton.visible = antiVanishButton.visible = antiKnockbackButton.visible = autoToolButton.visible = safeWalkButton.visible = visU;
         speedButton.setAlpha(dropdownProgress);
         jumpButton.setAlpha(dropdownProgress);
         flyButton.setAlpha(dropdownProgress);
@@ -477,7 +494,8 @@ public class VisionMenuScreen extends Screen {
         forceCritButton.setAlpha(utilDropdownProgress);
         antiVanishButton.setAlpha(utilDropdownProgress);
         antiKnockbackButton.setAlpha(utilDropdownProgress);
-        antiCheatButton.setAlpha(utilDropdownProgress);
+        autoToolButton.setAlpha(utilDropdownProgress);
+        safeWalkButton.setAlpha(utilDropdownProgress);
 
         super.render(matrices, mouseX, mouseY, partialTicks);
     }
