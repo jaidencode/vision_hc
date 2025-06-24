@@ -66,8 +66,8 @@ public class VisionOverlay {
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
         }
-        if (VisionClient.getChestHack().isEnabled()) {
-            String text = "ChestInteract";
+        if (VisionClient.getNoDrownHack().isEnabled()) {
+            String text = "NoDrown";
             int w = mc.font.width(text);
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
