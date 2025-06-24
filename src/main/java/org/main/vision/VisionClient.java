@@ -17,9 +17,7 @@ import org.main.vision.actions.ForceCritHack;
 import org.main.vision.actions.AntiVanishHack;
 import org.main.vision.actions.BlinkHack;
 import org.main.vision.actions.AntiKnockbackHack;
-import org.main.vision.actions.AutoToolHack;
-import org.main.vision.actions.StepHack;
-import org.main.vision.actions.ReachHack;
+import org.main.vision.actions.AntiCheatHack;
 import org.main.vision.config.HackSettings;
 
 /**
@@ -38,9 +36,7 @@ public class VisionClient {
     private static final AntiVanishHack ANTIVANISH_HACK = new AntiVanishHack();
     private static final BlinkHack BLINK_HACK = new BlinkHack();
     private static final AntiKnockbackHack ANTIKNOCKBACK_HACK = new AntiKnockbackHack();
-    private static final AutoToolHack AUTOTOOL_HACK = new AutoToolHack();
-    private static final StepHack STEP_HACK = new StepHack();
-    private static final ReachHack REACH_HACK = new ReachHack();
+    private static final AntiCheatHack ANTICHEAT_HACK = new AntiCheatHack();
     private static HackSettings SETTINGS;
 
     static void init() {
@@ -92,16 +88,9 @@ public class VisionClient {
         return ANTIKNOCKBACK_HACK;
     }
 
-    public static AutoToolHack getAutoToolHack() {
-        return AUTOTOOL_HACK;
-    }
 
-    public static StepHack getStepHack() {
-        return STEP_HACK;
-    }
-
-    public static ReachHack getReachHack() {
-        return REACH_HACK;
+    public static AntiCheatHack getAntiCheatHack() {
+        return ANTICHEAT_HACK;
     }
 
 
@@ -151,14 +140,8 @@ public class VisionClient {
         if (event.getKey() == VisionKeybind.antiKnockbackKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             ANTIKNOCKBACK_HACK.toggle();
         }
-        if (event.getKey() == VisionKeybind.autoToolKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
-            AUTOTOOL_HACK.toggle();
-        }
-        if (event.getKey() == VisionKeybind.stepKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
-            STEP_HACK.toggle();
-        }
-        if (event.getKey() == VisionKeybind.reachKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
-            REACH_HACK.toggle();
+        if (event.getKey() == VisionKeybind.antiCheatKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            ANTICHEAT_HACK.toggle();
         }
         if (event.getKey() == VisionKeybind.menuKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
             Minecraft.getInstance().setScreen(new VisionMenuScreen());

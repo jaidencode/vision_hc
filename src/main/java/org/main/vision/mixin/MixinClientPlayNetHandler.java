@@ -3,7 +3,6 @@ package org.main.vision.mixin;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.network.play.server.SEntityVelocityPacket;
 import net.minecraft.network.play.server.SExplosionPacket;
-import net.minecraft.network.play.server.SPlayerPositionLookPacket;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,15 +32,5 @@ public class MixinClientPlayNetHandler {
                 mc.player.setDeltaMovement(0.0D, 0.0D, 0.0D);
             }
         }
-    }
-
-    @Inject(method = "handlePlayerPosition", at = @At("HEAD"))
-    private void vision$onPosition(SPlayerPositionLookPacket packet, CallbackInfo ci) {
-        org.main.vision.net.PredictionManager.handleInbound(packet);
-    }
-
-    @Inject(method = "handleMovePlayer", at = @At("HEAD"))
-    private void vision$onPositionAlt(SPlayerPositionLookPacket packet, CallbackInfo ci) {
-        org.main.vision.net.PredictionManager.handleInbound(packet);
     }
 }
