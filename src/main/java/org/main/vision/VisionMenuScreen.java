@@ -124,22 +124,22 @@ public class VisionMenuScreen extends Screen {
 
     private void openJumpSettings() {
         this.minecraft.setScreen(new HackSettingsScreen(this, "Jump", () -> VisionClient.getSettings().jumpVelocity,
-                v -> {VisionClient.getSettings().jumpVelocity = v;}, VisionClient::saveSettings));
+                v -> {VisionClient.getSettings().jumpVelocity = v;}, VisionClient::saveSettings, 1.2D));
     }
 
     private void openFlySettings() {
         this.minecraft.setScreen(new HackSettingsScreen(this, "FlySpeed", () -> VisionClient.getSettings().flyHorizontalSpeed,
-                v -> {VisionClient.getSettings().flyHorizontalSpeed = v;}, VisionClient::saveSettings));
+                v -> {VisionClient.getSettings().flyHorizontalSpeed = v;}, VisionClient::saveSettings, 0.75D));
     }
 
     private void openJesusSettings() {
         this.minecraft.setScreen(new HackSettingsScreen(this, "Buoyancy", () -> VisionClient.getSettings().jesusBuoyancy,
-                v -> {VisionClient.getSettings().jesusBuoyancy = v;}, VisionClient::saveSettings));
+                v -> {VisionClient.getSettings().jesusBuoyancy = v;}, VisionClient::saveSettings, 0.0D));
     }
 
     private void openNoFallSettings() {
         this.minecraft.setScreen(new HackSettingsScreen(this, "Threshold", () -> VisionClient.getSettings().noFallThreshold,
-                v -> {VisionClient.getSettings().noFallThreshold = v;}, VisionClient::saveSettings));
+                v -> {VisionClient.getSettings().noFallThreshold = v;}, VisionClient::saveSettings, 2.0D));
     }
 
     private void openXRaySettings() {

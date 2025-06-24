@@ -16,6 +16,9 @@ public class XRaySettingsScreen extends Screen {
     private final Screen parent;
     private TextFieldWidget field;
     private final Map<CheckboxButton, String> options = new HashMap<>();
+    private java.util.List<String> workingBlocks = new java.util.ArrayList<>();
+    private java.util.List<String> originalBlocks = new java.util.ArrayList<>();
+    private PurpleButton applyButton;
     private static final String[] COMMON_ORES = new String[] {
             "minecraft:coal_ore", "minecraft:iron_ore", "minecraft:gold_ore",
             "minecraft:diamond_ore", "minecraft:emerald_ore", "minecraft:lapis_ore",
@@ -29,12 +32,14 @@ public class XRaySettingsScreen extends Screen {
     @Override
     protected void init() {
         HackSettings cfg = VisionClient.getSettings();
+        workingBlocks = new java.util.ArrayList<>(cfg.xrayBlocks);
+        originalBlocks = new java.util.ArrayList<>(cfg.xrayBlocks);
         int startY = this.height / 2 - 70;
         int x = this.width / 2 - 100;
         options.clear();
         for (int i = 0; i < COMMON_ORES.length; i++) {
             String id = COMMON_ORES[i];
-            CheckboxButton cb = new CheckboxButton(x, startY + i * 20, 200, 20, new StringTextComponent(id), cfg.xrayBlocks.contains(id));
+            CheckboxButton cb = new CheckboxButton(x, startY + i * 20, 200, 20, new StringTextComponent(id), workingBlocks.contains(id));
             options.put(cb, id);
             this.addButton(cb);
         }
@@ -44,19 +49,23 @@ public class XRaySettingsScreen extends Screen {
         field.setMaxLength(64);
         this.addWidget(field);
         this.addButton(new PurpleButton(x + fieldWidth + 5, startY + COMMON_ORES.length * 20 + 5, 55, 20, new StringTextComponent("Add"), b -> addCustomBlock()));
-        this.addButton(new PurpleButton(this.width / 2 - 50, this.height - 30, 100, 20, new StringTextComponent("Back"), b -> onClose()));
+        int bottomY = this.height - 30;
+        int centerX = this.width / 2;
+        this.applyButton = this.addButton(new PurpleButton(centerX - 95, bottomY, 60, 20, new StringTextComponent("Apply"), b -> apply()));
+        this.addButton(new PurpleButton(centerX - 30, bottomY, 60, 20, new StringTextComponent("Reset"), b -> reset()));
+        this.addButton(new PurpleButton(centerX + 35, bottomY, 60, 20, new StringTextComponent("Back"), b -> onClose()));
     }
 
     private void addCustomBlock() {
         String val = field.getValue().trim();
         if (!val.isEmpty()) {
-            HackSettings cfg = VisionClient.getSettings();
             for (String part : val.split("\\s*,\\s*")) {
-                if (!part.isEmpty() && !cfg.xrayBlocks.contains(part)) {
-                    cfg.xrayBlocks.add(part);
+                if (!part.isEmpty() && !workingBlocks.contains(part)) {
+                    workingBlocks.add(part);
                 }
             }
             field.setValue("");
+            applyButton.active = true;
         }
     }
 
@@ -66,20 +75,50 @@ public class XRaySettingsScreen extends Screen {
         drawCenteredString(ms, this.font, new StringTextComponent("XRay Blocks"), this.width / 2, 15, 0xFFFFFF);
         super.render(ms, mouseX, mouseY, partialTicks);
         field.render(ms, mouseX, mouseY, partialTicks);
+        boolean changed = !workingBlocks.equals(originalBlocks);
+        if (!changed) {
+            // check checkboxes
+            for (Map.Entry<CheckboxButton, String> e : options.entrySet()) {
+                boolean selected = e.getKey().selected();
+                boolean origSel = originalBlocks.contains(e.getValue());
+                if (selected != origSel) { changed = true; break; }
+            }
+        }
+        applyButton.active = changed;
     }
 
     @Override
     public void onClose() {
+        // ignore changes unless applied
+        this.minecraft.setScreen(parent);
+    }
+
+    private void apply() {
         HackSettings cfg = VisionClient.getSettings();
-        // sync checkbox selections
+        java.util.List<String> newList = new java.util.ArrayList<>();
         for (Map.Entry<CheckboxButton, String> e : options.entrySet()) {
             if (e.getKey().selected()) {
-                if (!cfg.xrayBlocks.contains(e.getValue())) cfg.xrayBlocks.add(e.getValue());
-            } else {
-                cfg.xrayBlocks.remove(e.getValue());
+                newList.add(e.getValue());
             }
         }
+        for (String custom : workingBlocks) {
+            if (!newList.contains(custom)) newList.add(custom);
+        }
+        workingBlocks = new java.util.ArrayList<>(newList);
+        cfg.xrayBlocks.clear();
+        cfg.xrayBlocks.addAll(newList);
+        originalBlocks = new java.util.ArrayList<>(newList);
         VisionClient.saveSettings();
-        this.minecraft.setScreen(parent);
+        applyButton.active = false;
+    }
+
+    private void reset() {
+        workingBlocks.clear();
+        originalBlocks.clear();
+        for (CheckboxButton cb : options.keySet()) {
+            if (cb.selected()) cb.onPress();
+        }
+        field.setValue("");
+        applyButton.active = true;
     }
 }
