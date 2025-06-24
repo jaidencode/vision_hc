@@ -10,6 +10,9 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 
 /**
  * Deflects incoming arrows by altering their motion when they get close to the player.
@@ -20,6 +23,9 @@ public class ArrowDeflectHack extends ActionBase {
 
     /** Radius around the player to check for incoming arrows. */
     private static final double DEFLECT_RADIUS = 3.0D;
+
+    /** Track arrows we have already processed to avoid spamming packets. */
+    private final Set<Integer> processedArrows = new HashSet<>();
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
@@ -32,7 +38,9 @@ public class ArrowDeflectHack extends ActionBase {
 
         List<AbstractArrowEntity> arrows = mc.level.getEntitiesOfClass(AbstractArrowEntity.class,
                 player.getBoundingBox().inflate(DEFLECT_RADIUS));
+
         for (AbstractArrowEntity arrow : arrows) {
+            if (!arrow.isAlive()) continue;
             Vector3d motion = arrow.getDeltaMovement();
             Vector3d toPlayer = player.position().subtract(arrow.position());
             if (motion.dot(toPlayer) <= 0) continue; // Not heading toward the player
@@ -40,8 +48,16 @@ public class ArrowDeflectHack extends ActionBase {
             // Rotate arrow motion around Y axis to deflect sideways
             Vector3d newMotion = new Vector3d(-motion.z, motion.y, motion.x);
             arrow.setDeltaMovement(newMotion);
-            sendInteractPacket(arrow);
+
+            // Only notify the server once per arrow to prevent disconnects
+            if (processedArrows.add(arrow.getId())) {
+                sendInteractPacket(arrow);
+            }
         }
+
+        // Remove arrows that are no longer nearby
+        Set<Integer> nearbyIds = arrows.stream().map(AbstractArrowEntity::getId).collect(Collectors.toSet());
+        processedArrows.retainAll(nearbyIds);
     }
 
     /**
@@ -50,7 +66,7 @@ public class ArrowDeflectHack extends ActionBase {
     private void sendInteractPacket(AbstractArrowEntity arrow) {
         Minecraft mc = Minecraft.getInstance();
         ClientPlayNetHandler conn = mc.getConnection();
-        if (conn != null) {
+        if (conn != null && arrow.isAlive()) {
             conn.send(new CUseEntityPacket(arrow, false));
         }
     }

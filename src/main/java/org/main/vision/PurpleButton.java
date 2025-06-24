@@ -24,6 +24,19 @@ public class PurpleButton extends Button {
         start = (start & 0x00FFFFFF) | ((int)(alpha * ((start >> 24) & 0xFF)) << 24);
         end = (end & 0x00FFFFFF) | ((int)(alpha * ((end >> 24) & 0xFF)) << 24);
         fillGradient(ms, x, y, x + width, y + height, start, end);
-        drawCenteredString(ms, Minecraft.getInstance().font, getMessage(), x + width / 2, y + (height - 8) / 2, (int)(alpha * 255.0f) << 24 | 0xFFFFFF);
+
+        Minecraft mc = Minecraft.getInstance();
+        String text = getMessage().getString();
+        int textWidth = mc.font.width(text);
+        float scale = 1.0f;
+        if (textWidth > width - 4) {
+            scale = (width - 4) / (float) textWidth;
+        }
+        ms.pushPose();
+        ms.translate(x + width / 2f, y + (height - mc.font.lineHeight * scale) / 2f, 0);
+        ms.scale(scale, scale, 1.0f);
+        int color = ((int)(alpha * 255.0f) << 24) | 0xFFFFFF;
+        mc.font.draw(ms, text, -textWidth / 2f, 0, color);
+        ms.popPose();
     }
 }
