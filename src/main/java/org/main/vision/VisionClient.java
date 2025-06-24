@@ -16,7 +16,8 @@ import org.main.vision.actions.FullBrightHack;
 import org.main.vision.actions.ForceCritHack;
 import org.main.vision.actions.AntiVanishHack;
 import org.main.vision.actions.BlinkHack;
-import org.main.vision.actions.ArrowDeflectHack;
+import org.main.vision.actions.AntiKnockbackHack;
+import org.main.vision.actions.ReachHack;
 import org.main.vision.config.HackSettings;
 
 /**
@@ -34,7 +35,8 @@ public class VisionClient {
     private static final ForceCritHack FORCECRIT_HACK = new ForceCritHack();
     private static final AntiVanishHack ANTIVANISH_HACK = new AntiVanishHack();
     private static final BlinkHack BLINK_HACK = new BlinkHack();
-    private static final ArrowDeflectHack ARROWDEFLECT_HACK = new ArrowDeflectHack();
+    private static final AntiKnockbackHack ANTIKNOCKBACK_HACK = new AntiKnockbackHack();
+    private static final ReachHack REACH_HACK = new ReachHack();
     private static HackSettings SETTINGS;
 
     static void init() {
@@ -82,8 +84,12 @@ public class VisionClient {
         return BLINK_HACK;
     }
 
-    public static ArrowDeflectHack getArrowDeflectHack() {
-        return ARROWDEFLECT_HACK;
+    public static AntiKnockbackHack getAntiKnockbackHack() {
+        return ANTIKNOCKBACK_HACK;
+    }
+
+    public static ReachHack getReachHack() {
+        return REACH_HACK;
     }
 
 
@@ -130,8 +136,11 @@ public class VisionClient {
         if (event.getKey() == VisionKeybind.blinkKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             BLINK_HACK.toggle();
         }
-        if (event.getKey() == VisionKeybind.arrowDeflectKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
-            ARROWDEFLECT_HACK.toggle();
+        if (event.getKey() == VisionKeybind.antiKnockbackKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            ANTIKNOCKBACK_HACK.toggle();
+        }
+        if (event.getKey() == VisionKeybind.reachKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            REACH_HACK.toggle();
         }
         if (event.getKey() == VisionKeybind.menuKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
             Minecraft.getInstance().setScreen(new VisionMenuScreen());

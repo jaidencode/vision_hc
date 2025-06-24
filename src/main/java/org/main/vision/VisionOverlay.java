@@ -78,8 +78,14 @@ public class VisionOverlay {
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
         }
-        if (VisionClient.getArrowDeflectHack().isEnabled()) {
-            String text = "ArrowDeflect";
+        if (VisionClient.getAntiKnockbackHack().isEnabled()) {
+            String text = "AntiKnockback";
+            int w = mc.font.width(text);
+            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
+            y += mc.font.lineHeight;
+        }
+        if (VisionClient.getReachHack().isEnabled()) {
+            String text = "Reach";
             int w = mc.font.width(text);
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
