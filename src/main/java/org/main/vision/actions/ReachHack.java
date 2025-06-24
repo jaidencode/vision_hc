@@ -5,6 +5,8 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
+import net.minecraft.network.play.client.CPlayerPacket;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.main.vision.VisionClient;
@@ -24,6 +26,7 @@ public class ReachHack extends ActionBase {
         ClientPlayerEntity player = (ClientPlayerEntity) event.player;
         if (isEnabled()) {
             apply(player);
+            sendRotation(player);
         } else {
             remove(player);
         }
@@ -32,7 +35,10 @@ public class ReachHack extends ActionBase {
     @Override
     protected void onEnable() {
         ClientPlayerEntity player = Minecraft.getInstance().player;
-        if (player != null) apply(player);
+        if (player != null) {
+            apply(player);
+            sendRotation(player);
+        }
     }
 
     @Override
@@ -58,6 +64,20 @@ public class ReachHack extends ActionBase {
         ModifiableAttributeInstance attr = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
         if (attr != null && attr.getModifier(MODIFIER_ID) != null) {
             attr.removeModifier(MODIFIER_ID);
+        }
+    }
+
+    /**
+     * Send a rotation update every tick so server-side raytraces
+     * use the player's current orientation when interacting at
+     * extended reach distances.
+     */
+    private void sendRotation(ClientPlayerEntity player) {
+        ClientPlayNetHandler conn = player.connection;
+        if (conn != null) {
+            conn.send(new CPlayerPacket.PositionRotationPacket(
+                    player.getX(), player.getY(), player.getZ(),
+                    player.yRot, player.xRot, player.isOnGround()));
         }
     }
 }
