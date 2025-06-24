@@ -29,8 +29,6 @@ public class HackSettings {
     public double noFallThreshold = 2.0D;
     /** List of block ids highlighted by XRayHack. */
     public java.util.List<String> xrayBlocks = new java.util.ArrayList<>();
-    /** Reach distance for ReachHack. */
-    public double reachDistance = 6.0D;
 
 
     /** Helper to check if a block should be highlighted. */

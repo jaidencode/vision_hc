@@ -53,35 +53,4 @@ public class JesusHack extends ActionBase {
         }
     }
 
-    /**
-     * Allow placing blocks on top of fluids while Jesus hack is active by
-     * redirecting right click interactions to the block above the fluid.
-     */
-    @SubscribeEvent
-    public void onRightClick(PlayerInteractEvent.RightClickBlock event) {
-        if (!isEnabled()) return;
-        if (!(event.getPlayer() instanceof ClientPlayerEntity)) return;
-        ClientPlayerEntity player = (ClientPlayerEntity) event.getPlayer();
-
-        if (event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.WATER ||
-            event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.LAVA) {
-
-            if (event.getItemStack().getItem() instanceof BlockItem) {
-                BlockPos placePos = event.getPos().above();
-                player.swing(event.getHand());
-
-                ClientPlayNetHandler conn = player.connection;
-                if (conn != null) {
-                    BlockRayTraceResult rt = new BlockRayTraceResult(
-                            new net.minecraft.util.math.vector.Vector3d(0.5D, 1.0D, 0.5D),
-                            Direction.UP, event.getPos(), false);
-                    conn.send(new CPlayerTryUseItemOnBlockPacket(event.getHand(), rt));
-                }
-
-                event.setUseItem(Event.Result.DENY);
-                event.setUseBlock(Event.Result.DENY);
-                event.setCanceled(true);
-            }
-        }
-    }
 }
