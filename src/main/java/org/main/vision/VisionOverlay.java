@@ -66,8 +66,14 @@ public class VisionOverlay {
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
         }
-        if (VisionClient.getNoDrownHack().isEnabled()) {
-            String text = "NoDrown";
+        if (VisionClient.getForceCritHack().isEnabled()) {
+            String text = "ForceCrit";
+            int w = mc.font.width(text);
+            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
+            y += mc.font.lineHeight;
+        }
+        if (VisionClient.getAntiVanishHack().isEnabled()) {
+            String text = "AntiVanish";
             int w = mc.font.width(text);
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
