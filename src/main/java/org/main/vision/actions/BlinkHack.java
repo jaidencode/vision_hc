@@ -19,6 +19,7 @@ public class BlinkHack extends ActionBase {
     private int cloneId;
     private float cloneYaw;
     private float clonePitch;
+    private boolean flushing;
 
     public static boolean handleSend(IPacket<?> packet) {
         BlinkHack hack = org.main.vision.VisionClient.getBlinkHack();
@@ -47,16 +48,9 @@ public class BlinkHack extends ActionBase {
 
     @Override
     protected void onDisable() {
-        NetworkManager nm = Minecraft.getInstance().getConnection().getConnection();
-        while (!queue.isEmpty()) {
-            nm.send(queue.poll());
-        }
-        Minecraft mc = Minecraft.getInstance();
-        ClientWorld world = mc.level;
-        if (world != null && clonePlayer != null) {
-            world.removeEntity(cloneId);
-            clonePlayer = null;
-        }
+        // Begin flushing queued packets gradually. They will be sent during
+        // client ticks to avoid overwhelming the server with a sudden burst.
+        flushing = true;
     }
 
     /**
@@ -64,12 +58,31 @@ public class BlinkHack extends ActionBase {
      */
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (!isEnabled()) return;
         if (event.phase != TickEvent.Phase.END) return;
-        if (clonePlayer != null) {
+
+        // When blinking, keep the clone oriented properly
+        if (isEnabled() && clonePlayer != null) {
             clonePlayer.yRot = cloneYaw;
             clonePlayer.xRot = clonePitch;
             clonePlayer.yHeadRot = cloneYaw;
+        }
+
+        if (flushing) {
+            NetworkManager nm = Minecraft.getInstance().getConnection().getConnection();
+            // Send a variable number of packets based on the remaining queue size
+            int batch = Math.max(1, queue.size() / 10);
+            for (int i = 0; i < batch && !queue.isEmpty(); i++) {
+                nm.send(queue.poll());
+            }
+            if (queue.isEmpty()) {
+                // Remove the clone once all packets are flushed
+                ClientWorld world = Minecraft.getInstance().level;
+                if (world != null && clonePlayer != null) {
+                    world.removeEntity(cloneId);
+                    clonePlayer = null;
+                }
+                flushing = false;
+            }
         }
     }
 }

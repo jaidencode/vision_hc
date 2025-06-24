@@ -32,7 +32,8 @@ public class SpeedSettingsScreen extends Screen {
         originalMultiplier = cfg.speedMultiplier;
         multiplierField.setValue(Float.toString(originalMultiplier));
         addWidget(multiplierField);
-        int y = centerY + 25;
+        // Align button positions with the generic hack settings screens
+        int y = centerY + 20;
         this.applyButton = addButton(new PurpleButton(centerX - 60, y, 120, 20, new StringTextComponent("Apply"), b -> apply()));
         y += 24;
         addButton(new PurpleButton(centerX - 60, y, 120, 20, new StringTextComponent("Reset"), b -> reset()));

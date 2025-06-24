@@ -34,7 +34,9 @@ public class XRaySettingsScreen extends Screen {
         HackSettings cfg = VisionClient.getSettings();
         workingBlocks = new java.util.ArrayList<>(cfg.xrayBlocks);
         originalBlocks = new java.util.ArrayList<>(cfg.xrayBlocks);
-        int startY = this.height / 2 - 70;
+        // Start higher on the screen so the buttons at the bottom do not overlap
+        // with the ore list or text field
+        int startY = 30;
         int x = this.width / 2 - 100;
         options.clear();
         for (int i = 0; i < COMMON_ORES.length; i++) {
