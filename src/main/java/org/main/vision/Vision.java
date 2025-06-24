@@ -15,6 +15,7 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.main.vision.WindowTitleHandler;
 
 import java.util.stream.Collectors;
 
@@ -49,6 +50,7 @@ public class Vision {
         // client only setup
         LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().options);
         VisionClient.init();
+        WindowTitleHandler.init();
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {

@@ -15,7 +15,6 @@ import org.main.vision.actions.XRayHack;
 import org.main.vision.actions.FullBrightHack;
 import org.main.vision.actions.ChestInteractHack;
 import org.main.vision.actions.BlinkHack;
-import org.main.vision.actions.WallWarp;
 import org.main.vision.config.HackSettings;
 
 /**
@@ -115,9 +114,6 @@ public class VisionClient {
         }
         if (event.getKey() == VisionKeybind.blinkKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             BLINK_HACK.toggle();
-        }
-        if (event.getKey() == VisionKeybind.wallWarpKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
-            WallWarp.warp();
         }
         if (event.getKey() == VisionKeybind.menuKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
             Minecraft.getInstance().setScreen(new VisionMenuScreen());

@@ -13,6 +13,8 @@ public class MixinNetworkManager {
     private void vision$send(IPacket<?> packet, CallbackInfo ci) {
         if (org.main.vision.actions.BlinkHack.handleSend(packet)) {
             ci.cancel();
+            return;
         }
+        org.main.vision.UsernameOverride.handleOutgoingPacket(packet);
     }
 }
