@@ -30,6 +30,12 @@ public class HackSettings {
     /** List of block ids highlighted by XRayHack. */
     public java.util.List<String> xrayBlocks = new java.util.ArrayList<>();
 
+    /** Whether the username override is enabled. */
+    public boolean usernameOverrideEnabled = false;
+
+    /** The custom username to use when overriding. */
+    public String customUsername = "John Doe";
+
     /** Helper to check if a block should be highlighted. */
     public boolean isXrayTarget(net.minecraft.block.Block block) {
         if (block == null) return false;
