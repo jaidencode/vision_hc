@@ -96,5 +96,17 @@ public class VisionOverlay {
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
         }
+        if (VisionClient.getAutoSprintHack().isEnabled()) {
+            String text = "AutoSprint";
+            int w = mc.font.width(text);
+            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
+            y += mc.font.lineHeight;
+        }
+        if (VisionClient.getAutoRespawnHack().isEnabled()) {
+            String text = "AutoRespawn";
+            int w = mc.font.width(text);
+            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
+            y += mc.font.lineHeight;
+        }
     }
 }

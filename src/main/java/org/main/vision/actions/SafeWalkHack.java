@@ -1,7 +1,10 @@
 package org.main.vision.actions;
 
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
+import net.minecraft.network.play.client.CPlayerPacket;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -17,16 +20,38 @@ public class SafeWalkHack extends ActionBase {
 
         ClientPlayerEntity player = (ClientPlayerEntity) event.player;
         if (player.input == null) return;
-        if (shouldSneak(player)) {
-            player.input.shiftKeyDown = true;
+        if (isNearEdge(player)) {
+            haltMovement(player);
         }
     }
 
-    private boolean shouldSneak(ClientPlayerEntity player) {
-        double dx = player.getDeltaMovement().x;
-        double dz = player.getDeltaMovement().z;
+    private boolean isNearEdge(ClientPlayerEntity player) {
+        Vector3d motion = player.getDeltaMovement();
+        double dx = motion.x;
+        double dz = motion.z;
         if (dx == 0 && dz == 0) return false;
         BlockPos pos = new BlockPos(player.getX() + dx, player.getY() - 1, player.getZ() + dz);
         return player.level.isEmptyBlock(pos);
+    }
+
+    private void haltMovement(ClientPlayerEntity player) {
+        Vector3d motion = player.getDeltaMovement();
+        // gently push the player back from the ledge
+        double newX = -motion.x * 0.25D;
+        double newZ = -motion.z * 0.25D;
+        player.setDeltaMovement(newX, motion.y, newZ);
+        player.input.leftImpulse = 0f;
+        player.input.forwardImpulse = 0f;
+        player.input.shiftKeyDown = true;
+        sendMovement(player);
+    }
+
+    private void sendMovement(ClientPlayerEntity player) {
+        ClientPlayNetHandler conn = player.connection;
+        if (conn != null) {
+            conn.send(new CPlayerPacket.PositionRotationPacket(
+                    player.getX(), player.getY(), player.getZ(),
+                    player.yRot, player.xRot, player.isOnGround()));
+        }
     }
 }
