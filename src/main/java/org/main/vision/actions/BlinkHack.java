@@ -7,6 +7,8 @@ import net.minecraft.client.world.ClientWorld;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.IPacket;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -15,6 +17,8 @@ public class BlinkHack extends ActionBase {
     private final Queue<IPacket<?>> queue = new LinkedList<>();
     private RemoteClientPlayerEntity clonePlayer;
     private int cloneId;
+    private float cloneYaw;
+    private float clonePitch;
 
     public static boolean handleSend(IPacket<?> packet) {
         BlinkHack hack = org.main.vision.VisionClient.getBlinkHack();
@@ -34,7 +38,9 @@ public class BlinkHack extends ActionBase {
             cloneId = -2000 - world.random.nextInt(1000);
             clonePlayer = new RemoteClientPlayerEntity(world, player.getGameProfile());
             clonePlayer.setId(cloneId);
-            clonePlayer.moveTo(player.getX(), player.getY(), player.getZ(), player.yRot, player.xRot);
+            cloneYaw = player.yRot;
+            clonePitch = player.xRot;
+            clonePlayer.moveTo(player.getX(), player.getY(), player.getZ(), cloneYaw, clonePitch);
             world.addPlayer(cloneId, clonePlayer);
         }
     }
@@ -50,6 +56,20 @@ public class BlinkHack extends ActionBase {
         if (world != null && clonePlayer != null) {
             world.removeEntity(cloneId);
             clonePlayer = null;
+        }
+    }
+
+    /**
+     * Keep the client-side clone oriented correctly while blink is active.
+     */
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (!isEnabled()) return;
+        if (event.phase != TickEvent.Phase.END) return;
+        if (clonePlayer != null) {
+            clonePlayer.yRot = cloneYaw;
+            clonePlayer.xRot = clonePitch;
+            clonePlayer.yHeadRot = cloneYaw;
         }
     }
 }
