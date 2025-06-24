@@ -50,7 +50,7 @@ public class XRayHack extends ActionBase {
 
         MatrixStack ms = event.getMatrixStack();
         Vector3d cam = mc.gameRenderer.getMainCamera().getPosition();
-        int radius = 24;
+        int radius = Minecraft.getInstance().options.renderDistance * 16;
         highlightCache.clear();
         BlockPos start = new BlockPos(cam.x - radius, cam.y - radius, cam.z - radius);
         BlockPos end = new BlockPos(cam.x + radius, cam.y + radius, cam.z + radius);
@@ -62,8 +62,10 @@ public class XRayHack extends ActionBase {
 
         IRenderTypeBuffer.Impl buffer = mc.renderBuffers().bufferSource();
 
-        // Render outlines with depth testing disabled so they remain visible through walls
+        // Render outlines with depth testing and culling disabled so they remain visible through walls
         RenderSystem.disableDepthTest();
+        RenderSystem.disableCull();
+        RenderSystem.lineWidth(2.0F);
         RenderSystem.depthMask(false);
         for (BlockPos pos : highlightCache) {
             AxisAlignedBB box = world.getBlockState(pos).getShape(world, pos).bounds()
@@ -74,6 +76,8 @@ public class XRayHack extends ActionBase {
         }
         buffer.endBatch(RenderType.lines());
         RenderSystem.depthMask(true);
+        RenderSystem.lineWidth(1.0F);
+        RenderSystem.enableCull();
         RenderSystem.enableDepthTest();
     }
 }
