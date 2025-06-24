@@ -32,9 +32,12 @@ public class SpeedSettingsScreen extends Screen {
         originalMultiplier = cfg.speedMultiplier;
         multiplierField.setValue(Float.toString(originalMultiplier));
         addWidget(multiplierField);
-        this.applyButton = addButton(new PurpleButton(centerX - 90, centerY + 35, 60, 20, new StringTextComponent("Apply"), b -> apply()));
-        addButton(new PurpleButton(centerX - 25, centerY + 35, 60, 20, new StringTextComponent("Reset"), b -> reset()));
-        addButton(new PurpleButton(centerX + 40, centerY + 35, 60, 20, new StringTextComponent("Back"), b -> onClose()));
+        int y = centerY + 25;
+        this.applyButton = addButton(new PurpleButton(centerX - 60, y, 120, 20, new StringTextComponent("Apply"), b -> apply()));
+        y += 24;
+        addButton(new PurpleButton(centerX - 60, y, 120, 20, new StringTextComponent("Reset"), b -> reset()));
+        y += 24;
+        addButton(new PurpleButton(centerX - 60, y, 120, 20, new StringTextComponent("Back"), b -> onClose()));
     }
 
     @Override

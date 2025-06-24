@@ -4,10 +4,10 @@
   "package": "org.main.vision.mixin",
   "compatibilityLevel": "JAVA_8",
   "refmap": "vision.refmap.json",
-  "mixins": [
-  ],
+  "mixins": [],
   "client": [
-    "MixinFlowingFluidBlock"
+    "MixinFlowingFluidBlock",
+    "MixinNetworkManager"
   ],
   "injectors": {
     "defaultRequire": 1
