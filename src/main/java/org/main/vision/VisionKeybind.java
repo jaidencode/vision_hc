@@ -15,7 +15,8 @@ public class VisionKeybind {
     public static KeyBinding noFallKey;
     public static KeyBinding xrayKey;
     public static KeyBinding fullBrightKey;
-    public static KeyBinding noDrownKey;
+    public static KeyBinding forceCritKey;
+    public static KeyBinding antiVanishKey;
     public static KeyBinding blinkKey;
     public static KeyBinding menuKey;
 
@@ -27,7 +28,8 @@ public class VisionKeybind {
         noFallKey = new KeyBinding("key.vision.nofall", GLFW.GLFW_KEY_L, "key.categories.vision");
         xrayKey = new KeyBinding("key.vision.xray", GLFW.GLFW_KEY_SEMICOLON, "key.categories.vision");
         fullBrightKey = new KeyBinding("key.vision.fullbright", GLFW.GLFW_KEY_APOSTROPHE, "key.categories.vision");
-        noDrownKey = new KeyBinding("key.vision.nodrown", GLFW.GLFW_KEY_P, "key.categories.vision");
+        forceCritKey = new KeyBinding("key.vision.forcecrit", GLFW.GLFW_KEY_P, "key.categories.vision");
+        antiVanishKey = new KeyBinding("key.vision.antivanish", GLFW.GLFW_KEY_I, "key.categories.vision");
         blinkKey = new KeyBinding("key.vision.blink", GLFW.GLFW_KEY_O, "key.categories.vision");
         menuKey = new KeyBinding("key.vision.menu", GLFW.GLFW_KEY_BACKSLASH, "key.categories.vision");
         ClientRegistry.registerKeyBinding(speedKey);
@@ -37,7 +39,8 @@ public class VisionKeybind {
         ClientRegistry.registerKeyBinding(noFallKey);
         ClientRegistry.registerKeyBinding(xrayKey);
         ClientRegistry.registerKeyBinding(fullBrightKey);
-        ClientRegistry.registerKeyBinding(noDrownKey);
+        ClientRegistry.registerKeyBinding(forceCritKey);
+        ClientRegistry.registerKeyBinding(antiVanishKey);
         ClientRegistry.registerKeyBinding(blinkKey);
         ClientRegistry.registerKeyBinding(menuKey);
     }

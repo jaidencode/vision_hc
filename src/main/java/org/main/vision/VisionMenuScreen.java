@@ -28,7 +28,8 @@ public class VisionMenuScreen extends Screen {
     private PurpleButton noFallSettings;
     private PurpleButton xraySettings;
     private PurpleButton fullBrightButton;
-    private PurpleButton noDrownButton;
+    private PurpleButton forceCritButton;
+    private PurpleButton antiVanishButton;
     private PurpleButton blinkButton;
     private static final int BUTTON_WIDTH = 100;
     private static final int BUTTON_HEIGHT = 20;
@@ -109,10 +110,12 @@ public class VisionMenuScreen extends Screen {
         xraySettings.visible = renderDropdownProgress > 0.05f;
 
         // Utility bar
-        this.noDrownButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20, width, height,
-                getNoDrownLabel(), b -> toggleNoDrown()));
+        this.forceCritButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20, width, height,
+                getForceCritLabel(), b -> toggleForceCrit()));
+        this.antiVanishButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20, width, height,
+                getAntiVanishLabel(), b -> toggleAntiVanish()));
 
-        noDrownButton.visible = utilDropdownProgress > 0.05f;
+        forceCritButton.visible = antiVanishButton.visible = utilDropdownProgress > 0.05f;
     }
 
     private void toggleSpeed() {
@@ -164,9 +167,15 @@ public class VisionMenuScreen extends Screen {
         state.save();
     }
 
-    private void toggleNoDrown() {
-        VisionClient.getNoDrownHack().toggle();
-        noDrownButton.setMessage(getNoDrownLabel());
+    private void toggleForceCrit() {
+        VisionClient.getForceCritHack().toggle();
+        forceCritButton.setMessage(getForceCritLabel());
+        state.save();
+    }
+
+    private void toggleAntiVanish() {
+        VisionClient.getAntiVanishHack().toggle();
+        antiVanishButton.setMessage(getAntiVanishLabel());
         state.save();
     }
 
@@ -232,8 +241,12 @@ public class VisionMenuScreen extends Screen {
         return new StringTextComponent((VisionClient.getFullBrightHack().isEnabled() ? "Disable" : "Enable") + " FullBright");
     }
 
-    private StringTextComponent getNoDrownLabel() {
-        return new StringTextComponent((VisionClient.getNoDrownHack().isEnabled() ? "Disable" : "Enable") + " NoDrown");
+    private StringTextComponent getForceCritLabel() {
+        return new StringTextComponent((VisionClient.getForceCritHack().isEnabled() ? "Disable" : "Enable") + " ForceCrit");
+    }
+
+    private StringTextComponent getAntiVanishLabel() {
+        return new StringTextComponent((VisionClient.getAntiVanishHack().isEnabled() ? "Disable" : "Enable") + " AntiVanish");
     }
 
     @Override
@@ -309,8 +322,10 @@ public class VisionMenuScreen extends Screen {
         if (draggingUtil) {
             state.utilBarX = (int)mouseX - utilDragOffsetX;
             state.utilBarY = (int)mouseY - utilDragOffsetY;
-            noDrownButton.x = state.utilBarX;
-            noDrownButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
+            forceCritButton.x = state.utilBarX;
+            antiVanishButton.x = state.utilBarX;
+            forceCritButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
+            antiVanishButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
             return true;
         }
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
@@ -396,8 +411,10 @@ public class VisionMenuScreen extends Screen {
         xrayButton.y = state.renderBarY + 20 + (int)(20 * renderDropdownProgress) - 20;
         fullBrightButton.y = state.renderBarY + 40 + (int)(20 * renderDropdownProgress) - 20;
         xraySettings.y = xrayButton.y;
-        noDrownButton.x = state.utilBarX;
-        noDrownButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
+        forceCritButton.x = state.utilBarX;
+        antiVanishButton.x = state.utilBarX;
+        forceCritButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
+        antiVanishButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
 
         boolean vis = dropdownProgress > 0.05f;
         boolean visR = renderDropdownProgress > 0.05f;
@@ -406,7 +423,7 @@ public class VisionMenuScreen extends Screen {
         speedSettings.visible = jumpSettings.visible = flySettings.visible = jesusSettings.visible = noFallSettings.visible = vis;
         xrayButton.visible = fullBrightButton.visible = visR;
         xraySettings.visible = visR;
-        noDrownButton.visible = visU;
+        forceCritButton.visible = antiVanishButton.visible = visU;
         speedButton.setAlpha(dropdownProgress);
         jumpButton.setAlpha(dropdownProgress);
         flyButton.setAlpha(dropdownProgress);
@@ -421,7 +438,8 @@ public class VisionMenuScreen extends Screen {
         xrayButton.setAlpha(renderDropdownProgress);
         fullBrightButton.setAlpha(renderDropdownProgress);
         xraySettings.setAlpha(renderDropdownProgress);
-        noDrownButton.setAlpha(utilDropdownProgress);
+        forceCritButton.setAlpha(utilDropdownProgress);
+        antiVanishButton.setAlpha(utilDropdownProgress);
 
         super.render(matrices, mouseX, mouseY, partialTicks);
     }
