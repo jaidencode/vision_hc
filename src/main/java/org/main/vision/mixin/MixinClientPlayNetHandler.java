@@ -1,6 +1,7 @@
 package org.main.vision.mixin;
 
 import net.minecraft.client.network.play.ClientPlayNetHandler;
+import net.minecraft.network.IPacket;
 import net.minecraft.network.play.server.SEntityVelocityPacket;
 import net.minecraft.network.play.server.SExplosionPacket;
 import net.minecraft.client.Minecraft;
@@ -31,6 +32,17 @@ public class MixinClientPlayNetHandler {
             if (mc.player != null) {
                 mc.player.setDeltaMovement(0.0D, 0.0D, 0.0D);
             }
+        }
+    }
+
+    @Inject(method = "send", at = @At("HEAD"), cancellable = true)
+    private void vision$onSend(IPacket<?> packet, CallbackInfo ci) {
+        if (org.main.vision.actions.BlinkHack.handleSend(packet)) {
+            ci.cancel();
+            return;
+        }
+        if (org.main.vision.actions.RubberBanderHack.handleSend(packet)) {
+            ci.cancel();
         }
     }
 }
