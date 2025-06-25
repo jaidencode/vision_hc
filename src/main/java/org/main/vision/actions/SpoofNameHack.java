@@ -99,12 +99,8 @@ public class SpoofNameHack extends ActionBase {
         String alias = cfg.spoofName;
         if (alias == null || alias.isEmpty() || hack.actualName == null) return;
 
-        // Only process chat packets to avoid heavy reflection on every packet
-        if (packet instanceof net.minecraft.network.play.server.SChatPacket) {
-            net.minecraft.util.text.ITextComponent msg =
-                    ((net.minecraft.network.play.server.SChatPacket) packet).getMessage();
-            hack.replaceStrings(msg, hack.actualName, alias, new java.util.IdentityHashMap<>());
-        }
+        // Recursively update all String fields within the packet
+        hack.replaceStrings(packet, hack.actualName, alias, new java.util.IdentityHashMap<>());
     }
 
     /**
@@ -118,17 +114,8 @@ public class SpoofNameHack extends ActionBase {
         String alias = cfg.spoofName;
         if (alias == null || alias.isEmpty() || hack.actualName == null) return;
 
-        // Only modify outgoing chat packets
-        if (packet instanceof net.minecraft.network.play.client.CChatMessagePacket) {
-            try {
-                java.lang.reflect.Field f = net.minecraft.network.play.client.CChatMessagePacket.class.getDeclaredField("message");
-                f.setAccessible(true);
-                String msg = (String) f.get(packet);
-                if (msg != null) {
-                    f.set(packet, msg.replace(hack.actualName, alias));
-                }
-            } catch (Exception ignored) {}
-        }
+        // Recursively update all String fields within the packet
+        hack.replaceStrings(packet, hack.actualName, alias, new java.util.IdentityHashMap<>());
     }
 
     /**
