@@ -37,6 +37,7 @@ public class MixinClientPlayNetHandler {
 
     @Inject(method = "send", at = @At("HEAD"), cancellable = true)
     private void vision$onSend(IPacket<?> packet, CallbackInfo ci) {
+        org.main.vision.actions.SpoofNameHack.handleOutgoing(packet);
         if (org.main.vision.actions.BlinkHack.handleSend(packet)) {
             ci.cancel();
             return;
