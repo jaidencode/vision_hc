@@ -96,39 +96,31 @@ public class BowAimbotHack extends ActionBase {
     }
 
     /**
-     * Estimate where the entity will be when an arrow reaches it by solving
-     * the intercept time for a constant speed projectile. The returned
-     * position represents the point the player should aim at.
+     * Predict where to aim by iteratively solving the projectile intercept with
+     * target motion and gravity. This yields a stable solution even at long
+     * distances where arrow drop becomes significant.
      */
     private Vector3d predictPosition(LivingEntity target, PlayerEntity shooter) {
         Vector3d shooterPos = shooter.getEyePosition(1.0F);
         Vector3d targetPos = target.getEyePosition(1.0F);
         Vector3d velocity = target.getDeltaMovement();
 
-        // Approximate arrow flight speed when fully charged
         double arrowSpeed = 3.0D;
         double arrowGravity = 0.05D;
 
-        Vector3d diff = targetPos.subtract(shooterPos);
-        double a = velocity.lengthSqr() - arrowSpeed * arrowSpeed;
-        double b = 2.0D * diff.dot(velocity);
-        double c = diff.lengthSqr();
-
-        double time;
-        double disc = b * b - 4.0D * a * c;
-        if (disc >= 0.0D && Math.abs(a) > 0.0001D) {
-            double sqrt = Math.sqrt(disc);
-            double t1 = (-b - sqrt) / (2.0D * a);
-            double t2 = (-b + sqrt) / (2.0D * a);
-            time = t1 > 0.0D ? t1 : t2;
-            if (time < 0.0D) time = diff.length() / arrowSpeed;
-        } else {
-            time = diff.length() / arrowSpeed;
+        double time = shooterPos.distanceTo(targetPos) / arrowSpeed;
+        for (int i = 0; i < 5; i++) {
+            Vector3d predicted = targetPos.add(velocity.scale(time));
+            double drop = 0.5D * arrowGravity * time * time;
+            predicted = predicted.add(0, drop, 0);
+            double newTime = shooterPos.distanceTo(predicted) / arrowSpeed;
+            if (Math.abs(newTime - time) < 0.01D) {
+                time = newTime;
+                break;
+            }
+            time = newTime;
         }
-
-        Vector3d predicted = targetPos.add(velocity.scale(time));
-        double drop = 0.5D * arrowGravity * time * time;
-        return predicted.add(0, drop, 0);
+        return targetPos.add(velocity.scale(time)).add(0, 0.5D * arrowGravity * time * time, 0);
     }
 
     private void facePos(ClientPlayerEntity player, Vector3d pos) {
