@@ -15,7 +15,6 @@ import io.netty.channel.ChannelHandlerContext;
 public class MixinNetworkManager {
     @Inject(method = "send", at = @At("HEAD"), cancellable = true)
     private void vision$onSend(IPacket<?> packet, CallbackInfo ci) {
-        org.main.vision.actions.SpoofNameHack.handleOutgoing(packet);
         if (org.main.vision.actions.BlinkHack.handleSend(packet)) {
             ci.cancel();
             return;
@@ -27,6 +26,5 @@ public class MixinNetworkManager {
 
     @Inject(method = "channelRead0", at = @At("HEAD"))
     private void vision$onReceive(ChannelHandlerContext ctx, IPacket<?> packet, CallbackInfo ci) {
-        org.main.vision.actions.SpoofNameHack.handleIncoming(packet);
     }
 }
