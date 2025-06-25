@@ -25,6 +25,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class BowAimbotHack extends ActionBase {
     public enum Mode { PLAYERS, MOBS, BOTH }
     private Mode mode = Mode.BOTH;
+    private LivingEntity lockedTarget = null;
 
     public void setMode(Mode m) { mode = m; }
     public Mode getMode() { return mode; }
@@ -36,11 +37,20 @@ public class BowAimbotHack extends ActionBase {
         Minecraft mc = Minecraft.getInstance();
         ClientPlayerEntity player = mc.player;
         if (player == null) return;
-        ItemStack stack = player.getUseItem();
-        if (!(stack.getItem() instanceof BowItem) || !player.isUsingItem()) return;
 
-        LivingEntity target = findTarget(player);
+        ItemStack stack = player.getUseItem();
+        boolean usingBow = stack.getItem() instanceof BowItem && player.isUsingItem();
+        if (!usingBow) {
+            lockedTarget = null;
+            return;
+        }
+
+        if (lockedTarget == null || !lockedTarget.isAlive()) {
+            lockedTarget = findTarget(player);
+        }
+        LivingEntity target = lockedTarget;
         if (target == null) return;
+
         Vector3d pos = predictPosition(target, player);
         facePos(player, pos);
     }
@@ -97,6 +107,7 @@ public class BowAimbotHack extends ActionBase {
 
         // Approximate arrow flight speed when fully charged
         double arrowSpeed = 3.0D;
+        double arrowGravity = 0.05D;
 
         Vector3d diff = targetPos.subtract(shooterPos);
         double a = velocity.lengthSqr() - arrowSpeed * arrowSpeed;
@@ -115,7 +126,9 @@ public class BowAimbotHack extends ActionBase {
             time = diff.length() / arrowSpeed;
         }
 
-        return targetPos.add(velocity.scale(time));
+        Vector3d predicted = targetPos.add(velocity.scale(time));
+        double drop = 0.5D * arrowGravity * time * time;
+        return predicted.add(0, drop, 0);
     }
 
     private void facePos(ClientPlayerEntity player, Vector3d pos) {
