@@ -4,11 +4,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.client.event.ClientChatEvent;
+import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.main.vision.VisionClient;
 import org.main.vision.config.HackSettings;
-import org.main.vision.util.PacketStringReplacer;
 
 /**
  * Replaces the player's name in chat with a user defined alias.
@@ -87,31 +88,25 @@ public class SpoofNameHack extends ActionBase {
         applyAlias();
     }
 
-    /**
-     * Modify an outgoing packet to replace the player's real name with the alias.
-     */
-    public static void handleOutgoing(Object packet) {
-        SpoofNameHack hack = VisionClient.getSpoofNameHack();
-        hack.modifyPacket(packet, true);
-    }
-
-    /**
-     * Modify an incoming packet to replace the real name with the alias.
-     */
-    public static void handleIncoming(Object packet) {
-        SpoofNameHack hack = VisionClient.getSpoofNameHack();
-        hack.modifyPacket(packet, false);
-    }
-
-    private void modifyPacket(Object packet, boolean outgoing) {
+    @SubscribeEvent
+    public void onChatReceive(ClientChatReceivedEvent event) {
         if (!isEnabled()) return;
         HackSettings cfg = VisionClient.getSettings();
-        if (outgoing && !cfg.spoofOutgoing) return;
-        if (!outgoing && !cfg.spoofIncoming) return;
-        if (actualName == null) return;
+        if (!cfg.spoofIncoming) return;
         String alias = cfg.spoofName;
-        if (alias == null || alias.isEmpty()) return;
-        PacketStringReplacer.replaceStrings(packet, outgoing ? alias : actualName,
-                outgoing ? actualName : alias);
+        if (alias == null || alias.isEmpty() || actualName == null) return;
+        String msg = event.getMessage().getString().replace(actualName, alias);
+        event.setMessage(new StringTextComponent(msg));
+    }
+
+    @SubscribeEvent
+    public void onChatSend(ClientChatEvent event) {
+        if (!isEnabled()) return;
+        HackSettings cfg = VisionClient.getSettings();
+        if (!cfg.spoofOutgoing) return;
+        String alias = cfg.spoofName;
+        if (alias == null || alias.isEmpty() || actualName == null) return;
+        String msg = event.getMessage().replace(actualName, alias);
+        event.setMessage(msg);
     }
 }
