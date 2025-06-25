@@ -30,6 +30,13 @@ public class HackSettings {
     /** List of block ids highlighted by XRayHack. */
     public java.util.List<String> xrayBlocks = new java.util.ArrayList<>();
 
+    /** Alias used by the SpoofName hack. */
+    public String spoofName = "";
+    /** Whether incoming chat should use the alias. */
+    public boolean spoofIncoming = true;
+    /** Whether outgoing chat should use the alias. */
+    public boolean spoofOutgoing = true;
+
 
     /** Helper to check if a block should be highlighted. */
     public boolean isXrayTarget(net.minecraft.block.Block block) {

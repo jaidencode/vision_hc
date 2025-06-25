@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.StringTextComponent;
+import org.main.vision.SpoofNameSettingsScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,7 @@ public class VisionMenuScreen extends Screen {
         addEntry(() -> getBowAimbotLabel(), this::toggleBowAimbot, null);
         addEntry(() -> getHealthDisplayLabel(), this::toggleHealthDisplay, null);
         addEntry(() -> getRubberBanderLabel(), this::toggleRubberBander, null);
+        addEntry(() -> getSpoofNameLabel(), this::toggleSpoofName, this::openSpoofNameSettings);
         layoutButtons();
     }
 
@@ -131,6 +133,7 @@ public class VisionMenuScreen extends Screen {
     private void toggleBowAimbot() { VisionClient.getBowAimbotHack().toggle(); }
     private void toggleHealthDisplay() { VisionClient.getHealthDisplayHack().toggle(); }
     private void toggleRubberBander() { VisionClient.getRubberBanderHack().toggle(); }
+    private void toggleSpoofName() { VisionClient.getSpoofNameHack().toggle(); }
 
     // Settings open methods
     private void openSpeedSettings() { this.minecraft.setScreen(new SpeedSettingsScreen(this)); }
@@ -143,6 +146,7 @@ public class VisionMenuScreen extends Screen {
     private void openNoFallSettings() { this.minecraft.setScreen(new HackSettingsScreen(this, "Threshold", () -> VisionClient.getSettings().noFallThreshold,
             v -> { VisionClient.getSettings().noFallThreshold = v; }, VisionClient::saveSettings, 2.0D)); }
     private void openXRaySettings() { this.minecraft.setScreen(new XRaySettingsScreen(this)); }
+    private void openSpoofNameSettings() { this.minecraft.setScreen(new SpoofNameSettingsScreen(this)); }
 
     // Label helpers
     private StringTextComponent getSpeedLabel() { return new StringTextComponent((VisionClient.getSpeedHack().isEnabled() ? "Disable" : "Enable") + " Speed"); }
@@ -162,4 +166,5 @@ public class VisionMenuScreen extends Screen {
     private StringTextComponent getBowAimbotLabel() { return new StringTextComponent((VisionClient.getBowAimbotHack().isEnabled() ? "Disable" : "Enable") + " BowAimbot"); }
     private StringTextComponent getHealthDisplayLabel() { return new StringTextComponent((VisionClient.getHealthDisplayHack().isEnabled() ? "Disable" : "Enable") + " HealthDisplay"); }
     private StringTextComponent getRubberBanderLabel() { return new StringTextComponent((VisionClient.getRubberBanderHack().isEnabled() ? "Disable" : "Enable") + " RubberBander"); }
+    private StringTextComponent getSpoofNameLabel() { return new StringTextComponent((VisionClient.getSpoofNameHack().isEnabled() ? "Disable" : "Enable") + " SpoofName"); }
 }
