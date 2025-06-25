@@ -2,7 +2,6 @@ package org.main.vision.actions;
 
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.network.play.client.CPlayerPacket;
-import org.main.vision.network.AdaptivePacketHandler;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.event.TickEvent;
@@ -59,9 +58,11 @@ public class SafeWalkHack extends ActionBase {
     }
 
     private void sendMovement(ClientPlayerEntity player) {
-        AdaptivePacketHandler.getInstance().sendDirect(
-                new CPlayerPacket.PositionRotationPacket(
-                        player.getX(), player.getY(), player.getZ(),
-                        player.yRot, player.xRot, player.isOnGround()));
+        if (player.connection != null) {
+            player.connection.send(
+                    new CPlayerPacket.PositionRotationPacket(
+                            player.getX(), player.getY(), player.getZ(),
+                            player.yRot, player.xRot, player.isOnGround()));
+        }
     }
 }

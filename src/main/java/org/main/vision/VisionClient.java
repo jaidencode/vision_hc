@@ -21,9 +21,7 @@ import org.main.vision.actions.AutoToolHack;
 import org.main.vision.actions.SafeWalkHack;
 import org.main.vision.actions.AutoSprintHack;
 import org.main.vision.actions.AutoRespawnHack;
-import org.main.vision.actions.ActiveNetHack;
 import org.main.vision.actions.NoArrowHack;
-import org.main.vision.network.PacketPredictor;
 import org.main.vision.config.HackSettings;
 
 /**
@@ -46,9 +44,7 @@ public class VisionClient {
     private static final SafeWalkHack SAFEWALK_HACK = new SafeWalkHack();
     private static final AutoSprintHack AUTOSPRINT_HACK = new AutoSprintHack();
     private static final AutoRespawnHack AUTORESPAWN_HACK = new AutoRespawnHack();
-    private static final ActiveNetHack ACTIVENET_HACK = new ActiveNetHack();
     private static final NoArrowHack NOARROW_HACK = new NoArrowHack();
-    private static final PacketPredictor PREDICTOR = PacketPredictor.getInstance();
     private static HackSettings SETTINGS;
 
     static void init() {
@@ -116,10 +112,6 @@ public class VisionClient {
         return AUTORESPAWN_HACK;
     }
 
-    public static ActiveNetHack getActiveNetHack() {
-        return ACTIVENET_HACK;
-    }
-
     public static NoArrowHack getNoArrowHack() {
         return NOARROW_HACK;
     }
@@ -182,9 +174,6 @@ public class VisionClient {
         }
         if (event.getKey() == VisionKeybind.autoRespawnKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             AUTORESPAWN_HACK.toggle();
-        }
-        if (event.getKey() == VisionKeybind.activeNetKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
-            ACTIVENET_HACK.toggle();
         }
         if (event.getKey() == VisionKeybind.noArrowKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             NOARROW_HACK.toggle();
