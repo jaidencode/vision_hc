@@ -2,11 +2,12 @@ package org.main.vision.actions;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.network.play.NetworkPlayerInfo;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.main.vision.VisionClient;
 import org.main.vision.config.HackSettings;
 
@@ -20,6 +21,7 @@ public class SpoofNameHack extends ActionBase {
     protected void onEnable() {
         captureName();
         applyAlias();
+        applyTabListAlias();
     }
 
     @Override
@@ -27,6 +29,7 @@ public class SpoofNameHack extends ActionBase {
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (player != null) {
             player.setCustomName(null);
+            clearTabListAlias();
         }
     }
 
@@ -42,6 +45,39 @@ public class SpoofNameHack extends ActionBase {
         HackSettings cfg = VisionClient.getSettings();
         if (player != null && cfg.spoofName != null && !cfg.spoofName.isEmpty()) {
             player.setCustomName(new StringTextComponent(cfg.spoofName));
+            applyTabListAlias();
+        }
+    }
+
+    /** Update the player's name in the tab list. */
+    private void applyTabListAlias() {
+        ClientPlayerEntity player = Minecraft.getInstance().player;
+        HackSettings cfg = VisionClient.getSettings();
+        if (player == null || Minecraft.getInstance().getConnection() == null) return;
+        NetworkPlayerInfo info = Minecraft.getInstance().getConnection().getPlayerInfo(player.getUUID());
+        if (info != null) {
+            if (cfg.spoofName != null && !cfg.spoofName.isEmpty()) {
+                info.setTabListDisplayName(new StringTextComponent(cfg.spoofName));
+            } else {
+                info.setTabListDisplayName(null);
+            }
+        }
+    }
+
+    /** Remove any alias from the tab list. */
+    private void clearTabListAlias() {
+        ClientPlayerEntity player = Minecraft.getInstance().player;
+        if (player == null || Minecraft.getInstance().getConnection() == null) return;
+        NetworkPlayerInfo info = Minecraft.getInstance().getConnection().getPlayerInfo(player.getUUID());
+        if (info != null) {
+            info.setTabListDisplayName(null);
+        }
+    }
+
+    /** Reapply the alias when settings are changed. */
+    public void refreshAlias() {
+        if (isEnabled()) {
+            applyAlias();
         }
     }
 
