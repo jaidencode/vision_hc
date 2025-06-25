@@ -49,10 +49,8 @@ public class VisionMenuScreen extends Screen {
         addEntry(() -> getSafeWalkLabel(), this::toggleSafeWalk, null);
         addEntry(() -> getAutoSprintLabel(), this::toggleAutoSprint, null);
         addEntry(() -> getAutoRespawnLabel(), this::toggleAutoRespawn, null);
-        addEntry(() -> getNoSlowLabel(), this::toggleNoSlow, null);
         addEntry(() -> getBowAimbotLabel(), this::toggleBowAimbot, null);
         addEntry(() -> getHealthDisplayLabel(), this::toggleHealthDisplay, null);
-        addEntry(() -> getFastEatLabel(), this::toggleFastEat, null);
         layoutButtons();
     }
 
@@ -129,10 +127,8 @@ public class VisionMenuScreen extends Screen {
     private void toggleSafeWalk() { VisionClient.getSafeWalkHack().toggle(); }
     private void toggleAutoSprint() { VisionClient.getAutoSprintHack().toggle(); }
     private void toggleAutoRespawn() { VisionClient.getAutoRespawnHack().toggle(); }
-    private void toggleNoSlow() { VisionClient.getNoSlowHack().toggle(); }
     private void toggleBowAimbot() { VisionClient.getBowAimbotHack().toggle(); }
     private void toggleHealthDisplay() { VisionClient.getHealthDisplayHack().toggle(); }
-    private void toggleFastEat() { VisionClient.getFastEatHack().toggle(); }
 
     // Settings open methods
     private void openSpeedSettings() { this.minecraft.setScreen(new SpeedSettingsScreen(this)); }
@@ -161,8 +157,6 @@ public class VisionMenuScreen extends Screen {
     private StringTextComponent getSafeWalkLabel() { return new StringTextComponent((VisionClient.getSafeWalkHack().isEnabled() ? "Disable" : "Enable") + " SafeWalk"); }
     private StringTextComponent getAutoSprintLabel() { return new StringTextComponent((VisionClient.getAutoSprintHack().isEnabled() ? "Disable" : "Enable") + " AutoSprint"); }
     private StringTextComponent getAutoRespawnLabel() { return new StringTextComponent((VisionClient.getAutoRespawnHack().isEnabled() ? "Disable" : "Enable") + " AutoRespawn"); }
-    private StringTextComponent getNoSlowLabel() { return new StringTextComponent((VisionClient.getNoSlowHack().isEnabled() ? "Disable" : "Enable") + " NoSlow"); }
     private StringTextComponent getBowAimbotLabel() { return new StringTextComponent((VisionClient.getBowAimbotHack().isEnabled() ? "Disable" : "Enable") + " BowAimbot"); }
     private StringTextComponent getHealthDisplayLabel() { return new StringTextComponent((VisionClient.getHealthDisplayHack().isEnabled() ? "Disable" : "Enable") + " HealthDisplay"); }
-    private StringTextComponent getFastEatLabel() { return new StringTextComponent((VisionClient.getFastEatHack().isEnabled() ? "Disable" : "Enable") + " FastEat"); }
 }

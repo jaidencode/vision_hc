@@ -22,10 +22,8 @@ public class VisionKeybind {
     public static KeyBinding safeWalkKey;
     public static KeyBinding autoSprintKey;
     public static KeyBinding autoRespawnKey;
-    public static KeyBinding noSlowKey;
     public static KeyBinding bowAimbotKey;
     public static KeyBinding healthDisplayKey;
-    public static KeyBinding fastEatKey;
     public static KeyBinding menuKey;
 
     static void register() {
@@ -43,10 +41,8 @@ public class VisionKeybind {
         safeWalkKey = new KeyBinding("key.vision.safewalk", GLFW.GLFW_KEY_V, "key.categories.vision");
         autoSprintKey = new KeyBinding("key.vision.autosprint", GLFW.GLFW_KEY_C, "key.categories.vision");
         autoRespawnKey = new KeyBinding("key.vision.autorespawn", GLFW.GLFW_KEY_R, "key.categories.vision");
-        noSlowKey = new KeyBinding("key.vision.noslow", GLFW.GLFW_KEY_N, "key.categories.vision");
         bowAimbotKey = new KeyBinding("key.vision.bowaimbot", GLFW.GLFW_KEY_X, "key.categories.vision");
         healthDisplayKey = new KeyBinding("key.vision.healthdisplay", GLFW.GLFW_KEY_U, "key.categories.vision");
-        fastEatKey = new KeyBinding("key.vision.fasteat", GLFW.GLFW_KEY_Z, "key.categories.vision");
         menuKey = new KeyBinding("key.vision.menu", GLFW.GLFW_KEY_BACKSLASH, "key.categories.vision");
         ClientRegistry.registerKeyBinding(speedKey);
         ClientRegistry.registerKeyBinding(jumpKey);
@@ -62,10 +58,8 @@ public class VisionKeybind {
         ClientRegistry.registerKeyBinding(safeWalkKey);
         ClientRegistry.registerKeyBinding(autoSprintKey);
         ClientRegistry.registerKeyBinding(autoRespawnKey);
-        ClientRegistry.registerKeyBinding(noSlowKey);
         ClientRegistry.registerKeyBinding(bowAimbotKey);
         ClientRegistry.registerKeyBinding(healthDisplayKey);
-        ClientRegistry.registerKeyBinding(fastEatKey);
         ClientRegistry.registerKeyBinding(menuKey);
     }
 }

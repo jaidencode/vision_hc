@@ -102,12 +102,6 @@ public class VisionOverlay {
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
         }
-        if (VisionClient.getNoSlowHack().isEnabled()) {
-            String text = "NoSlow";
-            int w = mc.font.width(text);
-            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
-            y += mc.font.lineHeight;
-        }
         if (VisionClient.getBowAimbotHack().isEnabled()) {
             String text = "BowAimbot";
             int w = mc.font.width(text);
@@ -116,12 +110,6 @@ public class VisionOverlay {
         }
         if (VisionClient.getHealthDisplayHack().isEnabled()) {
             String text = "HealthDisplay";
-            int w = mc.font.width(text);
-            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
-            y += mc.font.lineHeight;
-        }
-        if (VisionClient.getFastEatHack().isEnabled()) {
-            String text = "FastEat";
             int w = mc.font.width(text);
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
