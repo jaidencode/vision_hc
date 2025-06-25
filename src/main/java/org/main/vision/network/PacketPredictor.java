@@ -41,6 +41,7 @@ public class PacketPredictor {
     }
 
     public void onSend(IPacket<?> packet) {
+        if (!org.main.vision.VisionClient.getActiveNetHack().isEnabled()) return;
         if (packet instanceof CPlayerPacket) {
             ClientPlayerEntity player = Minecraft.getInstance().player;
             if (player != null) {
@@ -53,6 +54,7 @@ public class PacketPredictor {
     }
 
     public void onReceive(IPacket<?> packet) {
+        if (!org.main.vision.VisionClient.getActiveNetHack().isEnabled()) return;
         if (packet instanceof SPlayerPositionLookPacket) {
             SPlayerPositionLookPacket p = (SPlayerPositionLookPacket) packet;
             predictedX = p.getX();
@@ -64,6 +66,7 @@ public class PacketPredictor {
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
+        if (!org.main.vision.VisionClient.getActiveNetHack().isEnabled()) return;
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (player != null) {
             double dx = player.getX() - predictedX;

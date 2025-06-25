@@ -31,6 +31,9 @@ public class AdaptivePacketHandler {
      * packet should be dropped.
      */
     public boolean handleOutgoing(IPacket<?> packet) {
+        if (!org.main.vision.VisionClient.getActiveNetHack().isEnabled()) {
+            return true;
+        }
         if (packet instanceof CPlayerPacket) {
             ClientPlayerEntity player = Minecraft.getInstance().player;
             if (player != null) {
@@ -52,6 +55,7 @@ public class AdaptivePacketHandler {
      * Invoked after a packet has been sent successfully.
      */
     public void afterSend(IPacket<?> packet) {
+        if (!org.main.vision.VisionClient.getActiveNetHack().isEnabled()) return;
         predictor.onSend(packet);
     }
 
@@ -60,6 +64,7 @@ public class AdaptivePacketHandler {
      * network using any position corrections.
      */
     public void handleIncoming(IPacket<?> packet) {
+        if (!org.main.vision.VisionClient.getActiveNetHack().isEnabled()) return;
         predictor.onReceive(packet);
         if (packet instanceof SPlayerPositionLookPacket) {
             SPlayerPositionLookPacket p = (SPlayerPositionLookPacket) packet;
