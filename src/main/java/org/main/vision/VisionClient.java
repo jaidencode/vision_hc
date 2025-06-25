@@ -23,7 +23,8 @@ import org.main.vision.actions.AutoRespawnHack;
 import org.main.vision.actions.BowAimbotHack;
 import org.main.vision.actions.HealthDisplayHack;
 import org.main.vision.actions.RubberBanderHack;
-import org.main.vision.actions.SpoofNameHack;
+import org.main.vision.actions.SeeBarrierHack;
+import org.main.vision.actions.DualCamHack;
 import org.main.vision.config.HackSettings;
 
 /**
@@ -48,7 +49,8 @@ public class VisionClient {
     private static final BowAimbotHack BOWAIMBOT_HACK = new BowAimbotHack();
     private static final HealthDisplayHack HEALTHDISPLAY_HACK = new HealthDisplayHack();
     private static final RubberBanderHack RUBBERBANDER_HACK = new RubberBanderHack();
-    private static final SpoofNameHack SPOOFNAME_HACK = new SpoofNameHack();
+    private static final SeeBarrierHack SEEBARRIER_HACK = new SeeBarrierHack();
+    private static final DualCamHack DUALCAM_HACK = new DualCamHack();
     private static HackSettings SETTINGS;
 
     static void init() {
@@ -124,8 +126,12 @@ public class VisionClient {
         return RUBBERBANDER_HACK;
     }
 
-    public static SpoofNameHack getSpoofNameHack() {
-        return SPOOFNAME_HACK;
+    public static SeeBarrierHack getSeeBarrierHack() {
+        return SEEBARRIER_HACK;
+    }
+
+    public static DualCamHack getDualCamHack() {
+        return DUALCAM_HACK;
     }
 
 
@@ -193,8 +199,15 @@ public class VisionClient {
         if (event.getKey() == VisionKeybind.rubberBanderKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             RUBBERBANDER_HACK.toggle();
         }
-        if (event.getKey() == VisionKeybind.spoofNameKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
-            SPOOFNAME_HACK.toggle();
+        if (event.getKey() == VisionKeybind.seeBarrierKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            SEEBARRIER_HACK.toggle();
+        }
+        if (event.getKey() == VisionKeybind.dualCamKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            if (DUALCAM_HACK.isEnabled()) {
+                DUALCAM_HACK.toggleControl();
+            } else {
+                DUALCAM_HACK.toggle();
+            }
         }
         if (event.getKey() == VisionKeybind.menuKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
             Minecraft.getInstance().setScreen(new VisionMenuScreen());

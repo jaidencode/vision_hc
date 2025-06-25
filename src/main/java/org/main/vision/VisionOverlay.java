@@ -120,5 +120,17 @@ public class VisionOverlay {
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
         }
+        if (VisionClient.getSeeBarrierHack().isEnabled()) {
+            String text = "SeeBarrier";
+            int w = mc.font.width(text);
+            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
+            y += mc.font.lineHeight;
+        }
+        if (VisionClient.getDualCamHack().isEnabled()) {
+            String text = "DualCam";
+            int w = mc.font.width(text);
+            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
+            y += mc.font.lineHeight;
+        }
     }
 }

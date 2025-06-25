@@ -25,7 +25,8 @@ public class VisionKeybind {
     public static KeyBinding bowAimbotKey;
     public static KeyBinding healthDisplayKey;
     public static KeyBinding rubberBanderKey;
-    public static KeyBinding spoofNameKey;
+    public static KeyBinding seeBarrierKey;
+    public static KeyBinding dualCamKey;
     public static KeyBinding menuKey;
 
     static void register() {
@@ -46,7 +47,8 @@ public class VisionKeybind {
         bowAimbotKey = new KeyBinding("key.vision.bowaimbot", GLFW.GLFW_KEY_X, "key.categories.vision");
         healthDisplayKey = new KeyBinding("key.vision.healthdisplay", GLFW.GLFW_KEY_U, "key.categories.vision");
         rubberBanderKey = new KeyBinding("key.vision.rubberbander", GLFW.GLFW_KEY_Y, "key.categories.vision");
-        spoofNameKey = new KeyBinding("key.vision.spoofname", GLFW.GLFW_KEY_N, "key.categories.vision");
+        seeBarrierKey = new KeyBinding("key.vision.seebarrier", GLFW.GLFW_KEY_I, "key.categories.vision");
+        dualCamKey = new KeyBinding("key.vision.dualcam", GLFW.GLFW_KEY_N, "key.categories.vision");
         menuKey = new KeyBinding("key.vision.menu", GLFW.GLFW_KEY_BACKSLASH, "key.categories.vision");
         ClientRegistry.registerKeyBinding(speedKey);
         ClientRegistry.registerKeyBinding(jumpKey);
@@ -65,7 +67,8 @@ public class VisionKeybind {
         ClientRegistry.registerKeyBinding(bowAimbotKey);
         ClientRegistry.registerKeyBinding(healthDisplayKey);
         ClientRegistry.registerKeyBinding(rubberBanderKey);
-        ClientRegistry.registerKeyBinding(spoofNameKey);
+        ClientRegistry.registerKeyBinding(seeBarrierKey);
+        ClientRegistry.registerKeyBinding(dualCamKey);
         ClientRegistry.registerKeyBinding(menuKey);
     }
 }
