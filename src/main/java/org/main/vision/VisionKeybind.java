@@ -16,14 +16,16 @@ public class VisionKeybind {
     public static KeyBinding xrayKey;
     public static KeyBinding fullBrightKey;
     public static KeyBinding forceCritKey;
-    public static KeyBinding antiVanishKey;
     public static KeyBinding blinkKey;
     public static KeyBinding antiKnockbackKey;
     public static KeyBinding autoToolKey;
     public static KeyBinding safeWalkKey;
     public static KeyBinding autoSprintKey;
     public static KeyBinding autoRespawnKey;
-    public static KeyBinding noArrowKey;
+    public static KeyBinding noSlowKey;
+    public static KeyBinding bowAimbotKey;
+    public static KeyBinding healthDisplayKey;
+    public static KeyBinding fastEatKey;
     public static KeyBinding menuKey;
 
     static void register() {
@@ -35,14 +37,16 @@ public class VisionKeybind {
         xrayKey = new KeyBinding("key.vision.xray", GLFW.GLFW_KEY_SEMICOLON, "key.categories.vision");
         fullBrightKey = new KeyBinding("key.vision.fullbright", GLFW.GLFW_KEY_APOSTROPHE, "key.categories.vision");
         forceCritKey = new KeyBinding("key.vision.forcecrit", GLFW.GLFW_KEY_P, "key.categories.vision");
-        antiVanishKey = new KeyBinding("key.vision.antivanish", GLFW.GLFW_KEY_I, "key.categories.vision");
         blinkKey = new KeyBinding("key.vision.blink", GLFW.GLFW_KEY_O, "key.categories.vision");
         antiKnockbackKey = new KeyBinding("key.vision.antiknockback", GLFW.GLFW_KEY_M, "key.categories.vision");
         autoToolKey = new KeyBinding("key.vision.autotool", GLFW.GLFW_KEY_B, "key.categories.vision");
         safeWalkKey = new KeyBinding("key.vision.safewalk", GLFW.GLFW_KEY_V, "key.categories.vision");
         autoSprintKey = new KeyBinding("key.vision.autosprint", GLFW.GLFW_KEY_C, "key.categories.vision");
         autoRespawnKey = new KeyBinding("key.vision.autorespawn", GLFW.GLFW_KEY_R, "key.categories.vision");
-        noArrowKey = new KeyBinding("key.vision.noarrow", GLFW.GLFW_KEY_Y, "key.categories.vision");
+        noSlowKey = new KeyBinding("key.vision.noslow", GLFW.GLFW_KEY_N, "key.categories.vision");
+        bowAimbotKey = new KeyBinding("key.vision.bowaimbot", GLFW.GLFW_KEY_X, "key.categories.vision");
+        healthDisplayKey = new KeyBinding("key.vision.healthdisplay", GLFW.GLFW_KEY_U, "key.categories.vision");
+        fastEatKey = new KeyBinding("key.vision.fasteat", GLFW.GLFW_KEY_Z, "key.categories.vision");
         menuKey = new KeyBinding("key.vision.menu", GLFW.GLFW_KEY_BACKSLASH, "key.categories.vision");
         ClientRegistry.registerKeyBinding(speedKey);
         ClientRegistry.registerKeyBinding(jumpKey);
@@ -52,14 +56,16 @@ public class VisionKeybind {
         ClientRegistry.registerKeyBinding(xrayKey);
         ClientRegistry.registerKeyBinding(fullBrightKey);
         ClientRegistry.registerKeyBinding(forceCritKey);
-        ClientRegistry.registerKeyBinding(antiVanishKey);
         ClientRegistry.registerKeyBinding(blinkKey);
         ClientRegistry.registerKeyBinding(antiKnockbackKey);
         ClientRegistry.registerKeyBinding(autoToolKey);
         ClientRegistry.registerKeyBinding(safeWalkKey);
         ClientRegistry.registerKeyBinding(autoSprintKey);
         ClientRegistry.registerKeyBinding(autoRespawnKey);
-        ClientRegistry.registerKeyBinding(noArrowKey);
+        ClientRegistry.registerKeyBinding(noSlowKey);
+        ClientRegistry.registerKeyBinding(bowAimbotKey);
+        ClientRegistry.registerKeyBinding(healthDisplayKey);
+        ClientRegistry.registerKeyBinding(fastEatKey);
         ClientRegistry.registerKeyBinding(menuKey);
     }
 }

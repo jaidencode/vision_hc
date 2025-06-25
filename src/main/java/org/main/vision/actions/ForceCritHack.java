@@ -15,9 +15,7 @@ public class ForceCritHack extends ActionBase {
         if (!isEnabled()) return;
         if (!(event.getPlayer() instanceof ClientPlayerEntity)) return;
         ClientPlayerEntity player = (ClientPlayerEntity) event.getPlayer();
-        player.fallDistance = 1.0F;
-        player.setDeltaMovement(player.getDeltaMovement().x, -0.1D, player.getDeltaMovement().z);
-        sendMovement(player);
+        performPacketCrit(player);
     }
 
     @SubscribeEvent
@@ -32,6 +30,22 @@ public class ForceCritHack extends ActionBase {
         if (conn != null) {
             conn.send(new CPlayerPacket.PositionRotationPacket(
                     player.getX(), player.getY(), player.getZ(),
+                    player.yRot, player.xRot, false));
+        }
+    }
+
+    private void performPacketCrit(ClientPlayerEntity player) {
+        sendOffset(player, 0.0625D);
+        sendOffset(player, 0.0D);
+        sendOffset(player, 0.0125D);
+        sendOffset(player, 0.0D);
+    }
+
+    private void sendOffset(ClientPlayerEntity player, double y) {
+        ClientPlayNetHandler conn = player.connection;
+        if (conn != null) {
+            conn.send(new CPlayerPacket.PositionRotationPacket(
+                    player.getX(), player.getY() + y, player.getZ(),
                     player.yRot, player.xRot, false));
         }
     }

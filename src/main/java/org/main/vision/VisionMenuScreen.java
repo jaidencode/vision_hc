@@ -29,14 +29,16 @@ public class VisionMenuScreen extends Screen {
     private PurpleButton xraySettings;
     private PurpleButton fullBrightButton;
     private PurpleButton forceCritButton;
-    private PurpleButton antiVanishButton;
     private PurpleButton blinkButton;
     private PurpleButton antiKnockbackButton;
     private PurpleButton autoToolButton;
     private PurpleButton safeWalkButton;
     private PurpleButton autoSprintButton;
     private PurpleButton autoRespawnButton;
-    private PurpleButton noArrowButton;
+    private PurpleButton noSlowButton;
+    private PurpleButton bowAimbotButton;
+    private PurpleButton healthDisplayButton;
+    private PurpleButton fastEatButton;
     private static final int BUTTON_WIDTH = 100;
     private static final int BUTTON_HEIGHT = 20;
     private static final int BAR_WIDTH = BUTTON_WIDTH + 25;
@@ -118,21 +120,25 @@ public class VisionMenuScreen extends Screen {
         // Utility bar
         this.forceCritButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20, width, height,
                 getForceCritLabel(), b -> toggleForceCrit()));
-        this.antiVanishButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20, width, height,
-                getAntiVanishLabel(), b -> toggleAntiVanish()));
-        this.antiKnockbackButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20, width, height,
+        this.antiKnockbackButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20, width, height,
                 getAntiKnockbackLabel(), b -> toggleAntiKnockback()));
-        this.autoToolButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20, width, height,
+        this.autoToolButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20, width, height,
                 getAutoToolLabel(), b -> toggleAutoTool()));
-        this.safeWalkButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 100 + (int)(20 * utilDropdownProgress) - 20, width, height,
+        this.safeWalkButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20, width, height,
                 getSafeWalkLabel(), b -> toggleSafeWalk()));
-        this.autoSprintButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 120 + (int)(20 * utilDropdownProgress) - 20, width, height,
+        this.autoSprintButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 100 + (int)(20 * utilDropdownProgress) - 20, width, height,
                 getAutoSprintLabel(), b -> toggleAutoSprint()));
-        this.autoRespawnButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 140 + (int)(20 * utilDropdownProgress) - 20, width, height,
+        this.autoRespawnButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 120 + (int)(20 * utilDropdownProgress) - 20, width, height,
                 getAutoRespawnLabel(), b -> toggleAutoRespawn()));
-        this.noArrowButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 160 + (int)(20 * utilDropdownProgress) - 20, width, height,
-                getNoArrowLabel(), b -> toggleNoArrow()));
-        forceCritButton.visible = antiVanishButton.visible = antiKnockbackButton.visible = autoToolButton.visible = safeWalkButton.visible = autoSprintButton.visible = autoRespawnButton.visible = noArrowButton.visible = utilDropdownProgress > 0.05f;
+        this.noSlowButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 140 + (int)(20 * utilDropdownProgress) - 20, width, height,
+                getNoSlowLabel(), b -> toggleNoSlow()));
+        this.bowAimbotButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 160 + (int)(20 * utilDropdownProgress) - 20, width, height,
+                getBowAimbotLabel(), b -> toggleBowAimbot()));
+        this.healthDisplayButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 180 + (int)(20 * utilDropdownProgress) - 20, width, height,
+                getHealthDisplayLabel(), b -> toggleHealthDisplay()));
+        this.fastEatButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 200 + (int)(20 * utilDropdownProgress) - 20, width, height,
+                getFastEatLabel(), b -> toggleFastEat()));
+        forceCritButton.visible = antiKnockbackButton.visible = autoToolButton.visible = safeWalkButton.visible = autoSprintButton.visible = autoRespawnButton.visible = noSlowButton.visible = bowAimbotButton.visible = healthDisplayButton.visible = fastEatButton.visible = utilDropdownProgress > 0.05f;
     }
 
     private void toggleSpeed() {
@@ -190,12 +196,6 @@ public class VisionMenuScreen extends Screen {
         state.save();
     }
 
-    private void toggleAntiVanish() {
-        VisionClient.getAntiVanishHack().toggle();
-        antiVanishButton.setMessage(getAntiVanishLabel());
-        state.save();
-    }
-
     private void toggleAntiKnockback() {
         VisionClient.getAntiKnockbackHack().toggle();
         antiKnockbackButton.setMessage(getAntiKnockbackLabel());
@@ -226,9 +226,27 @@ public class VisionMenuScreen extends Screen {
         state.save();
     }
 
-    private void toggleNoArrow() {
-        VisionClient.getNoArrowHack().toggle();
-        noArrowButton.setMessage(getNoArrowLabel());
+    private void toggleNoSlow() {
+        VisionClient.getNoSlowHack().toggle();
+        noSlowButton.setMessage(getNoSlowLabel());
+        state.save();
+    }
+
+    private void toggleBowAimbot() {
+        VisionClient.getBowAimbotHack().toggle();
+        bowAimbotButton.setMessage(getBowAimbotLabel());
+        state.save();
+    }
+
+    private void toggleHealthDisplay() {
+        VisionClient.getHealthDisplayHack().toggle();
+        healthDisplayButton.setMessage(getHealthDisplayLabel());
+        state.save();
+    }
+
+    private void toggleFastEat() {
+        VisionClient.getFastEatHack().toggle();
+        fastEatButton.setMessage(getFastEatLabel());
         state.save();
     }
 
@@ -300,10 +318,6 @@ public class VisionMenuScreen extends Screen {
         return new StringTextComponent((VisionClient.getForceCritHack().isEnabled() ? "Disable" : "Enable") + " ForceCrit");
     }
 
-    private StringTextComponent getAntiVanishLabel() {
-        return new StringTextComponent((VisionClient.getAntiVanishHack().isEnabled() ? "Disable" : "Enable") + " AntiVanish");
-    }
-
     private StringTextComponent getAntiKnockbackLabel() {
         return new StringTextComponent((VisionClient.getAntiKnockbackHack().isEnabled() ? "Disable" : "Enable") + " AntiKnockback");
     }
@@ -324,8 +338,20 @@ public class VisionMenuScreen extends Screen {
         return new StringTextComponent((VisionClient.getAutoRespawnHack().isEnabled() ? "Disable" : "Enable") + " AutoRespawn");
     }
 
-    private StringTextComponent getNoArrowLabel() {
-        return new StringTextComponent((VisionClient.getNoArrowHack().isEnabled() ? "Disable" : "Enable") + " NoArrow");
+    private StringTextComponent getNoSlowLabel() {
+        return new StringTextComponent((VisionClient.getNoSlowHack().isEnabled() ? "Disable" : "Enable") + " NoSlow");
+    }
+
+    private StringTextComponent getBowAimbotLabel() {
+        return new StringTextComponent((VisionClient.getBowAimbotHack().isEnabled() ? "Disable" : "Enable") + " BowAimbot");
+    }
+
+    private StringTextComponent getHealthDisplayLabel() {
+        return new StringTextComponent((VisionClient.getHealthDisplayHack().isEnabled() ? "Disable" : "Enable") + " HealthDisplay");
+    }
+
+    private StringTextComponent getFastEatLabel() {
+        return new StringTextComponent((VisionClient.getFastEatHack().isEnabled() ? "Disable" : "Enable") + " FastEat");
     }
 
     @Override
@@ -402,21 +428,25 @@ public class VisionMenuScreen extends Screen {
             state.utilBarX = (int)mouseX - utilDragOffsetX;
             state.utilBarY = (int)mouseY - utilDragOffsetY;
             forceCritButton.x = state.utilBarX;
-            antiVanishButton.x = state.utilBarX;
             antiKnockbackButton.x = state.utilBarX;
             autoToolButton.x = state.utilBarX;
             safeWalkButton.x = state.utilBarX;
             autoSprintButton.x = state.utilBarX;
             autoRespawnButton.x = state.utilBarX;
-            noArrowButton.x = state.utilBarX;
+            noSlowButton.x = state.utilBarX;
+            bowAimbotButton.x = state.utilBarX;
+            healthDisplayButton.x = state.utilBarX;
+            fastEatButton.x = state.utilBarX;
             forceCritButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
-            antiVanishButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
-            antiKnockbackButton.y = state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20;
-            autoToolButton.y = state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20;
-            safeWalkButton.y = state.utilBarY + 100 + (int)(20 * utilDropdownProgress) - 20;
-            autoSprintButton.y = state.utilBarY + 120 + (int)(20 * utilDropdownProgress) - 20;
-            autoRespawnButton.y = state.utilBarY + 140 + (int)(20 * utilDropdownProgress) - 20;
-            noArrowButton.y = state.utilBarY + 160 + (int)(20 * utilDropdownProgress) - 20;
+            antiKnockbackButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
+            autoToolButton.y = state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20;
+            safeWalkButton.y = state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20;
+            autoSprintButton.y = state.utilBarY + 100 + (int)(20 * utilDropdownProgress) - 20;
+            autoRespawnButton.y = state.utilBarY + 120 + (int)(20 * utilDropdownProgress) - 20;
+            noSlowButton.y = state.utilBarY + 140 + (int)(20 * utilDropdownProgress) - 20;
+            bowAimbotButton.y = state.utilBarY + 160 + (int)(20 * utilDropdownProgress) - 20;
+            healthDisplayButton.y = state.utilBarY + 180 + (int)(20 * utilDropdownProgress) - 20;
+            fastEatButton.y = state.utilBarY + 200 + (int)(20 * utilDropdownProgress) - 20;
             return true;
         }
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
@@ -503,21 +533,25 @@ public class VisionMenuScreen extends Screen {
         fullBrightButton.y = state.renderBarY + 40 + (int)(20 * renderDropdownProgress) - 20;
         xraySettings.y = xrayButton.y;
         forceCritButton.x = state.utilBarX;
-        antiVanishButton.x = state.utilBarX;
         antiKnockbackButton.x = state.utilBarX;
         autoToolButton.x = state.utilBarX;
         safeWalkButton.x = state.utilBarX;
         autoSprintButton.x = state.utilBarX;
         autoRespawnButton.x = state.utilBarX;
-        noArrowButton.x = state.utilBarX;
+        noSlowButton.x = state.utilBarX;
+        bowAimbotButton.x = state.utilBarX;
+        healthDisplayButton.x = state.utilBarX;
+        fastEatButton.x = state.utilBarX;
         forceCritButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
-        antiVanishButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
-        antiKnockbackButton.y = state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20;
-        autoToolButton.y = state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20;
-        safeWalkButton.y = state.utilBarY + 100 + (int)(20 * utilDropdownProgress) - 20;
-        autoSprintButton.y = state.utilBarY + 120 + (int)(20 * utilDropdownProgress) - 20;
-        autoRespawnButton.y = state.utilBarY + 140 + (int)(20 * utilDropdownProgress) - 20;
-        noArrowButton.y = state.utilBarY + 160 + (int)(20 * utilDropdownProgress) - 20;
+        antiKnockbackButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
+        autoToolButton.y = state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20;
+        safeWalkButton.y = state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20;
+        autoSprintButton.y = state.utilBarY + 100 + (int)(20 * utilDropdownProgress) - 20;
+        autoRespawnButton.y = state.utilBarY + 120 + (int)(20 * utilDropdownProgress) - 20;
+        noSlowButton.y = state.utilBarY + 140 + (int)(20 * utilDropdownProgress) - 20;
+        bowAimbotButton.y = state.utilBarY + 160 + (int)(20 * utilDropdownProgress) - 20;
+        healthDisplayButton.y = state.utilBarY + 180 + (int)(20 * utilDropdownProgress) - 20;
+        fastEatButton.y = state.utilBarY + 200 + (int)(20 * utilDropdownProgress) - 20;
 
         boolean vis = dropdownProgress > 0.05f;
         boolean visR = renderDropdownProgress > 0.05f;
@@ -526,7 +560,7 @@ public class VisionMenuScreen extends Screen {
         speedSettings.visible = jumpSettings.visible = flySettings.visible = jesusSettings.visible = noFallSettings.visible = vis;
         xrayButton.visible = fullBrightButton.visible = visR;
         xraySettings.visible = visR;
-        forceCritButton.visible = antiVanishButton.visible = antiKnockbackButton.visible = autoToolButton.visible = safeWalkButton.visible = autoSprintButton.visible = autoRespawnButton.visible = noArrowButton.visible = visU;
+        forceCritButton.visible = antiKnockbackButton.visible = autoToolButton.visible = safeWalkButton.visible = autoSprintButton.visible = autoRespawnButton.visible = noSlowButton.visible = bowAimbotButton.visible = healthDisplayButton.visible = fastEatButton.visible = visU;
         speedButton.setAlpha(dropdownProgress);
         jumpButton.setAlpha(dropdownProgress);
         flyButton.setAlpha(dropdownProgress);
@@ -542,13 +576,15 @@ public class VisionMenuScreen extends Screen {
         fullBrightButton.setAlpha(renderDropdownProgress);
         xraySettings.setAlpha(renderDropdownProgress);
         forceCritButton.setAlpha(utilDropdownProgress);
-        antiVanishButton.setAlpha(utilDropdownProgress);
         antiKnockbackButton.setAlpha(utilDropdownProgress);
         autoToolButton.setAlpha(utilDropdownProgress);
         safeWalkButton.setAlpha(utilDropdownProgress);
         autoSprintButton.setAlpha(utilDropdownProgress);
         autoRespawnButton.setAlpha(utilDropdownProgress);
-        noArrowButton.setAlpha(utilDropdownProgress);
+        noSlowButton.setAlpha(utilDropdownProgress);
+        bowAimbotButton.setAlpha(utilDropdownProgress);
+        healthDisplayButton.setAlpha(utilDropdownProgress);
+        fastEatButton.setAlpha(utilDropdownProgress);
 
         super.render(matrices, mouseX, mouseY, partialTicks);
     }

@@ -14,14 +14,16 @@ import org.main.vision.actions.NoFallHack;
 import org.main.vision.actions.XRayHack;
 import org.main.vision.actions.FullBrightHack;
 import org.main.vision.actions.ForceCritHack;
-import org.main.vision.actions.AntiVanishHack;
 import org.main.vision.actions.BlinkHack;
 import org.main.vision.actions.AntiKnockbackHack;
 import org.main.vision.actions.AutoToolHack;
 import org.main.vision.actions.SafeWalkHack;
 import org.main.vision.actions.AutoSprintHack;
 import org.main.vision.actions.AutoRespawnHack;
-import org.main.vision.actions.NoArrowHack;
+import org.main.vision.actions.NoSlowHack;
+import org.main.vision.actions.BowAimbotHack;
+import org.main.vision.actions.HealthDisplayHack;
+import org.main.vision.actions.FastEatHack;
 import org.main.vision.config.HackSettings;
 
 /**
@@ -37,14 +39,16 @@ public class VisionClient {
     private static final XRayHack XRAY_HACK = new XRayHack();
     private static final FullBrightHack FULLBRIGHT_HACK = new FullBrightHack();
     private static final ForceCritHack FORCECRIT_HACK = new ForceCritHack();
-    private static final AntiVanishHack ANTIVANISH_HACK = new AntiVanishHack();
     private static final BlinkHack BLINK_HACK = new BlinkHack();
     private static final AntiKnockbackHack ANTIKNOCKBACK_HACK = new AntiKnockbackHack();
     private static final AutoToolHack AUTOTOOL_HACK = new AutoToolHack();
     private static final SafeWalkHack SAFEWALK_HACK = new SafeWalkHack();
     private static final AutoSprintHack AUTOSPRINT_HACK = new AutoSprintHack();
     private static final AutoRespawnHack AUTORESPAWN_HACK = new AutoRespawnHack();
-    private static final NoArrowHack NOARROW_HACK = new NoArrowHack();
+    private static final NoSlowHack NOSLOW_HACK = new NoSlowHack();
+    private static final BowAimbotHack BOWAIMBOT_HACK = new BowAimbotHack();
+    private static final HealthDisplayHack HEALTHDISPLAY_HACK = new HealthDisplayHack();
+    private static final FastEatHack FASTEAT_HACK = new FastEatHack();
     private static HackSettings SETTINGS;
 
     static void init() {
@@ -84,10 +88,6 @@ public class VisionClient {
         return FORCECRIT_HACK;
     }
 
-    public static AntiVanishHack getAntiVanishHack() {
-        return ANTIVANISH_HACK;
-    }
-
     public static BlinkHack getBlinkHack() {
         return BLINK_HACK;
     }
@@ -112,8 +112,20 @@ public class VisionClient {
         return AUTORESPAWN_HACK;
     }
 
-    public static NoArrowHack getNoArrowHack() {
-        return NOARROW_HACK;
+    public static NoSlowHack getNoSlowHack() {
+        return NOSLOW_HACK;
+    }
+
+    public static BowAimbotHack getBowAimbotHack() {
+        return BOWAIMBOT_HACK;
+    }
+
+    public static HealthDisplayHack getHealthDisplayHack() {
+        return HEALTHDISPLAY_HACK;
+    }
+
+    public static FastEatHack getFastEatHack() {
+        return FASTEAT_HACK;
     }
 
 
@@ -154,9 +166,6 @@ public class VisionClient {
         if (event.getKey() == VisionKeybind.forceCritKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             FORCECRIT_HACK.toggle();
         }
-        if (event.getKey() == VisionKeybind.antiVanishKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
-            ANTIVANISH_HACK.toggle();
-        }
         if (event.getKey() == VisionKeybind.blinkKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             BLINK_HACK.toggle();
         }
@@ -175,8 +184,17 @@ public class VisionClient {
         if (event.getKey() == VisionKeybind.autoRespawnKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             AUTORESPAWN_HACK.toggle();
         }
-        if (event.getKey() == VisionKeybind.noArrowKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
-            NOARROW_HACK.toggle();
+        if (event.getKey() == VisionKeybind.noSlowKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            NOSLOW_HACK.toggle();
+        }
+        if (event.getKey() == VisionKeybind.bowAimbotKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            BOWAIMBOT_HACK.toggle();
+        }
+        if (event.getKey() == VisionKeybind.healthDisplayKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            HEALTHDISPLAY_HACK.toggle();
+        }
+        if (event.getKey() == VisionKeybind.fastEatKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            FASTEAT_HACK.toggle();
         }
         if (event.getKey() == VisionKeybind.menuKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
             Minecraft.getInstance().setScreen(new VisionMenuScreen());
