@@ -16,16 +16,20 @@ public class MixinNetworkManager {
             ci.cancel();
             return;
         }
+        if (!org.main.vision.network.AdaptivePacketHandler.getInstance().handleOutgoing(packet)) {
+            ci.cancel();
+            return;
+        }
     }
 
     @Inject(method = "send", at = @At("TAIL"))
     private void vision$predictSend(IPacket<?> packet, CallbackInfo ci) {
-        org.main.vision.network.PacketPredictor.getInstance().onSend(packet);
+        org.main.vision.network.AdaptivePacketHandler.getInstance().afterSend(packet);
     }
 
     @Inject(method = "channelRead0", at = @At("HEAD"))
     private void vision$predictReceive(ChannelHandlerContext ctx, IPacket<?> packet, CallbackInfo ci) {
-        org.main.vision.network.PacketPredictor.getInstance().onReceive(packet);
+        org.main.vision.network.AdaptivePacketHandler.getInstance().handleIncoming(packet);
     }
 
 }

@@ -20,6 +20,18 @@ public class PacketPredictor {
     private double predictedY;
     private double predictedZ;
 
+    public double getPredictedX() {
+        return predictedX;
+    }
+
+    public double getPredictedY() {
+        return predictedY;
+    }
+
+    public double getPredictedZ() {
+        return predictedZ;
+    }
+
     private PacketPredictor() {
         MinecraftForge.EVENT_BUS.register(this);
     }

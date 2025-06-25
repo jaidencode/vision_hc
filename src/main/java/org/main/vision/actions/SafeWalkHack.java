@@ -1,8 +1,8 @@
 package org.main.vision.actions;
 
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.network.play.client.CPlayerPacket;
+import org.main.vision.network.AdaptivePacketHandler;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.event.TickEvent;
@@ -20,9 +20,21 @@ public class SafeWalkHack extends ActionBase {
 
         ClientPlayerEntity player = (ClientPlayerEntity) event.player;
         if (player.input == null) return;
-        if (isNearEdge(player)) {
+        if (isNearEdge(player) && !isIntentionalAction(player)) {
             haltMovement(player);
         }
+    }
+
+    /**
+     * Returns true if the player is intentionally moving off
+     * the ledge, such as jumping or performing an obvious
+     * upward movement.
+     */
+    private boolean isIntentionalAction(ClientPlayerEntity player) {
+        if (player.input.jumping) {
+            return true;
+        }
+        return player.getDeltaMovement().y > 0.1D;
     }
 
     private boolean isNearEdge(ClientPlayerEntity player) {
@@ -47,11 +59,9 @@ public class SafeWalkHack extends ActionBase {
     }
 
     private void sendMovement(ClientPlayerEntity player) {
-        ClientPlayNetHandler conn = player.connection;
-        if (conn != null) {
-            conn.send(new CPlayerPacket.PositionRotationPacket(
-                    player.getX(), player.getY(), player.getZ(),
-                    player.yRot, player.xRot, player.isOnGround()));
-        }
+        AdaptivePacketHandler.getInstance().sendDirect(
+                new CPlayerPacket.PositionRotationPacket(
+                        player.getX(), player.getY(), player.getZ(),
+                        player.yRot, player.xRot, player.isOnGround()));
     }
 }
