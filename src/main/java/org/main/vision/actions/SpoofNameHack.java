@@ -3,9 +3,9 @@ package org.main.vision.actions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
+import net.minecraft.network.IPacket;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.client.event.ClientChatEvent;
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.main.vision.VisionClient;
@@ -88,25 +88,84 @@ public class SpoofNameHack extends ActionBase {
         applyAlias();
     }
 
-    @SubscribeEvent
-    public void onChatReceive(ClientChatReceivedEvent event) {
-        if (!isEnabled()) return;
+    /**
+     * Modify the player's name within incoming packets.
+     */
+    public static void handleIncoming(IPacket<?> packet) {
+        SpoofNameHack hack = VisionClient.getSpoofNameHack();
+        if (!hack.isEnabled()) return;
         HackSettings cfg = VisionClient.getSettings();
         if (!cfg.spoofIncoming) return;
         String alias = cfg.spoofName;
-        if (alias == null || alias.isEmpty() || actualName == null) return;
-        String msg = event.getMessage().getString().replace(actualName, alias);
-        event.setMessage(new StringTextComponent(msg));
+        if (alias == null || alias.isEmpty() || hack.actualName == null) return;
+        hack.replaceStrings(packet, hack.actualName, alias, new java.util.IdentityHashMap<>());
     }
 
-    @SubscribeEvent
-    public void onChatSend(ClientChatEvent event) {
-        if (!isEnabled()) return;
+    /**
+     * Modify the player's name within outgoing packets.
+     */
+    public static void handleOutgoing(IPacket<?> packet) {
+        SpoofNameHack hack = VisionClient.getSpoofNameHack();
+        if (!hack.isEnabled()) return;
         HackSettings cfg = VisionClient.getSettings();
         if (!cfg.spoofOutgoing) return;
         String alias = cfg.spoofName;
-        if (alias == null || alias.isEmpty() || actualName == null) return;
-        String msg = event.getMessage().replace(actualName, alias);
-        event.setMessage(msg);
+        if (alias == null || alias.isEmpty() || hack.actualName == null) return;
+        hack.replaceStrings(packet, hack.actualName, alias, new java.util.IdentityHashMap<>());
+    }
+
+    /**
+     * Recursively replace string values within the given object.
+     */
+    private void replaceStrings(Object obj, String from, String to, java.util.Map<Object, Boolean> visited) {
+        if (obj == null || visited.containsKey(obj)) return;
+        visited.put(obj, Boolean.TRUE);
+
+        if (obj instanceof StringTextComponent) {
+            try {
+                java.lang.reflect.Field f = StringTextComponent.class.getDeclaredField("text");
+                f.setAccessible(true);
+                String val = (String) f.get(obj);
+                if (val != null) f.set(obj, val.replace(from, to));
+            } catch (Exception ignored) {}
+        }
+
+        if (obj instanceof ITextComponent) {
+            for (ITextComponent child : ((ITextComponent) obj).getSiblings()) {
+                replaceStrings(child, from, to, visited);
+            }
+            return;
+        }
+
+        Class<?> cls = obj.getClass();
+        if (cls.isArray()) {
+            int len = java.lang.reflect.Array.getLength(obj);
+            for (int i = 0; i < len; i++) {
+                replaceStrings(java.lang.reflect.Array.get(obj, i), from, to, visited);
+            }
+            return;
+        }
+
+        if (obj instanceof Iterable) {
+            for (Object o : (Iterable<?>) obj) {
+                replaceStrings(o, from, to, visited);
+            }
+            return;
+        }
+
+        while (cls != Object.class) {
+            for (java.lang.reflect.Field field : cls.getDeclaredFields()) {
+                field.setAccessible(true);
+                try {
+                    Object val = field.get(obj);
+                    if (val instanceof String) {
+                        field.set(obj, ((String) val).replace(from, to));
+                    } else {
+                        replaceStrings(val, from, to, visited);
+                    }
+                } catch (Exception ignored) {}
+            }
+            cls = cls.getSuperclass();
+        }
     }
 }
