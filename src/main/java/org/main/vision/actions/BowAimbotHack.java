@@ -13,6 +13,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
  * Automatically adjusts aim for bow shots using simple prediction.
+ * The improved version now predicts the target's future position based on
+ * its current velocity and distance so that moving entities are hit more
+ * consistently.
  */
 public class BowAimbotHack extends ActionBase {
     public enum Mode { PLAYERS, MOBS, BOTH }
@@ -33,7 +36,7 @@ public class BowAimbotHack extends ActionBase {
 
         LivingEntity target = findTarget(player);
         if (target == null) return;
-        Vector3d pos = target.getEyePosition(1.0F);
+        Vector3d pos = predictPosition(target, player);
         facePos(player, pos);
     }
 
@@ -62,6 +65,23 @@ public class BowAimbotHack extends ActionBase {
             }
         }
         return best;
+    }
+
+    /**
+     * Estimate where the entity will be when an arrow reaches it.
+     * This uses a simple linear prediction based on the entity's
+     * current velocity and distance from the shooter.
+     */
+    private Vector3d predictPosition(LivingEntity target, PlayerEntity shooter) {
+        Vector3d targetPos = target.getEyePosition(1.0F);
+        Vector3d velocity = target.getDeltaMovement();
+        double distance = targetPos.distanceTo(shooter.getEyePosition(1.0F));
+
+        // Approximate arrow flight speed when fully charged.
+        double arrowSpeed = 3.0D;
+        double time = distance / arrowSpeed;
+
+        return targetPos.add(velocity.scale(time));
     }
 
     private void facePos(ClientPlayerEntity player, Vector3d pos) {
