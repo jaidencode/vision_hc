@@ -10,7 +10,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.Comparator;
 
 /**
  * Automatically adjusts aim for bow shots using simple prediction.
@@ -34,29 +33,35 @@ public class BowAimbotHack extends ActionBase {
 
         LivingEntity target = findTarget(player);
         if (target == null) return;
-        Vector3d pos = predictPosition(player, target);
+        Vector3d pos = target.getEyePosition(1.0F);
         facePos(player, pos);
     }
 
     private LivingEntity findTarget(PlayerEntity player) {
-        net.minecraft.client.world.ClientWorld world = (net.minecraft.client.world.ClientWorld) player.level;
-        return java.util.stream.StreamSupport.stream(world.entitiesForRendering().spliterator(), false)
-                .filter(e -> e instanceof LivingEntity)
-                .map(e -> (LivingEntity)e)
-                .filter(e -> !e.isInvisible())
-                .filter(e -> e != player)
-                .filter(e -> mode == Mode.BOTH ||
-                        (mode == Mode.PLAYERS && e instanceof PlayerEntity) ||
-                        (mode == Mode.MOBS && !(e instanceof PlayerEntity)))
-                .min(Comparator.comparingDouble(e -> player.distanceToSqr(e)))
-                .orElse(null);
-    }
+        Vector3d eye = player.getEyePosition(1.0F);
+        Vector3d look = player.getViewVector(1.0F);
+        double range = 50.0D;
+        LivingEntity best = null;
+        double bestDist = range;
 
-    private Vector3d predictPosition(PlayerEntity shooter, LivingEntity target) {
-        Vector3d tv = target.getDeltaMovement();
-        double dist = shooter.distanceTo(target);
-        double t = dist / 1.5D;
-        return target.position().add(tv.scale(t));
+        net.minecraft.client.world.ClientWorld world = (net.minecraft.client.world.ClientWorld) player.level;
+        for (LivingEntity e : world.getEntitiesOfClass(LivingEntity.class,
+                player.getBoundingBox().expandTowards(look.scale(range)).inflate(1.0D),
+                ent -> ent != player && !ent.isInvisible() &&
+                        (mode == Mode.BOTH || (mode == Mode.PLAYERS && ent instanceof PlayerEntity) ||
+                                (mode == Mode.MOBS && !(ent instanceof PlayerEntity))))) {
+            Vector3d targetPos = e.getEyePosition(1.0F);
+            Vector3d toTarget = targetPos.subtract(eye);
+            double dist = toTarget.length();
+            if (dist < bestDist) {
+                double dot = toTarget.normalize().dot(look);
+                if (dot > 0.99) {
+                    bestDist = dist;
+                    best = e;
+                }
+            }
+        }
+        return best;
     }
 
     private void facePos(ClientPlayerEntity player, Vector3d pos) {

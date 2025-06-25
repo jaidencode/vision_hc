@@ -3,595 +3,166 @@ package org.main.vision;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import org.main.vision.PurpleButton;
 import net.minecraft.util.text.StringTextComponent;
-import org.main.vision.config.UIState;
-import org.main.vision.actions.SpeedHack;
-import org.main.vision.VisionClient;
-import org.main.vision.HackSettingsScreen;
-import org.main.vision.SpeedSettingsScreen;
 
-/** Simple in-game menu with a draggable bar and dropdown for hacks. */
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+
+/**
+ * Simple grid based menu for toggling hacks.
+ */
 public class VisionMenuScreen extends Screen {
-    private final Minecraft mc = Minecraft.getInstance();
-    private final UIState state;
-    private PurpleButton speedButton;
-    private PurpleButton jumpButton;
-    private PurpleButton flyButton;
-    private PurpleButton jesusButton;
-    private PurpleButton noFallButton;
-    private PurpleButton xrayButton;
-    private PurpleButton speedSettings;
-    private PurpleButton jumpSettings;
-    private PurpleButton flySettings;
-    private PurpleButton jesusSettings;
-    private PurpleButton noFallSettings;
-    private PurpleButton xraySettings;
-    private PurpleButton fullBrightButton;
-    private PurpleButton forceCritButton;
-    private PurpleButton blinkButton;
-    private PurpleButton antiKnockbackButton;
-    private PurpleButton autoToolButton;
-    private PurpleButton safeWalkButton;
-    private PurpleButton autoSprintButton;
-    private PurpleButton autoRespawnButton;
-    private PurpleButton noSlowButton;
-    private PurpleButton bowAimbotButton;
-    private PurpleButton healthDisplayButton;
-    private PurpleButton fastEatButton;
-    private static final int BUTTON_WIDTH = 100;
-    private static final int BUTTON_HEIGHT = 20;
-    private static final int BAR_WIDTH = BUTTON_WIDTH + 25;
-    private boolean dragging;
-    private boolean draggingRender;
-    private boolean draggingUtil;
-    private int dragOffsetX, dragOffsetY;
-    private int dragStartX, dragStartY;
-    private int renderDragOffsetX, renderDragOffsetY;
-    private int renderDragStartX, renderDragStartY;
-    private int utilDragOffsetX, utilDragOffsetY;
-    private int utilDragStartX, utilDragStartY;
-    private float dropdownProgress;
-    private float renderDropdownProgress;
-    private float utilDropdownProgress;
-    private boolean dropdownTarget;
-    private boolean renderDropdownTarget;
-    private boolean utilDropdownTarget;
+    private static final int TOGGLE_WIDTH = 80;
+    private static final int SETTINGS_WIDTH = 18;
+    private static final int BUTTON_HEIGHT = 16;
+    private static final int PADDING = 4;
+
+    private static class Entry {
+        PurpleButton toggle;
+        PurpleButton settings;
+        Supplier<StringTextComponent> label;
+    }
+
+    private final List<Entry> entries = new ArrayList<>();
+    private int scrollOffset;
 
     public VisionMenuScreen() {
         super(new StringTextComponent("Vision Menu"));
-        this.state = UIState.load();
-        this.dropdownTarget = state.hacksExpanded;
-        this.renderDropdownTarget = state.renderExpanded;
-        this.utilDropdownTarget = state.utilExpanded;
-        this.dropdownProgress = state.hacksExpanded ? 1.0f : 0.0f;
-        this.renderDropdownProgress = state.renderExpanded ? 1.0f : 0.0f;
-        this.utilDropdownProgress = state.utilExpanded ? 1.0f : 0.0f;
     }
 
     @Override
     protected void init() {
-        int width = BUTTON_WIDTH;
-        int height = BUTTON_HEIGHT;
-        // Movement bar
-        this.speedButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 20 + (int)(20 * dropdownProgress) - 20, width, height,
-                getSpeedLabel(), b -> toggleSpeed()));
-        this.speedSettings = addButton(new PurpleButton(state.miscBarX + width + 5, state.miscBarY + 20 + (int)(20 * dropdownProgress) - 20, 20, height,
-                new StringTextComponent("\u2699"), b -> openSpeedSettings()));
-
-        this.jumpButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 40 + (int)(20 * dropdownProgress) - 20, width, height,
-                getJumpLabel(), b -> toggleJump()));
-        this.jumpSettings = addButton(new PurpleButton(state.miscBarX + width + 5, state.miscBarY + 40 + (int)(20 * dropdownProgress) - 20, 20, height,
-                new StringTextComponent("\u2699"), b -> openJumpSettings()));
-
-        this.flyButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 60 + (int)(20 * dropdownProgress) - 20, width, height,
-                getFlyLabel(), b -> toggleFly()));
-        this.flySettings = addButton(new PurpleButton(state.miscBarX + width + 5, state.miscBarY + 60 + (int)(20 * dropdownProgress) - 20, 20, height,
-                new StringTextComponent("\u2699"), b -> openFlySettings()));
-
-        this.jesusButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 80 + (int)(20 * dropdownProgress) - 20, width, height,
-                getJesusLabel(), b -> toggleJesus()));
-        this.jesusSettings = addButton(new PurpleButton(state.miscBarX + width + 5, state.miscBarY + 80 + (int)(20 * dropdownProgress) - 20, 20, height,
-                new StringTextComponent("\u2699"), b -> openJesusSettings()));
-
-        this.noFallButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 100 + (int)(20 * dropdownProgress) - 20, width, height,
-                getNoFallLabel(), b -> toggleNoFall()));
-        this.noFallSettings = addButton(new PurpleButton(state.miscBarX + width + 5, state.miscBarY + 100 + (int)(20 * dropdownProgress) - 20, 20, height,
-                new StringTextComponent("\u2699"), b -> openNoFallSettings()));
-
-        this.blinkButton = addButton(new PurpleButton(state.miscBarX, state.miscBarY + 120 + (int)(20 * dropdownProgress) - 20, width, height,
-                getBlinkLabel(), b -> toggleBlink()));
-
-        speedButton.visible = jumpButton.visible = flyButton.visible = jesusButton.visible = noFallButton.visible = blinkButton.visible = dropdownProgress > 0.05f;
-        speedSettings.visible = jumpSettings.visible = flySettings.visible = jesusSettings.visible = noFallSettings.visible = dropdownProgress > 0.05f;
-
-        // Render bar
-        this.xrayButton = addButton(new PurpleButton(state.renderBarX, state.renderBarY + 20 + (int)(20 * renderDropdownProgress) - 20, width, height,
-                getXRayLabel(), b -> toggleXRay()));
-        this.xraySettings = addButton(new PurpleButton(state.renderBarX + width + 5, state.renderBarY + 20 + (int)(20 * renderDropdownProgress) - 20, 20, height,
-                new StringTextComponent("\u2699"), b -> openXRaySettings()));
-
-        this.fullBrightButton = addButton(new PurpleButton(state.renderBarX, state.renderBarY + 40 + (int)(20 * renderDropdownProgress) - 20, width, height,
-                getFullBrightLabel(), b -> toggleFullBright()));
-
-        xrayButton.visible = fullBrightButton.visible = renderDropdownProgress > 0.05f;
-        xraySettings.visible = renderDropdownProgress > 0.05f;
-
-        // Utility bar
-        this.forceCritButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20, width, height,
-                getForceCritLabel(), b -> toggleForceCrit()));
-        this.antiKnockbackButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20, width, height,
-                getAntiKnockbackLabel(), b -> toggleAntiKnockback()));
-        this.autoToolButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20, width, height,
-                getAutoToolLabel(), b -> toggleAutoTool()));
-        this.safeWalkButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20, width, height,
-                getSafeWalkLabel(), b -> toggleSafeWalk()));
-        this.autoSprintButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 100 + (int)(20 * utilDropdownProgress) - 20, width, height,
-                getAutoSprintLabel(), b -> toggleAutoSprint()));
-        this.autoRespawnButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 120 + (int)(20 * utilDropdownProgress) - 20, width, height,
-                getAutoRespawnLabel(), b -> toggleAutoRespawn()));
-        this.noSlowButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 140 + (int)(20 * utilDropdownProgress) - 20, width, height,
-                getNoSlowLabel(), b -> toggleNoSlow()));
-        this.bowAimbotButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 160 + (int)(20 * utilDropdownProgress) - 20, width, height,
-                getBowAimbotLabel(), b -> toggleBowAimbot()));
-        this.healthDisplayButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 180 + (int)(20 * utilDropdownProgress) - 20, width, height,
-                getHealthDisplayLabel(), b -> toggleHealthDisplay()));
-        this.fastEatButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 200 + (int)(20 * utilDropdownProgress) - 20, width, height,
-                getFastEatLabel(), b -> toggleFastEat()));
-        forceCritButton.visible = antiKnockbackButton.visible = autoToolButton.visible = safeWalkButton.visible = autoSprintButton.visible = autoRespawnButton.visible = noSlowButton.visible = bowAimbotButton.visible = healthDisplayButton.visible = fastEatButton.visible = utilDropdownProgress > 0.05f;
+        entries.clear();
+        scrollOffset = 0;
+        addEntry(() -> getSpeedLabel(), this::toggleSpeed, this::openSpeedSettings);
+        addEntry(() -> getJumpLabel(), this::toggleJump, this::openJumpSettings);
+        addEntry(() -> getFlyLabel(), this::toggleFly, this::openFlySettings);
+        addEntry(() -> getJesusLabel(), this::toggleJesus, this::openJesusSettings);
+        addEntry(() -> getNoFallLabel(), this::toggleNoFall, this::openNoFallSettings);
+        addEntry(() -> getBlinkLabel(), this::toggleBlink, null);
+        addEntry(() -> getXRayLabel(), this::toggleXRay, this::openXRaySettings);
+        addEntry(() -> getFullBrightLabel(), this::toggleFullBright, null);
+        addEntry(() -> getForceCritLabel(), this::toggleForceCrit, null);
+        addEntry(() -> getAntiKnockbackLabel(), this::toggleAntiKnockback, null);
+        addEntry(() -> getAutoToolLabel(), this::toggleAutoTool, null);
+        addEntry(() -> getSafeWalkLabel(), this::toggleSafeWalk, null);
+        addEntry(() -> getAutoSprintLabel(), this::toggleAutoSprint, null);
+        addEntry(() -> getAutoRespawnLabel(), this::toggleAutoRespawn, null);
+        addEntry(() -> getNoSlowLabel(), this::toggleNoSlow, null);
+        addEntry(() -> getBowAimbotLabel(), this::toggleBowAimbot, null);
+        addEntry(() -> getHealthDisplayLabel(), this::toggleHealthDisplay, null);
+        addEntry(() -> getFastEatLabel(), this::toggleFastEat, null);
+        layoutButtons();
     }
 
-    private void toggleSpeed() {
-        SpeedHack hack = VisionClient.getSpeedHack();
-        hack.toggle();
-        speedButton.setMessage(getSpeedLabel());
-        state.save();
-    }
-
-    private void toggleJump() {
-        VisionClient.getJumpHack().toggle();
-        jumpButton.setMessage(getJumpLabel());
-        state.save();
-    }
-
-    private void toggleFly() {
-        VisionClient.getFlyHack().toggle();
-        flyButton.setMessage(getFlyLabel());
-        state.save();
-    }
-
-    private void toggleJesus() {
-        VisionClient.getJesusHack().toggle();
-        jesusButton.setMessage(getJesusLabel());
-        state.save();
-    }
-
-    private void toggleNoFall() {
-        VisionClient.getNoFallHack().toggle();
-        noFallButton.setMessage(getNoFallLabel());
-        state.save();
-    }
-
-    private void toggleXRay() {
-        VisionClient.getXRayHack().toggle();
-        xrayButton.setMessage(getXRayLabel());
-        state.save();
-    }
-
-    private void toggleBlink() {
-        VisionClient.getBlinkHack().toggle();
-        blinkButton.setMessage(getBlinkLabel());
-        state.save();
-    }
-
-    private void toggleFullBright() {
-        VisionClient.getFullBrightHack().toggle();
-        fullBrightButton.setMessage(getFullBrightLabel());
-        state.save();
-    }
-
-    private void toggleForceCrit() {
-        VisionClient.getForceCritHack().toggle();
-        forceCritButton.setMessage(getForceCritLabel());
-        state.save();
-    }
-
-    private void toggleAntiKnockback() {
-        VisionClient.getAntiKnockbackHack().toggle();
-        antiKnockbackButton.setMessage(getAntiKnockbackLabel());
-        state.save();
-    }
-
-    private void toggleAutoTool() {
-        VisionClient.getAutoToolHack().toggle();
-        autoToolButton.setMessage(getAutoToolLabel());
-        state.save();
-    }
-
-    private void toggleSafeWalk() {
-        VisionClient.getSafeWalkHack().toggle();
-        safeWalkButton.setMessage(getSafeWalkLabel());
-        state.save();
-    }
-
-    private void toggleAutoSprint() {
-        VisionClient.getAutoSprintHack().toggle();
-        autoSprintButton.setMessage(getAutoSprintLabel());
-        state.save();
-    }
-
-    private void toggleAutoRespawn() {
-        VisionClient.getAutoRespawnHack().toggle();
-        autoRespawnButton.setMessage(getAutoRespawnLabel());
-        state.save();
-    }
-
-    private void toggleNoSlow() {
-        VisionClient.getNoSlowHack().toggle();
-        noSlowButton.setMessage(getNoSlowLabel());
-        state.save();
-    }
-
-    private void toggleBowAimbot() {
-        VisionClient.getBowAimbotHack().toggle();
-        bowAimbotButton.setMessage(getBowAimbotLabel());
-        state.save();
-    }
-
-    private void toggleHealthDisplay() {
-        VisionClient.getHealthDisplayHack().toggle();
-        healthDisplayButton.setMessage(getHealthDisplayLabel());
-        state.save();
-    }
-
-    private void toggleFastEat() {
-        VisionClient.getFastEatHack().toggle();
-        fastEatButton.setMessage(getFastEatLabel());
-        state.save();
-    }
-
-
-    private void openSpeedSettings() {
-        this.minecraft.setScreen(new SpeedSettingsScreen(this));
-    }
-
-    private void openJumpSettings() {
-        this.minecraft.setScreen(new HackSettingsScreen(this, "Jump", () -> VisionClient.getSettings().jumpVelocity,
-                v -> {VisionClient.getSettings().jumpVelocity = v;}, VisionClient::saveSettings, 1.2D));
-    }
-
-    private void openFlySettings() {
-        this.minecraft.setScreen(new HackSettingsScreen(this, "FlySpeed", () -> VisionClient.getSettings().flyHorizontalSpeed,
-                v -> {VisionClient.getSettings().flyHorizontalSpeed = v;}, VisionClient::saveSettings, 0.75D));
-    }
-
-    private void openJesusSettings() {
-        this.minecraft.setScreen(new HackSettingsScreen(this, "Buoyancy", () -> VisionClient.getSettings().jesusBuoyancy,
-                v -> {VisionClient.getSettings().jesusBuoyancy = v;}, VisionClient::saveSettings, 0.0D));
-    }
-
-    private void openNoFallSettings() {
-        this.minecraft.setScreen(new HackSettingsScreen(this, "Threshold", () -> VisionClient.getSettings().noFallThreshold,
-                v -> {VisionClient.getSettings().noFallThreshold = v;}, VisionClient::saveSettings, 2.0D));
-    }
-
-    private void openXRaySettings() {
-        this.minecraft.setScreen(new XRaySettingsScreen(this));
-    }
-
-
-
-    private StringTextComponent getSpeedLabel() {
-        return new StringTextComponent((VisionClient.getSpeedHack().isEnabled() ? "Disable" : "Enable") + " Speed");
-    }
-
-    private StringTextComponent getJumpLabel() {
-        return new StringTextComponent((VisionClient.getJumpHack().isEnabled() ? "Disable" : "Enable") + " Jump");
-    }
-
-    private StringTextComponent getFlyLabel() {
-        return new StringTextComponent((VisionClient.getFlyHack().isEnabled() ? "Disable" : "Enable") + " Fly");
-    }
-
-    private StringTextComponent getJesusLabel() {
-        return new StringTextComponent((VisionClient.getJesusHack().isEnabled() ? "Disable" : "Enable") + " Jesus");
-    }
-
-    private StringTextComponent getNoFallLabel() {
-        return new StringTextComponent((VisionClient.getNoFallHack().isEnabled() ? "Disable" : "Enable") + " NoFall");
-    }
-
-    private StringTextComponent getXRayLabel() {
-        return new StringTextComponent((VisionClient.getXRayHack().isEnabled() ? "Disable" : "Enable") + " XRay");
-    }
-
-    private StringTextComponent getBlinkLabel() {
-        return new StringTextComponent((VisionClient.getBlinkHack().isEnabled() ? "Disable" : "Enable") + " Blink");
-    }
-
-
-    private StringTextComponent getFullBrightLabel() {
-        return new StringTextComponent((VisionClient.getFullBrightHack().isEnabled() ? "Disable" : "Enable") + " FullBright");
-    }
-
-    private StringTextComponent getForceCritLabel() {
-        return new StringTextComponent((VisionClient.getForceCritHack().isEnabled() ? "Disable" : "Enable") + " ForceCrit");
-    }
-
-    private StringTextComponent getAntiKnockbackLabel() {
-        return new StringTextComponent((VisionClient.getAntiKnockbackHack().isEnabled() ? "Disable" : "Enable") + " AntiKnockback");
-    }
-
-    private StringTextComponent getAutoToolLabel() {
-        return new StringTextComponent((VisionClient.getAutoToolHack().isEnabled() ? "Disable" : "Enable") + " AutoTool");
-    }
-
-    private StringTextComponent getSafeWalkLabel() {
-        return new StringTextComponent((VisionClient.getSafeWalkHack().isEnabled() ? "Disable" : "Enable") + " SafeWalk");
-    }
-
-    private StringTextComponent getAutoSprintLabel() {
-        return new StringTextComponent((VisionClient.getAutoSprintHack().isEnabled() ? "Disable" : "Enable") + " AutoSprint");
-    }
-
-    private StringTextComponent getAutoRespawnLabel() {
-        return new StringTextComponent((VisionClient.getAutoRespawnHack().isEnabled() ? "Disable" : "Enable") + " AutoRespawn");
-    }
-
-    private StringTextComponent getNoSlowLabel() {
-        return new StringTextComponent((VisionClient.getNoSlowHack().isEnabled() ? "Disable" : "Enable") + " NoSlow");
-    }
-
-    private StringTextComponent getBowAimbotLabel() {
-        return new StringTextComponent((VisionClient.getBowAimbotHack().isEnabled() ? "Disable" : "Enable") + " BowAimbot");
-    }
-
-    private StringTextComponent getHealthDisplayLabel() {
-        return new StringTextComponent((VisionClient.getHealthDisplayHack().isEnabled() ? "Disable" : "Enable") + " HealthDisplay");
-    }
-
-    private StringTextComponent getFastEatLabel() {
-        return new StringTextComponent((VisionClient.getFastEatHack().isEnabled() ? "Disable" : "Enable") + " FastEat");
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == 0 && mouseX >= state.miscBarX && mouseX <= state.miscBarX + BUTTON_WIDTH && mouseY >= state.miscBarY && mouseY <= state.miscBarY + 20) {
-            dragging = true;
-            dragOffsetX = (int)mouseX - state.miscBarX;
-            dragOffsetY = (int)mouseY - state.miscBarY;
-            dragStartX = (int)mouseX;
-            dragStartY = (int)mouseY;
-            return true;
+    private void addEntry(Supplier<StringTextComponent> label, Runnable toggle, Runnable settings) {
+        PurpleButton toggleBtn = new PurpleButton(0, 0, TOGGLE_WIDTH, BUTTON_HEIGHT, label.get(), b -> {
+            toggle.run();
+            b.setMessage(label.get());
+        });
+        this.addButton(toggleBtn);
+        PurpleButton settingsBtn = null;
+        if (settings != null) {
+            settingsBtn = new PurpleButton(0, 0, SETTINGS_WIDTH, BUTTON_HEIGHT, new StringTextComponent("\u2699"), b -> settings.run());
+            this.addButton(settingsBtn);
         }
-        if (button == 0 && mouseX >= state.renderBarX && mouseX <= state.renderBarX + BUTTON_WIDTH && mouseY >= state.renderBarY && mouseY <= state.renderBarY + 20) {
-            draggingRender = true;
-            renderDragOffsetX = (int)mouseX - state.renderBarX;
-            renderDragOffsetY = (int)mouseY - state.renderBarY;
-            renderDragStartX = (int)mouseX;
-            renderDragStartY = (int)mouseY;
-            return true;
-        }
-        if (button == 0 && mouseX >= state.utilBarX && mouseX <= state.utilBarX + BUTTON_WIDTH && mouseY >= state.utilBarY && mouseY <= state.utilBarY + 20) {
-            draggingUtil = true;
-            utilDragOffsetX = (int)mouseX - state.utilBarX;
-            utilDragOffsetY = (int)mouseY - state.utilBarY;
-            utilDragStartX = (int)mouseX;
-            utilDragStartY = (int)mouseY;
-            return true;
-        }
-        return super.mouseClicked(mouseX, mouseY, button);
+        Entry e = new Entry();
+        e.toggle = toggleBtn;
+        e.settings = settingsBtn;
+        e.label = label;
+        entries.add(e);
     }
 
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (dragging) {
-            state.miscBarX = (int)mouseX - dragOffsetX;
-            state.miscBarY = (int)mouseY - dragOffsetY;
-            speedButton.x = state.miscBarX;
-            jumpButton.x = state.miscBarX;
-            flyButton.x = state.miscBarX;
-            jesusButton.x = state.miscBarX;
-            noFallButton.x = state.miscBarX;
-            blinkButton.x = state.miscBarX;
-            speedSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
-            jumpSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
-            flySettings.x = state.miscBarX + BUTTON_WIDTH + 5;
-            jesusSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
-            noFallSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
-
-            speedButton.y = state.miscBarY + 20 + (int)(20 * dropdownProgress) - 20;
-            jumpButton.y = state.miscBarY + 40 + (int)(20 * dropdownProgress) - 20;
-            flyButton.y = state.miscBarY + 60 + (int)(20 * dropdownProgress) - 20;
-            jesusButton.y = state.miscBarY + 80 + (int)(20 * dropdownProgress) - 20;
-            noFallButton.y = state.miscBarY + 100 + (int)(20 * dropdownProgress) - 20;
-            blinkButton.y = state.miscBarY + 120 + (int)(20 * dropdownProgress) - 20;
-            speedSettings.y = speedButton.y;
-            jumpSettings.y = jumpButton.y;
-            flySettings.y = flyButton.y;
-            jesusSettings.y = jesusButton.y;
-            noFallSettings.y = noFallButton.y;
-            return true;
-        }
-        if (draggingRender) {
-            state.renderBarX = (int)mouseX - renderDragOffsetX;
-            state.renderBarY = (int)mouseY - renderDragOffsetY;
-            xrayButton.x = state.renderBarX;
-            fullBrightButton.x = state.renderBarX;
-            xraySettings.x = state.renderBarX + BUTTON_WIDTH + 5;
-            xrayButton.y = state.renderBarY + 20 + (int)(20 * renderDropdownProgress) - 20;
-            fullBrightButton.y = state.renderBarY + 40 + (int)(20 * renderDropdownProgress) - 20;
-            xraySettings.y = xrayButton.y;
-            return true;
-        }
-        if (draggingUtil) {
-            state.utilBarX = (int)mouseX - utilDragOffsetX;
-            state.utilBarY = (int)mouseY - utilDragOffsetY;
-            forceCritButton.x = state.utilBarX;
-            antiKnockbackButton.x = state.utilBarX;
-            autoToolButton.x = state.utilBarX;
-            safeWalkButton.x = state.utilBarX;
-            autoSprintButton.x = state.utilBarX;
-            autoRespawnButton.x = state.utilBarX;
-            noSlowButton.x = state.utilBarX;
-            bowAimbotButton.x = state.utilBarX;
-            healthDisplayButton.x = state.utilBarX;
-            fastEatButton.x = state.utilBarX;
-            forceCritButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
-            antiKnockbackButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
-            autoToolButton.y = state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20;
-            safeWalkButton.y = state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20;
-            autoSprintButton.y = state.utilBarY + 100 + (int)(20 * utilDropdownProgress) - 20;
-            autoRespawnButton.y = state.utilBarY + 120 + (int)(20 * utilDropdownProgress) - 20;
-            noSlowButton.y = state.utilBarY + 140 + (int)(20 * utilDropdownProgress) - 20;
-            bowAimbotButton.y = state.utilBarY + 160 + (int)(20 * utilDropdownProgress) - 20;
-            healthDisplayButton.y = state.utilBarY + 180 + (int)(20 * utilDropdownProgress) - 20;
-            fastEatButton.y = state.utilBarY + 200 + (int)(20 * utilDropdownProgress) - 20;
-            return true;
-        }
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
-    }
-
-    @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (dragging) {
-            dragging = false;
-            if (Math.abs(mouseX - dragStartX) < 5 && Math.abs(mouseY - dragStartY) < 5) {
-                state.hacksExpanded = !state.hacksExpanded;
-                dropdownTarget = state.hacksExpanded;
+    private void layoutButtons() {
+        int slotWidth = TOGGLE_WIDTH + SETTINGS_WIDTH + PADDING;
+        int cols = Math.max(1, (this.width - 20) / slotWidth);
+        for (int i = 0; i < entries.size(); i++) {
+            int col = i % cols;
+            int row = i / cols;
+            int x = 10 + col * slotWidth;
+            int y = 20 + row * (BUTTON_HEIGHT + PADDING) - scrollOffset;
+            Entry e = entries.get(i);
+            e.toggle.x = x;
+            e.toggle.y = y;
+            if (e.settings != null) {
+                e.settings.x = x + TOGGLE_WIDTH + 2;
+                e.settings.y = y;
             }
-            state.save();
-            return true;
         }
-        if (draggingRender) {
-            draggingRender = false;
-            if (Math.abs(mouseX - renderDragStartX) < 5 && Math.abs(mouseY - renderDragStartY) < 5) {
-                state.renderExpanded = !state.renderExpanded;
-                renderDropdownTarget = state.renderExpanded;
-            }
-            state.save();
-            return true;
-        }
-        if (draggingUtil) {
-            draggingUtil = false;
-            if (Math.abs(mouseX - utilDragStartX) < 5 && Math.abs(mouseY - utilDragStartY) < 5) {
-                state.utilExpanded = !state.utilExpanded;
-                utilDropdownTarget = state.utilExpanded;
-            }
-            state.save();
-            return true;
-        }
-        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrices);
-        fill(matrices, state.miscBarX, state.miscBarY, state.miscBarX + BAR_WIDTH, state.miscBarY + 20, 0xAA5511AA);
-        drawCenteredString(matrices, font, "Movement", state.miscBarX + 50, state.miscBarY + 6, 0xFFFFFF);
-        dropdownProgress += ((dropdownTarget ? 1.0f : 0.0f) - dropdownProgress) * 0.2f;
-        dropdownProgress = Math.max(0.0f, Math.min(1.0f, dropdownProgress));
-
-        fill(matrices, state.renderBarX, state.renderBarY, state.renderBarX + BAR_WIDTH, state.renderBarY + 20, 0xAA5511AA);
-        drawCenteredString(matrices, font, "Render", state.renderBarX + 50, state.renderBarY + 6, 0xFFFFFF);
-        renderDropdownProgress += ((renderDropdownTarget ? 1.0f : 0.0f) - renderDropdownProgress) * 0.2f;
-        renderDropdownProgress = Math.max(0.0f, Math.min(1.0f, renderDropdownProgress));
-
-        fill(matrices, state.utilBarX, state.utilBarY, state.utilBarX + BAR_WIDTH, state.utilBarY + 20, 0xAA5511AA);
-        drawCenteredString(matrices, font, "Utility", state.utilBarX + 50, state.utilBarY + 6, 0xFFFFFF);
-        utilDropdownProgress += ((utilDropdownTarget ? 1.0f : 0.0f) - utilDropdownProgress) * 0.2f;
-        utilDropdownProgress = Math.max(0.0f, Math.min(1.0f, utilDropdownProgress));
-
-        int offsetY = (int)(20 * dropdownProgress);
-        speedButton.x = state.miscBarX;
-        jumpButton.x = state.miscBarX;
-        flyButton.x = state.miscBarX;
-        jesusButton.x = state.miscBarX;
-        noFallButton.x = state.miscBarX;
-        blinkButton.x = state.miscBarX;
-        speedSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
-        jumpSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
-        flySettings.x = state.miscBarX + BUTTON_WIDTH + 5;
-        jesusSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
-        noFallSettings.x = state.miscBarX + BUTTON_WIDTH + 5;
-        xrayButton.x = state.renderBarX;
-        fullBrightButton.x = state.renderBarX;
-        xraySettings.x = state.renderBarX + BUTTON_WIDTH + 5;
-
-        speedButton.y = state.miscBarY + 20 + offsetY - 20;
-        jumpButton.y = state.miscBarY + 40 + offsetY - 20;
-        flyButton.y = state.miscBarY + 60 + offsetY - 20;
-        jesusButton.y = state.miscBarY + 80 + offsetY - 20;
-        noFallButton.y = state.miscBarY + 100 + offsetY - 20;
-        blinkButton.y = state.miscBarY + 120 + offsetY - 20;
-        speedSettings.y = speedButton.y;
-        jumpSettings.y = jumpButton.y;
-        flySettings.y = flyButton.y;
-        jesusSettings.y = jesusButton.y;
-        noFallSettings.y = noFallButton.y;
-        xrayButton.y = state.renderBarY + 20 + (int)(20 * renderDropdownProgress) - 20;
-        fullBrightButton.y = state.renderBarY + 40 + (int)(20 * renderDropdownProgress) - 20;
-        xraySettings.y = xrayButton.y;
-        forceCritButton.x = state.utilBarX;
-        antiKnockbackButton.x = state.utilBarX;
-        autoToolButton.x = state.utilBarX;
-        safeWalkButton.x = state.utilBarX;
-        autoSprintButton.x = state.utilBarX;
-        autoRespawnButton.x = state.utilBarX;
-        noSlowButton.x = state.utilBarX;
-        bowAimbotButton.x = state.utilBarX;
-        healthDisplayButton.x = state.utilBarX;
-        fastEatButton.x = state.utilBarX;
-        forceCritButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
-        antiKnockbackButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
-        autoToolButton.y = state.utilBarY + 60 + (int)(20 * utilDropdownProgress) - 20;
-        safeWalkButton.y = state.utilBarY + 80 + (int)(20 * utilDropdownProgress) - 20;
-        autoSprintButton.y = state.utilBarY + 100 + (int)(20 * utilDropdownProgress) - 20;
-        autoRespawnButton.y = state.utilBarY + 120 + (int)(20 * utilDropdownProgress) - 20;
-        noSlowButton.y = state.utilBarY + 140 + (int)(20 * utilDropdownProgress) - 20;
-        bowAimbotButton.y = state.utilBarY + 160 + (int)(20 * utilDropdownProgress) - 20;
-        healthDisplayButton.y = state.utilBarY + 180 + (int)(20 * utilDropdownProgress) - 20;
-        fastEatButton.y = state.utilBarY + 200 + (int)(20 * utilDropdownProgress) - 20;
-
-        boolean vis = dropdownProgress > 0.05f;
-        boolean visR = renderDropdownProgress > 0.05f;
-        boolean visU = utilDropdownProgress > 0.05f;
-        speedButton.visible = jumpButton.visible = flyButton.visible = jesusButton.visible = noFallButton.visible = blinkButton.visible = vis;
-        speedSettings.visible = jumpSettings.visible = flySettings.visible = jesusSettings.visible = noFallSettings.visible = vis;
-        xrayButton.visible = fullBrightButton.visible = visR;
-        xraySettings.visible = visR;
-        forceCritButton.visible = antiKnockbackButton.visible = autoToolButton.visible = safeWalkButton.visible = autoSprintButton.visible = autoRespawnButton.visible = noSlowButton.visible = bowAimbotButton.visible = healthDisplayButton.visible = fastEatButton.visible = visU;
-        speedButton.setAlpha(dropdownProgress);
-        jumpButton.setAlpha(dropdownProgress);
-        flyButton.setAlpha(dropdownProgress);
-        jesusButton.setAlpha(dropdownProgress);
-        noFallButton.setAlpha(dropdownProgress);
-        blinkButton.setAlpha(dropdownProgress);
-        speedSettings.setAlpha(dropdownProgress);
-        jumpSettings.setAlpha(dropdownProgress);
-        flySettings.setAlpha(dropdownProgress);
-        jesusSettings.setAlpha(dropdownProgress);
-        noFallSettings.setAlpha(dropdownProgress);
-        xrayButton.setAlpha(renderDropdownProgress);
-        fullBrightButton.setAlpha(renderDropdownProgress);
-        xraySettings.setAlpha(renderDropdownProgress);
-        forceCritButton.setAlpha(utilDropdownProgress);
-        antiKnockbackButton.setAlpha(utilDropdownProgress);
-        autoToolButton.setAlpha(utilDropdownProgress);
-        safeWalkButton.setAlpha(utilDropdownProgress);
-        autoSprintButton.setAlpha(utilDropdownProgress);
-        autoRespawnButton.setAlpha(utilDropdownProgress);
-        noSlowButton.setAlpha(utilDropdownProgress);
-        bowAimbotButton.setAlpha(utilDropdownProgress);
-        healthDisplayButton.setAlpha(utilDropdownProgress);
-        fastEatButton.setAlpha(utilDropdownProgress);
-
-        super.render(matrices, mouseX, mouseY, partialTicks);
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        int slotHeight = BUTTON_HEIGHT + PADDING;
+        int slotWidth = TOGGLE_WIDTH + SETTINGS_WIDTH + PADDING;
+        int cols = Math.max(1, (this.width - 20) / slotWidth);
+        int totalRows = (entries.size() + cols - 1) / cols;
+        int visibleRows = (this.height - 40) / slotHeight;
+        int max = Math.max(0, totalRows - visibleRows) * slotHeight;
+        scrollOffset -= delta * slotHeight;
+        if (scrollOffset < 0) scrollOffset = 0;
+        if (scrollOffset > max) scrollOffset = max;
+        layoutButtons();
+        return true;
     }
 
     @Override
-    public void onClose() {
-        state.save();
-        super.onClose();
+    public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(ms);
+        layoutButtons();
+        super.render(ms, mouseX, mouseY, partialTicks);
     }
+
+    // Toggle methods
+    private void toggleSpeed() { VisionClient.getSpeedHack().toggle(); }
+    private void toggleJump() { VisionClient.getJumpHack().toggle(); }
+    private void toggleFly() { VisionClient.getFlyHack().toggle(); }
+    private void toggleJesus() { VisionClient.getJesusHack().toggle(); }
+    private void toggleNoFall() { VisionClient.getNoFallHack().toggle(); }
+    private void toggleXRay() { VisionClient.getXRayHack().toggle(); }
+    private void toggleBlink() { VisionClient.getBlinkHack().toggle(); }
+    private void toggleFullBright() { VisionClient.getFullBrightHack().toggle(); }
+    private void toggleForceCrit() { VisionClient.getForceCritHack().toggle(); }
+    private void toggleAntiKnockback() { VisionClient.getAntiKnockbackHack().toggle(); }
+    private void toggleAutoTool() { VisionClient.getAutoToolHack().toggle(); }
+    private void toggleSafeWalk() { VisionClient.getSafeWalkHack().toggle(); }
+    private void toggleAutoSprint() { VisionClient.getAutoSprintHack().toggle(); }
+    private void toggleAutoRespawn() { VisionClient.getAutoRespawnHack().toggle(); }
+    private void toggleNoSlow() { VisionClient.getNoSlowHack().toggle(); }
+    private void toggleBowAimbot() { VisionClient.getBowAimbotHack().toggle(); }
+    private void toggleHealthDisplay() { VisionClient.getHealthDisplayHack().toggle(); }
+    private void toggleFastEat() { VisionClient.getFastEatHack().toggle(); }
+
+    // Settings open methods
+    private void openSpeedSettings() { this.minecraft.setScreen(new SpeedSettingsScreen(this)); }
+    private void openJumpSettings() { this.minecraft.setScreen(new HackSettingsScreen(this, "Jump", () -> VisionClient.getSettings().jumpVelocity,
+            v -> { VisionClient.getSettings().jumpVelocity = v; }, VisionClient::saveSettings, 1.2D)); }
+    private void openFlySettings() { this.minecraft.setScreen(new HackSettingsScreen(this, "FlySpeed", () -> VisionClient.getSettings().flyHorizontalSpeed,
+            v -> { VisionClient.getSettings().flyHorizontalSpeed = v; }, VisionClient::saveSettings, 0.75D)); }
+    private void openJesusSettings() { this.minecraft.setScreen(new HackSettingsScreen(this, "Buoyancy", () -> VisionClient.getSettings().jesusBuoyancy,
+            v -> { VisionClient.getSettings().jesusBuoyancy = v; }, VisionClient::saveSettings, 0.0D)); }
+    private void openNoFallSettings() { this.minecraft.setScreen(new HackSettingsScreen(this, "Threshold", () -> VisionClient.getSettings().noFallThreshold,
+            v -> { VisionClient.getSettings().noFallThreshold = v; }, VisionClient::saveSettings, 2.0D)); }
+    private void openXRaySettings() { this.minecraft.setScreen(new XRaySettingsScreen(this)); }
+
+    // Label helpers
+    private StringTextComponent getSpeedLabel() { return new StringTextComponent((VisionClient.getSpeedHack().isEnabled() ? "Disable" : "Enable") + " Speed"); }
+    private StringTextComponent getJumpLabel() { return new StringTextComponent((VisionClient.getJumpHack().isEnabled() ? "Disable" : "Enable") + " Jump"); }
+    private StringTextComponent getFlyLabel() { return new StringTextComponent((VisionClient.getFlyHack().isEnabled() ? "Disable" : "Enable") + " Fly"); }
+    private StringTextComponent getJesusLabel() { return new StringTextComponent((VisionClient.getJesusHack().isEnabled() ? "Disable" : "Enable") + " Jesus"); }
+    private StringTextComponent getNoFallLabel() { return new StringTextComponent((VisionClient.getNoFallHack().isEnabled() ? "Disable" : "Enable") + " NoFall"); }
+    private StringTextComponent getXRayLabel() { return new StringTextComponent((VisionClient.getXRayHack().isEnabled() ? "Disable" : "Enable") + " XRay"); }
+    private StringTextComponent getBlinkLabel() { return new StringTextComponent((VisionClient.getBlinkHack().isEnabled() ? "Disable" : "Enable") + " Blink"); }
+    private StringTextComponent getFullBrightLabel() { return new StringTextComponent((VisionClient.getFullBrightHack().isEnabled() ? "Disable" : "Enable") + " FullBright"); }
+    private StringTextComponent getForceCritLabel() { return new StringTextComponent((VisionClient.getForceCritHack().isEnabled() ? "Disable" : "Enable") + " ForceCrit"); }
+    private StringTextComponent getAntiKnockbackLabel() { return new StringTextComponent((VisionClient.getAntiKnockbackHack().isEnabled() ? "Disable" : "Enable") + " AntiKnockback"); }
+    private StringTextComponent getAutoToolLabel() { return new StringTextComponent((VisionClient.getAutoToolHack().isEnabled() ? "Disable" : "Enable") + " AutoTool"); }
+    private StringTextComponent getSafeWalkLabel() { return new StringTextComponent((VisionClient.getSafeWalkHack().isEnabled() ? "Disable" : "Enable") + " SafeWalk"); }
+    private StringTextComponent getAutoSprintLabel() { return new StringTextComponent((VisionClient.getAutoSprintHack().isEnabled() ? "Disable" : "Enable") + " AutoSprint"); }
+    private StringTextComponent getAutoRespawnLabel() { return new StringTextComponent((VisionClient.getAutoRespawnHack().isEnabled() ? "Disable" : "Enable") + " AutoRespawn"); }
+    private StringTextComponent getNoSlowLabel() { return new StringTextComponent((VisionClient.getNoSlowHack().isEnabled() ? "Disable" : "Enable") + " NoSlow"); }
+    private StringTextComponent getBowAimbotLabel() { return new StringTextComponent((VisionClient.getBowAimbotHack().isEnabled() ? "Disable" : "Enable") + " BowAimbot"); }
+    private StringTextComponent getHealthDisplayLabel() { return new StringTextComponent((VisionClient.getHealthDisplayHack().isEnabled() ? "Disable" : "Enable") + " HealthDisplay"); }
+    private StringTextComponent getFastEatLabel() { return new StringTextComponent((VisionClient.getFastEatHack().isEnabled() ? "Disable" : "Enable") + " FastEat"); }
 }
