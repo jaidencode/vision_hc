@@ -7,6 +7,8 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.client.CPlayerPacket;
 import net.minecraft.network.play.server.SPlayerPositionLookPacket;
 
+import org.main.vision.network.NetworkPerformanceMonitor;
+
 /**
  * Centralised packet handler that uses a tiny neural network
  * to reject obviously invalid packets and adapt to server
@@ -18,6 +20,7 @@ public class AdaptivePacketHandler {
 
     private final LightweightNN net = new LightweightNN();
     private final PacketPredictor predictor = PacketPredictor.getInstance();
+    private final NetworkPerformanceMonitor monitor = NetworkPerformanceMonitor.getInstance();
 
     public static AdaptivePacketHandler getInstance() {
         return INSTANCE;
@@ -35,7 +38,9 @@ public class AdaptivePacketHandler {
                 double dx = p.getX(player.getX()) - predictor.getPredictedX();
                 double dy = p.getY(player.getY()) - predictor.getPredictedY();
                 double dz = p.getZ(player.getZ()) - predictor.getPredictedZ();
-                if (!net.allow(dx, dy, dz)) {
+                double score = net.evaluate(dx, dy, dz);
+                double threshold = 0.5 + (1.0 - monitor.getQuality()) * 0.25;
+                if (score < threshold) {
                     return false;
                 }
             }
@@ -63,6 +68,7 @@ public class AdaptivePacketHandler {
             double dz = p.getZ() - predictor.getPredictedZ();
             boolean valid = Math.abs(dx) < 5 && Math.abs(dy) < 5 && Math.abs(dz) < 5;
             net.train(dx, dy, dz, valid);
+            monitor.recordCorrection(dx, dy, dz, valid);
         }
     }
 

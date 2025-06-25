@@ -9,10 +9,15 @@ public class LightweightNN {
     private final double[] w = new double[4];
     private static final double RATE = 0.05;
 
+    /** Raw probability that the given deltas are valid. */
+    public double evaluate(double dx, double dy, double dz) {
+        double z = w[0] * dx + w[1] * dy + w[2] * dz + w[3];
+        return sigmoid(z);
+    }
+
     /** Evaluate whether the given deltas are likely valid. */
     public boolean allow(double dx, double dy, double dz) {
-        double z = w[0] * dx + w[1] * dy + w[2] * dz + w[3];
-        return sigmoid(z) >= 0.5;
+        return evaluate(dx, dy, dz) >= 0.5;
     }
 
     /** Train the network with the given outcome. */
