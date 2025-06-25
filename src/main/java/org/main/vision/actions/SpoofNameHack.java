@@ -89,6 +89,22 @@ public class SpoofNameHack extends ActionBase {
     }
 
     /**
+     * Replace occurrences of the player's actual name with the alias within the
+     * provided packet. Login and handshake packets are ignored to avoid
+     * protocol issues.
+     */
+    private void processPacket(IPacket<?> packet, String from, String to) {
+        if (packet == null) return;
+        String name = packet.getClass().getName();
+        if (name.contains(".network.login.") || name.contains(".network.handshake.")) {
+            return;
+        }
+        try {
+            replaceStrings(packet, from, to, new java.util.IdentityHashMap<>());
+        } catch (Exception ignored) {}
+    }
+
+    /**
      * Modify the player's name within incoming packets.
      */
     public static void handleIncoming(IPacket<?> packet) {
@@ -99,12 +115,7 @@ public class SpoofNameHack extends ActionBase {
         String alias = cfg.spoofName;
         if (alias == null || alias.isEmpty() || hack.actualName == null) return;
 
-        // Only process chat packets to avoid heavy reflection on every packet
-        if (packet instanceof net.minecraft.network.play.server.SChatPacket) {
-            net.minecraft.util.text.ITextComponent msg =
-                    ((net.minecraft.network.play.server.SChatPacket) packet).getMessage();
-            hack.replaceStrings(msg, hack.actualName, alias, new java.util.IdentityHashMap<>());
-        }
+        hack.processPacket(packet, hack.actualName, alias);
     }
 
     /**
@@ -118,17 +129,7 @@ public class SpoofNameHack extends ActionBase {
         String alias = cfg.spoofName;
         if (alias == null || alias.isEmpty() || hack.actualName == null) return;
 
-        // Only modify outgoing chat packets
-        if (packet instanceof net.minecraft.network.play.client.CChatMessagePacket) {
-            try {
-                java.lang.reflect.Field f = net.minecraft.network.play.client.CChatMessagePacket.class.getDeclaredField("message");
-                f.setAccessible(true);
-                String msg = (String) f.get(packet);
-                if (msg != null) {
-                    f.set(packet, msg.replace(hack.actualName, alias));
-                }
-            } catch (Exception ignored) {}
-        }
+        hack.processPacket(packet, hack.actualName, alias);
     }
 
     /**
