@@ -71,6 +71,7 @@ public class SpoofNameSettingsScreen extends Screen {
         cfg.spoofIncoming = incomingBox.selected();
         cfg.spoofOutgoing = outgoingBox.selected();
         VisionClient.saveSettings();
+        VisionClient.getSpoofNameHack().refreshAlias();
         originalAlias = cfg.spoofName;
         originalIncoming = cfg.spoofIncoming;
         originalOutgoing = cfg.spoofOutgoing;
