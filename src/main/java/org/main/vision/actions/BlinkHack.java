@@ -64,6 +64,10 @@ public class BlinkHack extends ActionBase {
     /** Send all queued packets to the server. */
     private void flushQueue() {
         if (queue.isEmpty()) return;
+        if (Minecraft.getInstance().getConnection() == null) {
+            queue.clear();
+            return;
+        }
         NetworkManager nm = Minecraft.getInstance().getConnection().getConnection();
         while (!queue.isEmpty()) {
             nm.send(queue.poll());
