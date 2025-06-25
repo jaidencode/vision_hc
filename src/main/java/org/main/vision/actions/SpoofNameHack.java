@@ -101,7 +101,9 @@ public class SpoofNameHack extends ActionBase {
         }
         try {
             replaceStrings(packet, from, to, new java.util.IdentityHashMap<>());
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -145,7 +147,9 @@ public class SpoofNameHack extends ActionBase {
                 f.setAccessible(true);
                 String val = (String) f.get(obj);
                 if (val != null) f.set(obj, val.replace(from, to));
-            } catch (Exception ignored) {}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         if (obj instanceof ITextComponent) {
@@ -160,6 +164,29 @@ public class SpoofNameHack extends ActionBase {
             int len = java.lang.reflect.Array.getLength(obj);
             for (int i = 0; i < len; i++) {
                 replaceStrings(java.lang.reflect.Array.get(obj, i), from, to, visited);
+            }
+            return;
+        }
+
+        if (obj instanceof java.util.Map) {
+            @SuppressWarnings("unchecked")
+            java.util.Map<Object, Object> map = (java.util.Map<Object, Object>) obj;
+            java.util.List<Object> keys = new java.util.ArrayList<>(map.keySet());
+            for (Object key : keys) {
+                Object newKey = key;
+                if (key instanceof String) {
+                    newKey = ((String) key).replace(from, to);
+                } else {
+                    replaceStrings(key, from, to, visited);
+                }
+                Object val = map.get(key);
+                if (val != null) {
+                    replaceStrings(val, from, to, visited);
+                }
+                if (newKey != key) {
+                    map.remove(key);
+                    map.put(newKey, val);
+                }
             }
             return;
         }
@@ -181,7 +208,9 @@ public class SpoofNameHack extends ActionBase {
                     } else {
                         replaceStrings(val, from, to, visited);
                     }
-                } catch (Exception ignored) {}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             cls = cls.getSuperclass();
         }
