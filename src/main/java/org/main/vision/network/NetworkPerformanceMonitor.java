@@ -22,6 +22,7 @@ public class NetworkPerformanceMonitor {
      * Update the monitor with a server correction delta.
      */
     public void recordCorrection(double dx, double dy, double dz, boolean valid) {
+        if (!org.main.vision.VisionClient.getActiveNetHack().isEnabled()) return;
         net.train(dx, dy, dz, valid);
         double score = net.evaluate(dx, dy, dz);
         // Exponential moving average of the latest score
