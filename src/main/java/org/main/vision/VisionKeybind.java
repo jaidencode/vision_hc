@@ -23,7 +23,6 @@ public class VisionKeybind {
     public static KeyBinding safeWalkKey;
     public static KeyBinding autoSprintKey;
     public static KeyBinding autoRespawnKey;
-    public static KeyBinding activeNetKey;
     public static KeyBinding noArrowKey;
     public static KeyBinding menuKey;
 
@@ -43,7 +42,6 @@ public class VisionKeybind {
         safeWalkKey = new KeyBinding("key.vision.safewalk", GLFW.GLFW_KEY_V, "key.categories.vision");
         autoSprintKey = new KeyBinding("key.vision.autosprint", GLFW.GLFW_KEY_C, "key.categories.vision");
         autoRespawnKey = new KeyBinding("key.vision.autorespawn", GLFW.GLFW_KEY_R, "key.categories.vision");
-        activeNetKey = new KeyBinding("key.vision.activenet", GLFW.GLFW_KEY_N, "key.categories.vision");
         noArrowKey = new KeyBinding("key.vision.noarrow", GLFW.GLFW_KEY_Y, "key.categories.vision");
         menuKey = new KeyBinding("key.vision.menu", GLFW.GLFW_KEY_BACKSLASH, "key.categories.vision");
         ClientRegistry.registerKeyBinding(speedKey);
@@ -61,7 +59,6 @@ public class VisionKeybind {
         ClientRegistry.registerKeyBinding(safeWalkKey);
         ClientRegistry.registerKeyBinding(autoSprintKey);
         ClientRegistry.registerKeyBinding(autoRespawnKey);
-        ClientRegistry.registerKeyBinding(activeNetKey);
         ClientRegistry.registerKeyBinding(noArrowKey);
         ClientRegistry.registerKeyBinding(menuKey);
     }

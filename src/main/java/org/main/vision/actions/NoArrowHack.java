@@ -36,19 +36,22 @@ public class NoArrowHack extends ActionBase {
         }
 
         for (AbstractArrowEntity arrow : world.getEntitiesOfClass(AbstractArrowEntity.class,
-                player.getBoundingBox().inflate(15))) {
+                player.getBoundingBox().inflate(50))) {
             Vector3d arrowPos = arrow.position();
             Vector3d arrowVel = arrow.getDeltaMovement();
+            if (arrowVel.lengthSqr() < 0.001) continue;
             Vector3d toPlayer = player.position().subtract(arrowPos);
-            if (arrowVel.dot(toPlayer) <= 0) continue; // moving away
-            if (lineDistance(arrowPos, arrowVel, player.position()) > 1.5) continue;
+            double t = toPlayer.dot(arrowVel) / arrowVel.lengthSqr();
+            if (t < 0) continue;
+            Vector3d closest = arrowPos.add(arrowVel.scale(t));
+            if (closest.distanceTo(player.position()) > 1.5) continue;
             BlockPos safe = findSafeSpot(world, player.blockPosition(), arrowPos, arrowVel);
             if (safe != null) {
                 originalPos = player.position();
                 player.setDeltaMovement(Vector3d.ZERO);
                 player.moveTo(safe.getX() + 0.5, safe.getY(), safe.getZ() + 0.5, player.yRot, player.xRot);
                 avoiding = true;
-                returnTicks = 5;
+                returnTicks = 3;
             }
             break;
         }
@@ -75,14 +78,14 @@ public class NoArrowHack extends ActionBase {
         Set<BlockPos> visited = new HashSet<>();
         q.add(start);
         visited.add(start);
-        int maxDist = 5;
+        int maxDist = 10;
         while (!q.isEmpty()) {
             BlockPos pos = q.poll();
             if (isSafe(world, pos, arrowPos, arrowVel)) return pos;
             if (pos.distManhattan(start) >= maxDist) continue;
             for (Direction d : Direction.Plane.HORIZONTAL) {
                 BlockPos next = pos.relative(d);
-                if (!visited.contains(next) && isWalkable(world, next)) {
+                if (!visited.contains(next) && isSafe(world, next, arrowPos, arrowVel)) {
                     visited.add(next);
                     q.add(next);
                 }
@@ -98,7 +101,7 @@ public class NoArrowHack extends ActionBase {
     private boolean isSafe(ClientWorld world, BlockPos pos, Vector3d arrowPos, Vector3d arrowVel) {
         if (!isWalkable(world, pos)) return false;
         Vector3d p = new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
-        return lineDistance(arrowPos, arrowVel, p) > 1.0;
+        return lineDistance(arrowPos, arrowVel, p) > 2.0;
     }
 
     private double lineDistance(Vector3d origin, Vector3d dir, Vector3d point) {

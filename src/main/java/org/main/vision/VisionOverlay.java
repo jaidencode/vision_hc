@@ -108,12 +108,6 @@ public class VisionOverlay {
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
         }
-        if (VisionClient.getActiveNetHack().isEnabled()) {
-            String text = "ActiveNet";
-            int w = mc.font.width(text);
-            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
-            y += mc.font.lineHeight;
-        }
         if (VisionClient.getNoArrowHack().isEnabled()) {
             String text = "NoArrow";
             int w = mc.font.width(text);

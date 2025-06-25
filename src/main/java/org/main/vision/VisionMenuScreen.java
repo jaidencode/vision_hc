@@ -36,7 +36,6 @@ public class VisionMenuScreen extends Screen {
     private PurpleButton safeWalkButton;
     private PurpleButton autoSprintButton;
     private PurpleButton autoRespawnButton;
-    private PurpleButton activeNetButton;
     private PurpleButton noArrowButton;
     private static final int BUTTON_WIDTH = 100;
     private static final int BUTTON_HEIGHT = 20;
@@ -131,12 +130,9 @@ public class VisionMenuScreen extends Screen {
                 getAutoSprintLabel(), b -> toggleAutoSprint()));
         this.autoRespawnButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 140 + (int)(20 * utilDropdownProgress) - 20, width, height,
                 getAutoRespawnLabel(), b -> toggleAutoRespawn()));
-        this.activeNetButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 160 + (int)(20 * utilDropdownProgress) - 20, width, height,
-                getActiveNetLabel(), b -> toggleActiveNet()));
-        this.noArrowButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 180 + (int)(20 * utilDropdownProgress) - 20, width, height,
+        this.noArrowButton = addButton(new PurpleButton(state.utilBarX, state.utilBarY + 160 + (int)(20 * utilDropdownProgress) - 20, width, height,
                 getNoArrowLabel(), b -> toggleNoArrow()));
-
-        forceCritButton.visible = antiVanishButton.visible = antiKnockbackButton.visible = autoToolButton.visible = safeWalkButton.visible = autoSprintButton.visible = autoRespawnButton.visible = activeNetButton.visible = noArrowButton.visible = utilDropdownProgress > 0.05f;
+        forceCritButton.visible = antiVanishButton.visible = antiKnockbackButton.visible = autoToolButton.visible = safeWalkButton.visible = autoSprintButton.visible = autoRespawnButton.visible = noArrowButton.visible = utilDropdownProgress > 0.05f;
     }
 
     private void toggleSpeed() {
@@ -227,12 +223,6 @@ public class VisionMenuScreen extends Screen {
     private void toggleAutoRespawn() {
         VisionClient.getAutoRespawnHack().toggle();
         autoRespawnButton.setMessage(getAutoRespawnLabel());
-        state.save();
-    }
-
-    private void toggleActiveNet() {
-        VisionClient.getActiveNetHack().toggle();
-        activeNetButton.setMessage(getActiveNetLabel());
         state.save();
     }
 
@@ -334,10 +324,6 @@ public class VisionMenuScreen extends Screen {
         return new StringTextComponent((VisionClient.getAutoRespawnHack().isEnabled() ? "Disable" : "Enable") + " AutoRespawn");
     }
 
-    private StringTextComponent getActiveNetLabel() {
-        return new StringTextComponent((VisionClient.getActiveNetHack().isEnabled() ? "Disable" : "Enable") + " ActiveNet");
-    }
-
     private StringTextComponent getNoArrowLabel() {
         return new StringTextComponent((VisionClient.getNoArrowHack().isEnabled() ? "Disable" : "Enable") + " NoArrow");
     }
@@ -422,7 +408,6 @@ public class VisionMenuScreen extends Screen {
             safeWalkButton.x = state.utilBarX;
             autoSprintButton.x = state.utilBarX;
             autoRespawnButton.x = state.utilBarX;
-            activeNetButton.x = state.utilBarX;
             noArrowButton.x = state.utilBarX;
             forceCritButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
             antiVanishButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
@@ -431,8 +416,7 @@ public class VisionMenuScreen extends Screen {
             safeWalkButton.y = state.utilBarY + 100 + (int)(20 * utilDropdownProgress) - 20;
             autoSprintButton.y = state.utilBarY + 120 + (int)(20 * utilDropdownProgress) - 20;
             autoRespawnButton.y = state.utilBarY + 140 + (int)(20 * utilDropdownProgress) - 20;
-            activeNetButton.y = state.utilBarY + 160 + (int)(20 * utilDropdownProgress) - 20;
-            noArrowButton.y = state.utilBarY + 180 + (int)(20 * utilDropdownProgress) - 20;
+            noArrowButton.y = state.utilBarY + 160 + (int)(20 * utilDropdownProgress) - 20;
             return true;
         }
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
@@ -525,7 +509,6 @@ public class VisionMenuScreen extends Screen {
         safeWalkButton.x = state.utilBarX;
         autoSprintButton.x = state.utilBarX;
         autoRespawnButton.x = state.utilBarX;
-        activeNetButton.x = state.utilBarX;
         noArrowButton.x = state.utilBarX;
         forceCritButton.y = state.utilBarY + 20 + (int)(20 * utilDropdownProgress) - 20;
         antiVanishButton.y = state.utilBarY + 40 + (int)(20 * utilDropdownProgress) - 20;
@@ -534,8 +517,7 @@ public class VisionMenuScreen extends Screen {
         safeWalkButton.y = state.utilBarY + 100 + (int)(20 * utilDropdownProgress) - 20;
         autoSprintButton.y = state.utilBarY + 120 + (int)(20 * utilDropdownProgress) - 20;
         autoRespawnButton.y = state.utilBarY + 140 + (int)(20 * utilDropdownProgress) - 20;
-        activeNetButton.y = state.utilBarY + 160 + (int)(20 * utilDropdownProgress) - 20;
-        noArrowButton.y = state.utilBarY + 180 + (int)(20 * utilDropdownProgress) - 20;
+        noArrowButton.y = state.utilBarY + 160 + (int)(20 * utilDropdownProgress) - 20;
 
         boolean vis = dropdownProgress > 0.05f;
         boolean visR = renderDropdownProgress > 0.05f;
@@ -544,7 +526,7 @@ public class VisionMenuScreen extends Screen {
         speedSettings.visible = jumpSettings.visible = flySettings.visible = jesusSettings.visible = noFallSettings.visible = vis;
         xrayButton.visible = fullBrightButton.visible = visR;
         xraySettings.visible = visR;
-        forceCritButton.visible = antiVanishButton.visible = antiKnockbackButton.visible = autoToolButton.visible = safeWalkButton.visible = autoSprintButton.visible = autoRespawnButton.visible = activeNetButton.visible = noArrowButton.visible = visU;
+        forceCritButton.visible = antiVanishButton.visible = antiKnockbackButton.visible = autoToolButton.visible = safeWalkButton.visible = autoSprintButton.visible = autoRespawnButton.visible = noArrowButton.visible = visU;
         speedButton.setAlpha(dropdownProgress);
         jumpButton.setAlpha(dropdownProgress);
         flyButton.setAlpha(dropdownProgress);
@@ -566,7 +548,6 @@ public class VisionMenuScreen extends Screen {
         safeWalkButton.setAlpha(utilDropdownProgress);
         autoSprintButton.setAlpha(utilDropdownProgress);
         autoRespawnButton.setAlpha(utilDropdownProgress);
-        activeNetButton.setAlpha(utilDropdownProgress);
         noArrowButton.setAlpha(utilDropdownProgress);
 
         super.render(matrices, mouseX, mouseY, partialTicks);
