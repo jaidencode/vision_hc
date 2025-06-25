@@ -6,9 +6,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import io.netty.channel.ChannelHandlerContext;
 
 /**
- * Intercepts outgoing packets for Blink and RubberBander hacks.
+ * Intercepts network packets for various hacks.
  */
 @Mixin(NetworkManager.class)
 public class MixinNetworkManager {
@@ -21,5 +22,11 @@ public class MixinNetworkManager {
         if (org.main.vision.actions.RubberBanderHack.handleSend(packet)) {
             ci.cancel();
         }
+        org.main.vision.actions.SpoofNameHack.handleOutgoing(packet);
+    }
+
+    @Inject(method = "channelRead0", at = @At("HEAD"))
+    private void vision$onReceive(ChannelHandlerContext ctx, IPacket<?> packet, CallbackInfo ci) {
+        org.main.vision.actions.SpoofNameHack.handleIncoming(packet);
     }
 }
