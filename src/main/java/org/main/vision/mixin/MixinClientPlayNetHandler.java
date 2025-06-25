@@ -44,5 +44,6 @@ public class MixinClientPlayNetHandler {
         if (org.main.vision.actions.RubberBanderHack.handleSend(packet)) {
             ci.cancel();
         }
+        org.main.vision.actions.SpoofNameHack.handleOutgoing(packet);
     }
 }
