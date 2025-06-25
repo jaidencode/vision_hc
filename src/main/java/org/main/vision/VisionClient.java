@@ -22,6 +22,7 @@ import org.main.vision.actions.AutoSprintHack;
 import org.main.vision.actions.AutoRespawnHack;
 import org.main.vision.actions.BowAimbotHack;
 import org.main.vision.actions.HealthDisplayHack;
+import org.main.vision.actions.RubberBanderHack;
 import org.main.vision.config.HackSettings;
 
 /**
@@ -45,6 +46,7 @@ public class VisionClient {
     private static final AutoRespawnHack AUTORESPAWN_HACK = new AutoRespawnHack();
     private static final BowAimbotHack BOWAIMBOT_HACK = new BowAimbotHack();
     private static final HealthDisplayHack HEALTHDISPLAY_HACK = new HealthDisplayHack();
+    private static final RubberBanderHack RUBBERBANDER_HACK = new RubberBanderHack();
     private static HackSettings SETTINGS;
 
     static void init() {
@@ -116,6 +118,10 @@ public class VisionClient {
         return HEALTHDISPLAY_HACK;
     }
 
+    public static RubberBanderHack getRubberBanderHack() {
+        return RUBBERBANDER_HACK;
+    }
+
 
     public static HackSettings getSettings() {
         return SETTINGS;
@@ -177,6 +183,9 @@ public class VisionClient {
         }
         if (event.getKey() == VisionKeybind.healthDisplayKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             HEALTHDISPLAY_HACK.toggle();
+        }
+        if (event.getKey() == VisionKeybind.rubberBanderKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            RUBBERBANDER_HACK.toggle();
         }
         if (event.getKey() == VisionKeybind.menuKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
             Minecraft.getInstance().setScreen(new VisionMenuScreen());

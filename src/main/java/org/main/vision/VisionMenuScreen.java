@@ -51,6 +51,7 @@ public class VisionMenuScreen extends Screen {
         addEntry(() -> getAutoRespawnLabel(), this::toggleAutoRespawn, null);
         addEntry(() -> getBowAimbotLabel(), this::toggleBowAimbot, null);
         addEntry(() -> getHealthDisplayLabel(), this::toggleHealthDisplay, null);
+        addEntry(() -> getRubberBanderLabel(), this::toggleRubberBander, null);
         layoutButtons();
     }
 
@@ -129,6 +130,7 @@ public class VisionMenuScreen extends Screen {
     private void toggleAutoRespawn() { VisionClient.getAutoRespawnHack().toggle(); }
     private void toggleBowAimbot() { VisionClient.getBowAimbotHack().toggle(); }
     private void toggleHealthDisplay() { VisionClient.getHealthDisplayHack().toggle(); }
+    private void toggleRubberBander() { VisionClient.getRubberBanderHack().toggle(); }
 
     // Settings open methods
     private void openSpeedSettings() { this.minecraft.setScreen(new SpeedSettingsScreen(this)); }
@@ -159,4 +161,5 @@ public class VisionMenuScreen extends Screen {
     private StringTextComponent getAutoRespawnLabel() { return new StringTextComponent((VisionClient.getAutoRespawnHack().isEnabled() ? "Disable" : "Enable") + " AutoRespawn"); }
     private StringTextComponent getBowAimbotLabel() { return new StringTextComponent((VisionClient.getBowAimbotHack().isEnabled() ? "Disable" : "Enable") + " BowAimbot"); }
     private StringTextComponent getHealthDisplayLabel() { return new StringTextComponent((VisionClient.getHealthDisplayHack().isEnabled() ? "Disable" : "Enable") + " HealthDisplay"); }
+    private StringTextComponent getRubberBanderLabel() { return new StringTextComponent((VisionClient.getRubberBanderHack().isEnabled() ? "Disable" : "Enable") + " RubberBander"); }
 }

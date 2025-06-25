@@ -24,6 +24,7 @@ public class VisionKeybind {
     public static KeyBinding autoRespawnKey;
     public static KeyBinding bowAimbotKey;
     public static KeyBinding healthDisplayKey;
+    public static KeyBinding rubberBanderKey;
     public static KeyBinding menuKey;
 
     static void register() {
@@ -43,6 +44,7 @@ public class VisionKeybind {
         autoRespawnKey = new KeyBinding("key.vision.autorespawn", GLFW.GLFW_KEY_R, "key.categories.vision");
         bowAimbotKey = new KeyBinding("key.vision.bowaimbot", GLFW.GLFW_KEY_X, "key.categories.vision");
         healthDisplayKey = new KeyBinding("key.vision.healthdisplay", GLFW.GLFW_KEY_U, "key.categories.vision");
+        rubberBanderKey = new KeyBinding("key.vision.rubberbander", GLFW.GLFW_KEY_Y, "key.categories.vision");
         menuKey = new KeyBinding("key.vision.menu", GLFW.GLFW_KEY_BACKSLASH, "key.categories.vision");
         ClientRegistry.registerKeyBinding(speedKey);
         ClientRegistry.registerKeyBinding(jumpKey);
@@ -60,6 +62,7 @@ public class VisionKeybind {
         ClientRegistry.registerKeyBinding(autoRespawnKey);
         ClientRegistry.registerKeyBinding(bowAimbotKey);
         ClientRegistry.registerKeyBinding(healthDisplayKey);
+        ClientRegistry.registerKeyBinding(rubberBanderKey);
         ClientRegistry.registerKeyBinding(menuKey);
     }
 }
