@@ -32,9 +32,16 @@ public class HackSettings {
 
     /** Alias used by the SpoofName hack. */
     public String spoofName = "";
-    /** Whether incoming chat should use the alias. */
+    /**
+     * Whether incoming network traffic should have the player's name replaced
+     * with the alias. This now applies to all packet types rather than only
+     * chat packets.
+     */
     public boolean spoofIncoming = true;
-    /** Whether outgoing chat should use the alias. */
+    /**
+     * Whether outgoing network traffic should use the alias instead of the
+     * actual player name. This applies to all packets sent after login.
+     */
     public boolean spoofOutgoing = true;
 
 

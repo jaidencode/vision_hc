@@ -38,10 +38,12 @@ public class SpoofNameSettingsScreen extends Screen {
         addWidget(aliasField);
 
         y += 25;
-        incomingBox = new CheckboxButton(centerX - 80, y, 160, 20, new StringTextComponent("Spoof Incoming"), originalIncoming);
+        incomingBox = new CheckboxButton(centerX - 80, y, 160, 20,
+                new StringTextComponent("Spoof Incoming Packets"), originalIncoming);
         addButton(incomingBox);
         y += 25;
-        outgoingBox = new CheckboxButton(centerX - 80, y, 160, 20, new StringTextComponent("Spoof Outgoing"), originalOutgoing);
+        outgoingBox = new CheckboxButton(centerX - 80, y, 160, 20,
+                new StringTextComponent("Spoof Outgoing Packets"), originalOutgoing);
         addButton(outgoingBox);
 
         y += 30;
