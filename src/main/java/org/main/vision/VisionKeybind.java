@@ -29,6 +29,7 @@ public class VisionKeybind {
     public static KeyBinding scaffoldKey;
     public static KeyBinding quickChargeKey;
     public static KeyBinding itemMagnetKey;
+    public static KeyBinding quantumTunnelKey;
     public static KeyBinding menuKey;
 
     static void register() {
@@ -53,6 +54,7 @@ public class VisionKeybind {
         scaffoldKey = new KeyBinding("key.vision.scaffold", GLFW.GLFW_KEY_F7, "key.categories.vision");
         quickChargeKey = new KeyBinding("key.vision.quickcharge", GLFW.GLFW_KEY_F9, "key.categories.vision");
         itemMagnetKey = new KeyBinding("key.vision.itemmagnet", GLFW.GLFW_KEY_F11, "key.categories.vision");
+        quantumTunnelKey = new KeyBinding("key.vision.quantumtunnel", GLFW.GLFW_KEY_F12, "key.categories.vision");
         menuKey = new KeyBinding("key.vision.menu", GLFW.GLFW_KEY_BACKSLASH, "key.categories.vision");
         ClientRegistry.registerKeyBinding(speedKey);
         ClientRegistry.registerKeyBinding(jumpKey);
@@ -75,6 +77,7 @@ public class VisionKeybind {
         ClientRegistry.registerKeyBinding(scaffoldKey);
         ClientRegistry.registerKeyBinding(quickChargeKey);
         ClientRegistry.registerKeyBinding(itemMagnetKey);
+        ClientRegistry.registerKeyBinding(quantumTunnelKey);
         ClientRegistry.registerKeyBinding(menuKey);
     }
 }
