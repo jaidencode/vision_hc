@@ -29,6 +29,8 @@ public class VisionKeybind {
     public static KeyBinding nameTagsKey;
     public static KeyBinding scaffoldKey;
     public static KeyBinding perspectiveSwapKey;
+    public static KeyBinding quickChargeKey;
+    public static KeyBinding ghostPredictKey;
     public static KeyBinding menuKey;
 
     static void register() {
@@ -53,6 +55,8 @@ public class VisionKeybind {
         nameTagsKey = new KeyBinding("key.vision.nametags", GLFW.GLFW_KEY_F6, "key.categories.vision");
         scaffoldKey = new KeyBinding("key.vision.scaffold", GLFW.GLFW_KEY_F7, "key.categories.vision");
         perspectiveSwapKey = new KeyBinding("key.vision.perspectiveswap", GLFW.GLFW_KEY_F8, "key.categories.vision");
+        quickChargeKey = new KeyBinding("key.vision.quickcharge", GLFW.GLFW_KEY_F9, "key.categories.vision");
+        ghostPredictKey = new KeyBinding("key.vision.ghostpredict", GLFW.GLFW_KEY_F10, "key.categories.vision");
         menuKey = new KeyBinding("key.vision.menu", GLFW.GLFW_KEY_BACKSLASH, "key.categories.vision");
         ClientRegistry.registerKeyBinding(speedKey);
         ClientRegistry.registerKeyBinding(jumpKey);
@@ -75,6 +79,8 @@ public class VisionKeybind {
         ClientRegistry.registerKeyBinding(nameTagsKey);
         ClientRegistry.registerKeyBinding(scaffoldKey);
         ClientRegistry.registerKeyBinding(perspectiveSwapKey);
+        ClientRegistry.registerKeyBinding(quickChargeKey);
+        ClientRegistry.registerKeyBinding(ghostPredictKey);
         ClientRegistry.registerKeyBinding(menuKey);
     }
 }

@@ -27,6 +27,8 @@ import org.main.vision.actions.SeeBarrierHack;
 import org.main.vision.actions.NameTagsHack;
 import org.main.vision.actions.ScaffoldHack;
 import org.main.vision.actions.PerspectiveSwapHack;
+import org.main.vision.actions.QuickChargeHack;
+import org.main.vision.actions.GhostPredictHack;
 import org.main.vision.config.HackSettings;
 
 /**
@@ -55,6 +57,8 @@ public class VisionClient {
     private static final NameTagsHack NAMETAGS_HACK = new NameTagsHack();
     private static final ScaffoldHack SCAFFOLD_HACK = new ScaffoldHack();
     private static final PerspectiveSwapHack PERSPECTIVE_SWAP_HACK = new PerspectiveSwapHack();
+    private static final QuickChargeHack QUICKCHARGE_HACK = new QuickChargeHack();
+    private static final GhostPredictHack GHOSTPREDICT_HACK = new GhostPredictHack();
     private static HackSettings SETTINGS;
 
     static void init() {
@@ -146,6 +150,14 @@ public class VisionClient {
         return PERSPECTIVE_SWAP_HACK;
     }
 
+    public static QuickChargeHack getQuickChargeHack() {
+        return QUICKCHARGE_HACK;
+    }
+
+    public static GhostPredictHack getGhostPredictHack() {
+        return GHOSTPREDICT_HACK;
+    }
+
 
     public static HackSettings getSettings() {
         return SETTINGS;
@@ -219,6 +231,12 @@ public class VisionClient {
         }
         if (event.getKey() == VisionKeybind.scaffoldKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             SCAFFOLD_HACK.toggle();
+        }
+        if (event.getKey() == VisionKeybind.quickChargeKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            QUICKCHARGE_HACK.toggle();
+        }
+        if (event.getKey() == VisionKeybind.ghostPredictKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            GHOSTPREDICT_HACK.toggle();
         }
         if (event.getKey() == VisionKeybind.perspectiveSwapKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             PERSPECTIVE_SWAP_HACK.toggle();

@@ -138,6 +138,18 @@ public class VisionOverlay {
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
         }
+        if (VisionClient.getQuickChargeHack().isEnabled()) {
+            String text = "QuickCharge";
+            int w = mc.font.width(text);
+            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
+            y += mc.font.lineHeight;
+        }
+        if (VisionClient.getGhostPredictHack().isEnabled()) {
+            String text = "GhostPredict";
+            int w = mc.font.width(text);
+            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
+            y += mc.font.lineHeight;
+        }
         if (VisionClient.getPerspectiveSwapHack().isEnabled()) {
             String text = "PerspectiveSwap";
             int w = mc.font.width(text);

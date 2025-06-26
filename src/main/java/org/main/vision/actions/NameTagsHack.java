@@ -25,8 +25,12 @@ public class NameTagsHack extends ActionBase {
         Vector3d camPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
         double dist = entity.position().distanceTo(camPos);
         String name = entity.getName().getString();
-        String text = String.format("%s [%.0f%% %.1fm]", name,
-                (entity.getHealth() / Math.max(1.0f, entity.getMaxHealth())) * 100.0f, dist);
+        String health = String.format("HP: %.0f%%",
+                (entity.getHealth() / Math.max(1.0f, entity.getMaxHealth())) * 100.0f);
+        String distance = String.format("Dist: %.1fm", dist);
+        String coords = String.format("XYZ: %d %d %d",
+                (int) entity.getX(), (int) entity.getY(), (int) entity.getZ());
+        String[] lines = new String[] { name, health + " " + distance, coords };
 
         MatrixStack ms = event.getMatrixStack();
         EntityRendererManager rm = Minecraft.getInstance().getEntityRenderDispatcher();
@@ -35,8 +39,21 @@ public class NameTagsHack extends ActionBase {
         ms.mulPose(rm.cameraOrientation());
         ms.scale(-0.025F, -0.025F, 0.025F);
         IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-        float w = Minecraft.getInstance().font.width(text) / 2f;
-        Minecraft.getInstance().font.draw(ms, text, -w, 0, 0xFFFFFFFF);
+
+        int lineHeight = Minecraft.getInstance().font.lineHeight;
+        int boxWidth = 0;
+        for (String s : lines) {
+            boxWidth = Math.max(boxWidth, Minecraft.getInstance().font.width(s));
+        }
+        int half = boxWidth / 2 + 2;
+        net.minecraft.client.gui.AbstractGui.fill(ms, -half, -2, half, lines.length * lineHeight + 2, 0x55000000);
+
+        for (int i = 0; i < lines.length; i++) {
+            String s = lines[i];
+            float x = -Minecraft.getInstance().font.width(s) / 2f;
+            Minecraft.getInstance().font.draw(ms, s, x, i * lineHeight, 0xFFFFFFFF);
+        }
+
         buffer.endBatch(RenderType.lines());
         ms.popPose();
     }
