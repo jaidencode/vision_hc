@@ -6,8 +6,8 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.util.text.StringTextComponent;
 import org.main.vision.config.HackSettings;
 
-/** Screen to edit QuantumTunnel target coordinates. */
-public class QuantumTunnelSettingsScreen extends Screen {
+/** Screen to edit Teleport target coordinates. */
+public class TeleportSettingsScreen extends Screen {
     private final Screen parent;
     private TextFieldWidget xField;
     private TextFieldWidget yField;
@@ -17,8 +17,8 @@ public class QuantumTunnelSettingsScreen extends Screen {
     private double originalY;
     private double originalZ;
 
-    public QuantumTunnelSettingsScreen(Screen parent) {
-        super(new StringTextComponent("QuantumTunnel Settings"));
+    public TeleportSettingsScreen(Screen parent) {
+        super(new StringTextComponent("Teleport Settings"));
         this.parent = parent;
     }
 
@@ -34,9 +34,9 @@ public class QuantumTunnelSettingsScreen extends Screen {
         xField.setMaxLength(32);
         yField.setMaxLength(32);
         zField.setMaxLength(32);
-        originalX = cfg.quantumX;
-        originalY = cfg.quantumY;
-        originalZ = cfg.quantumZ;
+        originalX = cfg.teleportX;
+        originalY = cfg.teleportY;
+        originalZ = cfg.teleportZ;
         xField.setValue(Double.toString(originalX));
         yField.setValue(Double.toString(originalY));
         zField.setValue(Double.toString(originalZ));
@@ -70,14 +70,14 @@ public class QuantumTunnelSettingsScreen extends Screen {
     private void apply() {
         HackSettings cfg = VisionClient.getSettings();
         try {
-            cfg.quantumX = Double.parseDouble(xField.getValue());
-            cfg.quantumY = Double.parseDouble(yField.getValue());
-            cfg.quantumZ = Double.parseDouble(zField.getValue());
-            originalX = cfg.quantumX;
-            originalY = cfg.quantumY;
-            originalZ = cfg.quantumZ;
+            cfg.teleportX = Double.parseDouble(xField.getValue());
+            cfg.teleportY = Double.parseDouble(yField.getValue());
+            cfg.teleportZ = Double.parseDouble(zField.getValue());
+            originalX = cfg.teleportX;
+            originalY = cfg.teleportY;
+            originalZ = cfg.teleportZ;
             VisionClient.saveSettings();
-            VisionClient.getQuantumTunnelHack().setTarget(cfg.quantumX, cfg.quantumY, cfg.quantumZ);
+            VisionClient.getTeleportHack().setTarget(cfg.teleportX, cfg.teleportY, cfg.teleportZ);
         } catch (NumberFormatException ignored) {}
     }
 }

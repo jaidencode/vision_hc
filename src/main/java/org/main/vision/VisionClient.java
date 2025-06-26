@@ -27,7 +27,7 @@ import org.main.vision.actions.NameTagsHack;
 import org.main.vision.actions.ScaffoldHack;
 import org.main.vision.actions.QuickChargeHack;
 import org.main.vision.actions.ItemMagnetHack;
-import org.main.vision.actions.QuantumTunnelHack;
+import org.main.vision.actions.TeleportHack;
 import org.main.vision.config.HackSettings;
 
 /**
@@ -56,13 +56,13 @@ public class VisionClient {
     private static final ScaffoldHack SCAFFOLD_HACK = new ScaffoldHack();
     private static final QuickChargeHack QUICKCHARGE_HACK = new QuickChargeHack();
     private static final ItemMagnetHack ITEMMAGNET_HACK = new ItemMagnetHack();
-    private static final QuantumTunnelHack QUANTUMTUNNEL_HACK = new QuantumTunnelHack();
+    private static final TeleportHack TELEPORT_HACK = new TeleportHack();
     private static HackSettings SETTINGS;
 
     static void init() {
         VisionKeybind.register();
         SETTINGS = HackSettings.load();
-        QUANTUMTUNNEL_HACK.setTarget(SETTINGS.quantumX, SETTINGS.quantumY, SETTINGS.quantumZ);
+        TELEPORT_HACK.setTarget(SETTINGS.teleportX, SETTINGS.teleportY, SETTINGS.teleportZ);
     }
 
     public static SpeedHack getSpeedHack() {
@@ -149,8 +149,8 @@ public class VisionClient {
         return ITEMMAGNET_HACK;
     }
 
-    public static QuantumTunnelHack getQuantumTunnelHack() {
-        return QUANTUMTUNNEL_HACK;
+    public static TeleportHack getTeleportHack() {
+        return TELEPORT_HACK;
     }
 
 
@@ -230,8 +230,8 @@ public class VisionClient {
         if (event.getKey() == VisionKeybind.itemMagnetKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             ITEMMAGNET_HACK.toggle();
         }
-        if (event.getKey() == VisionKeybind.quantumTunnelKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
-            QUANTUMTUNNEL_HACK.toggle();
+        if (event.getKey() == VisionKeybind.teleportKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            TELEPORT_HACK.toggle();
         }
         if (event.getKey() == VisionKeybind.menuKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
             Minecraft.getInstance().setScreen(new VisionMenuScreen());
