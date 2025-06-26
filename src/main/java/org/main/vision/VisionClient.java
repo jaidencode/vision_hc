@@ -28,6 +28,7 @@ import org.main.vision.actions.ScaffoldHack;
 import org.main.vision.actions.QuickChargeHack;
 import org.main.vision.actions.TeleportHack;
 import org.main.vision.actions.AutoDodgeHack;
+import org.main.vision.actions.InventoryPreviewHack;
 import org.main.vision.config.HackSettings;
 
 /**
@@ -56,6 +57,7 @@ public class VisionClient {
     private static final ScaffoldHack SCAFFOLD_HACK = new ScaffoldHack();
     private static final QuickChargeHack QUICKCHARGE_HACK = new QuickChargeHack();
     private static final AutoDodgeHack AUTODODGE_HACK = new AutoDodgeHack();
+    private static final InventoryPreviewHack INVENTORY_PREVIEW_HACK = new InventoryPreviewHack();
     private static final TeleportHack TELEPORT_HACK = new TeleportHack();
     private static HackSettings SETTINGS;
 
@@ -149,6 +151,10 @@ public class VisionClient {
         return AUTODODGE_HACK;
     }
 
+    public static InventoryPreviewHack getInventoryPreviewHack() {
+        return INVENTORY_PREVIEW_HACK;
+    }
+
     public static TeleportHack getTeleportHack() {
         return TELEPORT_HACK;
     }
@@ -229,6 +235,9 @@ public class VisionClient {
         }
         if (event.getKey() == VisionKeybind.autoDodgeKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             AUTODODGE_HACK.toggle();
+        }
+        if (event.getKey() == VisionKeybind.inventoryPreviewKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            INVENTORY_PREVIEW_HACK.toggle();
         }
         if (event.getKey() == VisionKeybind.teleportKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             TELEPORT_HACK.toggle();

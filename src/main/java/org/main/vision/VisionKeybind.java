@@ -29,6 +29,7 @@ public class VisionKeybind {
     public static KeyBinding scaffoldKey;
     public static KeyBinding quickChargeKey;
     public static KeyBinding autoDodgeKey;
+    public static KeyBinding inventoryPreviewKey;
     public static KeyBinding teleportKey;
     public static KeyBinding menuKey;
 
@@ -54,6 +55,7 @@ public class VisionKeybind {
         scaffoldKey = new KeyBinding("key.vision.scaffold", GLFW.GLFW_KEY_F7, "key.categories.vision");
         quickChargeKey = new KeyBinding("key.vision.quickcharge", GLFW.GLFW_KEY_F9, "key.categories.vision");
         autoDodgeKey = new KeyBinding("key.vision.autododge", GLFW.GLFW_KEY_F10, "key.categories.vision");
+        inventoryPreviewKey = new KeyBinding("key.vision.invpreview", GLFW.GLFW_KEY_F8, "key.categories.vision");
         teleportKey = new KeyBinding("key.vision.teleport", GLFW.GLFW_KEY_F12, "key.categories.vision");
         menuKey = new KeyBinding("key.vision.menu", GLFW.GLFW_KEY_BACKSLASH, "key.categories.vision");
         ClientRegistry.registerKeyBinding(speedKey);
@@ -77,6 +79,7 @@ public class VisionKeybind {
         ClientRegistry.registerKeyBinding(scaffoldKey);
         ClientRegistry.registerKeyBinding(quickChargeKey);
         ClientRegistry.registerKeyBinding(autoDodgeKey);
+        ClientRegistry.registerKeyBinding(inventoryPreviewKey);
         ClientRegistry.registerKeyBinding(teleportKey);
         ClientRegistry.registerKeyBinding(menuKey);
     }
