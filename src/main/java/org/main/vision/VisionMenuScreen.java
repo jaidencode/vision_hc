@@ -56,6 +56,8 @@ public class VisionMenuScreen extends Screen {
         addEntry(() -> getNameTagsLabel(), this::toggleNameTags, null);
         addEntry(() -> getScaffoldLabel(), this::toggleScaffold, null);
         addEntry(() -> getPerspectiveSwapLabel(), this::togglePerspectiveSwap, null);
+        addEntry(() -> getQuickChargeLabel(), this::toggleQuickCharge, null);
+        addEntry(() -> getGhostPredictLabel(), this::toggleGhostPredict, null);
         layoutButtons();
     }
 
@@ -139,6 +141,8 @@ public class VisionMenuScreen extends Screen {
     private void toggleNameTags() { VisionClient.getNameTagsHack().toggle(); }
     private void toggleScaffold() { VisionClient.getScaffoldHack().toggle(); }
     private void togglePerspectiveSwap() { VisionClient.getPerspectiveSwapHack().toggle(); }
+    private void toggleQuickCharge() { VisionClient.getQuickChargeHack().toggle(); }
+    private void toggleGhostPredict() { VisionClient.getGhostPredictHack().toggle(); }
 
     // Settings open methods
     private void openSpeedSettings() { this.minecraft.setScreen(new SpeedSettingsScreen(this)); }
@@ -175,4 +179,6 @@ public class VisionMenuScreen extends Screen {
     private StringTextComponent getNameTagsLabel() { return new StringTextComponent((VisionClient.getNameTagsHack().isEnabled() ? "Disable" : "Enable") + " NameTags++"); }
     private StringTextComponent getScaffoldLabel() { return new StringTextComponent((VisionClient.getScaffoldHack().isEnabled() ? "Disable" : "Enable") + " Scaffold"); }
     private StringTextComponent getPerspectiveSwapLabel() { return new StringTextComponent((VisionClient.getPerspectiveSwapHack().isEnabled() ? "Disable" : "Enable") + " PerspectiveSwap"); }
+    private StringTextComponent getQuickChargeLabel() { return new StringTextComponent((VisionClient.getQuickChargeHack().isEnabled() ? "Disable" : "Enable") + " QuickCharge"); }
+    private StringTextComponent getGhostPredictLabel() { return new StringTextComponent((VisionClient.getGhostPredictHack().isEnabled() ? "Disable" : "Enable") + " GhostPredict"); }
 }
