@@ -53,7 +53,9 @@ public class VisionMenuScreen extends Screen {
         addEntry(() -> getHealthDisplayLabel(), this::toggleHealthDisplay, null);
         addEntry(() -> getRubberBanderLabel(), this::toggleRubberBander, null);
         addEntry(() -> getSeeBarrierLabel(), this::toggleSeeBarrier, null);
-        addEntry(() -> getDualCamLabel(), this::toggleDualCam, null);
+        addEntry(() -> getNameTagsLabel(), this::toggleNameTags, null);
+        addEntry(() -> getScaffoldLabel(), this::toggleScaffold, null);
+        addEntry(() -> getPerspectiveSwapLabel(), this::togglePerspectiveSwap, null);
         layoutButtons();
     }
 
@@ -134,7 +136,9 @@ public class VisionMenuScreen extends Screen {
     private void toggleHealthDisplay() { VisionClient.getHealthDisplayHack().toggle(); }
     private void toggleRubberBander() { VisionClient.getRubberBanderHack().toggle(); }
     private void toggleSeeBarrier() { VisionClient.getSeeBarrierHack().toggle(); }
-    private void toggleDualCam() { VisionClient.getDualCamHack().toggle(); }
+    private void toggleNameTags() { VisionClient.getNameTagsHack().toggle(); }
+    private void toggleScaffold() { VisionClient.getScaffoldHack().toggle(); }
+    private void togglePerspectiveSwap() { VisionClient.getPerspectiveSwapHack().toggle(); }
 
     // Settings open methods
     private void openSpeedSettings() { this.minecraft.setScreen(new SpeedSettingsScreen(this)); }
@@ -168,5 +172,7 @@ public class VisionMenuScreen extends Screen {
     private StringTextComponent getHealthDisplayLabel() { return new StringTextComponent((VisionClient.getHealthDisplayHack().isEnabled() ? "Disable" : "Enable") + " HealthDisplay"); }
     private StringTextComponent getRubberBanderLabel() { return new StringTextComponent((VisionClient.getRubberBanderHack().isEnabled() ? "Disable" : "Enable") + " RubberBander"); }
     private StringTextComponent getSeeBarrierLabel() { return new StringTextComponent((VisionClient.getSeeBarrierHack().isEnabled() ? "Disable" : "Enable") + " SeeBarrier"); }
-    private StringTextComponent getDualCamLabel() { return new StringTextComponent((VisionClient.getDualCamHack().isEnabled() ? "Disable" : "Enable") + " DualCam"); }
+    private StringTextComponent getNameTagsLabel() { return new StringTextComponent((VisionClient.getNameTagsHack().isEnabled() ? "Disable" : "Enable") + " NameTags++"); }
+    private StringTextComponent getScaffoldLabel() { return new StringTextComponent((VisionClient.getScaffoldHack().isEnabled() ? "Disable" : "Enable") + " Scaffold"); }
+    private StringTextComponent getPerspectiveSwapLabel() { return new StringTextComponent((VisionClient.getPerspectiveSwapHack().isEnabled() ? "Disable" : "Enable") + " PerspectiveSwap"); }
 }

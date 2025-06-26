@@ -26,7 +26,9 @@ public class VisionKeybind {
     public static KeyBinding healthDisplayKey;
     public static KeyBinding rubberBanderKey;
     public static KeyBinding seeBarrierKey;
-    public static KeyBinding dualCamKey;
+    public static KeyBinding nameTagsKey;
+    public static KeyBinding scaffoldKey;
+    public static KeyBinding perspectiveSwapKey;
     public static KeyBinding menuKey;
 
     static void register() {
@@ -48,7 +50,9 @@ public class VisionKeybind {
         healthDisplayKey = new KeyBinding("key.vision.healthdisplay", GLFW.GLFW_KEY_U, "key.categories.vision");
         rubberBanderKey = new KeyBinding("key.vision.rubberbander", GLFW.GLFW_KEY_Y, "key.categories.vision");
         seeBarrierKey = new KeyBinding("key.vision.seebarrier", GLFW.GLFW_KEY_I, "key.categories.vision");
-        dualCamKey = new KeyBinding("key.vision.dualcam", GLFW.GLFW_KEY_N, "key.categories.vision");
+        nameTagsKey = new KeyBinding("key.vision.nametags", GLFW.GLFW_KEY_F6, "key.categories.vision");
+        scaffoldKey = new KeyBinding("key.vision.scaffold", GLFW.GLFW_KEY_F7, "key.categories.vision");
+        perspectiveSwapKey = new KeyBinding("key.vision.perspectiveswap", GLFW.GLFW_KEY_F8, "key.categories.vision");
         menuKey = new KeyBinding("key.vision.menu", GLFW.GLFW_KEY_BACKSLASH, "key.categories.vision");
         ClientRegistry.registerKeyBinding(speedKey);
         ClientRegistry.registerKeyBinding(jumpKey);
@@ -68,7 +72,9 @@ public class VisionKeybind {
         ClientRegistry.registerKeyBinding(healthDisplayKey);
         ClientRegistry.registerKeyBinding(rubberBanderKey);
         ClientRegistry.registerKeyBinding(seeBarrierKey);
-        ClientRegistry.registerKeyBinding(dualCamKey);
+        ClientRegistry.registerKeyBinding(nameTagsKey);
+        ClientRegistry.registerKeyBinding(scaffoldKey);
+        ClientRegistry.registerKeyBinding(perspectiveSwapKey);
         ClientRegistry.registerKeyBinding(menuKey);
     }
 }

@@ -24,7 +24,9 @@ import org.main.vision.actions.BowAimbotHack;
 import org.main.vision.actions.HealthDisplayHack;
 import org.main.vision.actions.RubberBanderHack;
 import org.main.vision.actions.SeeBarrierHack;
-import org.main.vision.actions.DualCamHack;
+import org.main.vision.actions.NameTagsHack;
+import org.main.vision.actions.ScaffoldHack;
+import org.main.vision.actions.PerspectiveSwapHack;
 import org.main.vision.config.HackSettings;
 
 /**
@@ -50,7 +52,9 @@ public class VisionClient {
     private static final HealthDisplayHack HEALTHDISPLAY_HACK = new HealthDisplayHack();
     private static final RubberBanderHack RUBBERBANDER_HACK = new RubberBanderHack();
     private static final SeeBarrierHack SEEBARRIER_HACK = new SeeBarrierHack();
-    private static final DualCamHack DUALCAM_HACK = new DualCamHack();
+    private static final NameTagsHack NAMETAGS_HACK = new NameTagsHack();
+    private static final ScaffoldHack SCAFFOLD_HACK = new ScaffoldHack();
+    private static final PerspectiveSwapHack PERSPECTIVE_SWAP_HACK = new PerspectiveSwapHack();
     private static HackSettings SETTINGS;
 
     static void init() {
@@ -130,8 +134,16 @@ public class VisionClient {
         return SEEBARRIER_HACK;
     }
 
-    public static DualCamHack getDualCamHack() {
-        return DUALCAM_HACK;
+    public static NameTagsHack getNameTagsHack() {
+        return NAMETAGS_HACK;
+    }
+
+    public static ScaffoldHack getScaffoldHack() {
+        return SCAFFOLD_HACK;
+    }
+
+    public static PerspectiveSwapHack getPerspectiveSwapHack() {
+        return PERSPECTIVE_SWAP_HACK;
     }
 
 
@@ -202,12 +214,14 @@ public class VisionClient {
         if (event.getKey() == VisionKeybind.seeBarrierKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             SEEBARRIER_HACK.toggle();
         }
-        if (event.getKey() == VisionKeybind.dualCamKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
-            if (DUALCAM_HACK.isEnabled()) {
-                DUALCAM_HACK.toggleControl();
-            } else {
-                DUALCAM_HACK.toggle();
-            }
+        if (event.getKey() == VisionKeybind.nameTagsKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            NAMETAGS_HACK.toggle();
+        }
+        if (event.getKey() == VisionKeybind.scaffoldKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            SCAFFOLD_HACK.toggle();
+        }
+        if (event.getKey() == VisionKeybind.perspectiveSwapKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            PERSPECTIVE_SWAP_HACK.toggle();
         }
         if (event.getKey() == VisionKeybind.menuKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
             Minecraft.getInstance().setScreen(new VisionMenuScreen());
