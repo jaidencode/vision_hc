@@ -108,12 +108,6 @@ public class VisionOverlay {
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
         }
-        if (VisionClient.getHealthDisplayHack().isEnabled()) {
-            String text = "HealthDisplay";
-            int w = mc.font.width(text);
-            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
-            y += mc.font.lineHeight;
-        }
         if (VisionClient.getRubberBanderHack().isEnabled()) {
             String text = "RubberBander";
             int w = mc.font.width(text);
@@ -144,14 +138,8 @@ public class VisionOverlay {
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
         }
-        if (VisionClient.getGhostPredictHack().isEnabled()) {
-            String text = "GhostPredict";
-            int w = mc.font.width(text);
-            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
-            y += mc.font.lineHeight;
-        }
-        if (VisionClient.getPerspectiveSwapHack().isEnabled()) {
-            String text = "PerspectiveSwap";
+        if (VisionClient.getItemMagnetHack().isEnabled()) {
+            String text = "ItemMagnet";
             int w = mc.font.width(text);
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;

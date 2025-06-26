@@ -35,7 +35,7 @@ public class NameTagsHack extends ActionBase {
         MatrixStack ms = event.getMatrixStack();
         EntityRendererManager rm = Minecraft.getInstance().getEntityRenderDispatcher();
         ms.pushPose();
-        ms.translate(0.0D, entity.getBbHeight() + 0.5D, 0.0D);
+        ms.translate(0.0D, entity.getBbHeight() + 1.0D, 0.0D);
         ms.mulPose(rm.cameraOrientation());
         ms.scale(-0.025F, -0.025F, 0.025F);
         IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();

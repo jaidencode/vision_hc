@@ -21,14 +21,12 @@ import org.main.vision.actions.SafeWalkHack;
 import org.main.vision.actions.AutoSprintHack;
 import org.main.vision.actions.AutoRespawnHack;
 import org.main.vision.actions.BowAimbotHack;
-import org.main.vision.actions.HealthDisplayHack;
 import org.main.vision.actions.RubberBanderHack;
 import org.main.vision.actions.SeeBarrierHack;
 import org.main.vision.actions.NameTagsHack;
 import org.main.vision.actions.ScaffoldHack;
-import org.main.vision.actions.PerspectiveSwapHack;
 import org.main.vision.actions.QuickChargeHack;
-import org.main.vision.actions.GhostPredictHack;
+import org.main.vision.actions.ItemMagnetHack;
 import org.main.vision.config.HackSettings;
 
 /**
@@ -51,14 +49,12 @@ public class VisionClient {
     private static final AutoSprintHack AUTOSPRINT_HACK = new AutoSprintHack();
     private static final AutoRespawnHack AUTORESPAWN_HACK = new AutoRespawnHack();
     private static final BowAimbotHack BOWAIMBOT_HACK = new BowAimbotHack();
-    private static final HealthDisplayHack HEALTHDISPLAY_HACK = new HealthDisplayHack();
     private static final RubberBanderHack RUBBERBANDER_HACK = new RubberBanderHack();
     private static final SeeBarrierHack SEEBARRIER_HACK = new SeeBarrierHack();
     private static final NameTagsHack NAMETAGS_HACK = new NameTagsHack();
     private static final ScaffoldHack SCAFFOLD_HACK = new ScaffoldHack();
-    private static final PerspectiveSwapHack PERSPECTIVE_SWAP_HACK = new PerspectiveSwapHack();
     private static final QuickChargeHack QUICKCHARGE_HACK = new QuickChargeHack();
-    private static final GhostPredictHack GHOSTPREDICT_HACK = new GhostPredictHack();
+    private static final ItemMagnetHack ITEMMAGNET_HACK = new ItemMagnetHack();
     private static HackSettings SETTINGS;
 
     static void init() {
@@ -126,10 +122,6 @@ public class VisionClient {
         return BOWAIMBOT_HACK;
     }
 
-    public static HealthDisplayHack getHealthDisplayHack() {
-        return HEALTHDISPLAY_HACK;
-    }
-
     public static RubberBanderHack getRubberBanderHack() {
         return RUBBERBANDER_HACK;
     }
@@ -146,16 +138,12 @@ public class VisionClient {
         return SCAFFOLD_HACK;
     }
 
-    public static PerspectiveSwapHack getPerspectiveSwapHack() {
-        return PERSPECTIVE_SWAP_HACK;
-    }
-
     public static QuickChargeHack getQuickChargeHack() {
         return QUICKCHARGE_HACK;
     }
 
-    public static GhostPredictHack getGhostPredictHack() {
-        return GHOSTPREDICT_HACK;
+    public static ItemMagnetHack getItemMagnetHack() {
+        return ITEMMAGNET_HACK;
     }
 
 
@@ -217,9 +205,6 @@ public class VisionClient {
         if (event.getKey() == VisionKeybind.bowAimbotKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             BOWAIMBOT_HACK.toggle();
         }
-        if (event.getKey() == VisionKeybind.healthDisplayKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
-            HEALTHDISPLAY_HACK.toggle();
-        }
         if (event.getKey() == VisionKeybind.rubberBanderKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             RUBBERBANDER_HACK.toggle();
         }
@@ -235,11 +220,8 @@ public class VisionClient {
         if (event.getKey() == VisionKeybind.quickChargeKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             QUICKCHARGE_HACK.toggle();
         }
-        if (event.getKey() == VisionKeybind.ghostPredictKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
-            GHOSTPREDICT_HACK.toggle();
-        }
-        if (event.getKey() == VisionKeybind.perspectiveSwapKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
-            PERSPECTIVE_SWAP_HACK.toggle();
+        if (event.getKey() == VisionKeybind.itemMagnetKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            ITEMMAGNET_HACK.toggle();
         }
         if (event.getKey() == VisionKeybind.menuKey.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
             Minecraft.getInstance().setScreen(new VisionMenuScreen());

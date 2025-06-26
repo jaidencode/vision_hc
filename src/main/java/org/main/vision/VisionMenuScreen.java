@@ -50,14 +50,12 @@ public class VisionMenuScreen extends Screen {
         addEntry(() -> getAutoSprintLabel(), this::toggleAutoSprint, null);
         addEntry(() -> getAutoRespawnLabel(), this::toggleAutoRespawn, null);
         addEntry(() -> getBowAimbotLabel(), this::toggleBowAimbot, null);
-        addEntry(() -> getHealthDisplayLabel(), this::toggleHealthDisplay, null);
         addEntry(() -> getRubberBanderLabel(), this::toggleRubberBander, null);
         addEntry(() -> getSeeBarrierLabel(), this::toggleSeeBarrier, null);
         addEntry(() -> getNameTagsLabel(), this::toggleNameTags, null);
         addEntry(() -> getScaffoldLabel(), this::toggleScaffold, null);
-        addEntry(() -> getPerspectiveSwapLabel(), this::togglePerspectiveSwap, null);
         addEntry(() -> getQuickChargeLabel(), this::toggleQuickCharge, null);
-        addEntry(() -> getGhostPredictLabel(), this::toggleGhostPredict, null);
+        addEntry(() -> getItemMagnetLabel(), this::toggleItemMagnet, null);
         layoutButtons();
     }
 
@@ -135,14 +133,12 @@ public class VisionMenuScreen extends Screen {
     private void toggleAutoSprint() { VisionClient.getAutoSprintHack().toggle(); }
     private void toggleAutoRespawn() { VisionClient.getAutoRespawnHack().toggle(); }
     private void toggleBowAimbot() { VisionClient.getBowAimbotHack().toggle(); }
-    private void toggleHealthDisplay() { VisionClient.getHealthDisplayHack().toggle(); }
     private void toggleRubberBander() { VisionClient.getRubberBanderHack().toggle(); }
     private void toggleSeeBarrier() { VisionClient.getSeeBarrierHack().toggle(); }
     private void toggleNameTags() { VisionClient.getNameTagsHack().toggle(); }
     private void toggleScaffold() { VisionClient.getScaffoldHack().toggle(); }
-    private void togglePerspectiveSwap() { VisionClient.getPerspectiveSwapHack().toggle(); }
     private void toggleQuickCharge() { VisionClient.getQuickChargeHack().toggle(); }
-    private void toggleGhostPredict() { VisionClient.getGhostPredictHack().toggle(); }
+    private void toggleItemMagnet() { VisionClient.getItemMagnetHack().toggle(); }
 
     // Settings open methods
     private void openSpeedSettings() { this.minecraft.setScreen(new SpeedSettingsScreen(this)); }
@@ -173,12 +169,10 @@ public class VisionMenuScreen extends Screen {
     private StringTextComponent getAutoSprintLabel() { return new StringTextComponent((VisionClient.getAutoSprintHack().isEnabled() ? "Disable" : "Enable") + " AutoSprint"); }
     private StringTextComponent getAutoRespawnLabel() { return new StringTextComponent((VisionClient.getAutoRespawnHack().isEnabled() ? "Disable" : "Enable") + " AutoRespawn"); }
     private StringTextComponent getBowAimbotLabel() { return new StringTextComponent((VisionClient.getBowAimbotHack().isEnabled() ? "Disable" : "Enable") + " BowAimbot"); }
-    private StringTextComponent getHealthDisplayLabel() { return new StringTextComponent((VisionClient.getHealthDisplayHack().isEnabled() ? "Disable" : "Enable") + " HealthDisplay"); }
     private StringTextComponent getRubberBanderLabel() { return new StringTextComponent((VisionClient.getRubberBanderHack().isEnabled() ? "Disable" : "Enable") + " RubberBander"); }
     private StringTextComponent getSeeBarrierLabel() { return new StringTextComponent((VisionClient.getSeeBarrierHack().isEnabled() ? "Disable" : "Enable") + " SeeBarrier"); }
     private StringTextComponent getNameTagsLabel() { return new StringTextComponent((VisionClient.getNameTagsHack().isEnabled() ? "Disable" : "Enable") + " NameTags++"); }
     private StringTextComponent getScaffoldLabel() { return new StringTextComponent((VisionClient.getScaffoldHack().isEnabled() ? "Disable" : "Enable") + " Scaffold"); }
-    private StringTextComponent getPerspectiveSwapLabel() { return new StringTextComponent((VisionClient.getPerspectiveSwapHack().isEnabled() ? "Disable" : "Enable") + " PerspectiveSwap"); }
     private StringTextComponent getQuickChargeLabel() { return new StringTextComponent((VisionClient.getQuickChargeHack().isEnabled() ? "Disable" : "Enable") + " QuickCharge"); }
-    private StringTextComponent getGhostPredictLabel() { return new StringTextComponent((VisionClient.getGhostPredictHack().isEnabled() ? "Disable" : "Enable") + " GhostPredict"); }
+    private StringTextComponent getItemMagnetLabel() { return new StringTextComponent((VisionClient.getItemMagnetHack().isEnabled() ? "Disable" : "Enable") + " ItemMagnet"); }
 }
