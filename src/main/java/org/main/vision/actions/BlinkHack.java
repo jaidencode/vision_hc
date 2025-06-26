@@ -81,8 +81,15 @@ public class BlinkHack extends ActionBase {
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
 
-        // When blinking, keep the clone oriented properly
+        // When blinking, keep the clone oriented properly and
+        // update its rotation to match the player's current view.
         if (isEnabled() && clonePlayer != null) {
+            Minecraft mc = Minecraft.getInstance();
+            ClientPlayerEntity player = mc.player;
+            if (player != null) {
+                cloneYaw = player.yRot;
+                clonePitch = player.xRot;
+            }
             clonePlayer.yRot = cloneYaw;
             clonePlayer.xRot = clonePitch;
             clonePlayer.yHeadRot = cloneYaw;
