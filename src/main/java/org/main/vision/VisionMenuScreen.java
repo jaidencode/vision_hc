@@ -56,7 +56,7 @@ public class VisionMenuScreen extends Screen {
         addEntry(() -> getNameTagsLabel(), this::toggleNameTags, null);
         addEntry(() -> getScaffoldLabel(), this::toggleScaffold, null);
         addEntry(() -> getQuickChargeLabel(), this::toggleQuickCharge, null);
-        addEntry(() -> getLegacyPvpLabel(), this::toggleLegacyPvp, this::openLegacyPvpSettings);
+        addEntry(() -> getItemMagnetLabel(), this::toggleItemMagnet, null);
         addEntry(() -> getTeleportLabel(), this::toggleTeleport, this::openTeleportSettings);
         layoutButtons();
     }
@@ -140,7 +140,7 @@ public class VisionMenuScreen extends Screen {
     private void toggleNameTags() { VisionClient.getNameTagsHack().toggle(); }
     private void toggleScaffold() { VisionClient.getScaffoldHack().toggle(); }
     private void toggleQuickCharge() { VisionClient.getQuickChargeHack().toggle(); }
-    private void toggleLegacyPvp() { VisionClient.getLegacyPvpHack().toggle(); }
+    private void toggleItemMagnet() { VisionClient.getItemMagnetHack().toggle(); }
     private void toggleTeleport() { VisionClient.getTeleportHack().toggle(); }
 
     // Settings open methods
@@ -155,10 +155,6 @@ public class VisionMenuScreen extends Screen {
             v -> { VisionClient.getSettings().noFallThreshold = v; }, VisionClient::saveSettings, 2.0D)); }
     private void openXRaySettings() { this.minecraft.setScreen(new XRaySettingsScreen(this)); }
     private void openTeleportSettings() { this.minecraft.setScreen(new TeleportSettingsScreen(this)); }
-    private void openLegacyPvpSettings() {
-        this.minecraft.setScreen(new HackSettingsScreen(this, "Damage", () -> VisionClient.getSettings().pvpDamageMultiplier,
-                v -> { VisionClient.getSettings().pvpDamageMultiplier = v; }, VisionClient::saveSettings, 1.0D));
-    }
     
 
     // Label helpers
@@ -182,6 +178,6 @@ public class VisionMenuScreen extends Screen {
     private StringTextComponent getNameTagsLabel() { return new StringTextComponent((VisionClient.getNameTagsHack().isEnabled() ? "Disable" : "Enable") + " NameTags++"); }
     private StringTextComponent getScaffoldLabel() { return new StringTextComponent((VisionClient.getScaffoldHack().isEnabled() ? "Disable" : "Enable") + " Scaffold"); }
     private StringTextComponent getQuickChargeLabel() { return new StringTextComponent((VisionClient.getQuickChargeHack().isEnabled() ? "Disable" : "Enable") + " QuickCharge"); }
-    private StringTextComponent getLegacyPvpLabel() { return new StringTextComponent((VisionClient.getLegacyPvpHack().isEnabled() ? "Disable" : "Enable") + " 1.8-PVP"); }
+    private StringTextComponent getItemMagnetLabel() { return new StringTextComponent((VisionClient.getItemMagnetHack().isEnabled() ? "Disable" : "Enable") + " ItemMagnet"); }
     private StringTextComponent getTeleportLabel() { return new StringTextComponent((VisionClient.getTeleportHack().isEnabled() ? "Disable" : "Enable") + " Teleport"); }
 }
