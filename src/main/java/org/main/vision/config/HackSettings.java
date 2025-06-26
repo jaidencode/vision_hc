@@ -30,6 +30,13 @@ public class HackSettings {
     /** List of block ids highlighted by XRayHack. */
     public java.util.List<String> xrayBlocks = new java.util.ArrayList<>();
 
+    /** Target X coordinate for QuantumTunnel. */
+    public double quantumX = 0.0D;
+    /** Target Y coordinate for QuantumTunnel. */
+    public double quantumY = 64.0D;
+    /** Target Z coordinate for QuantumTunnel. */
+    public double quantumZ = 0.0D;
+
 
 
     /** Helper to check if a block should be highlighted. */
