@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.StringTextComponent;
-import org.main.vision.QuantumTunnelSettingsScreen;
+import org.main.vision.TeleportSettingsScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,7 @@ public class VisionMenuScreen extends Screen {
         addEntry(() -> getScaffoldLabel(), this::toggleScaffold, null);
         addEntry(() -> getQuickChargeLabel(), this::toggleQuickCharge, null);
         addEntry(() -> getItemMagnetLabel(), this::toggleItemMagnet, null);
-        addEntry(() -> getQuantumTunnelLabel(), this::toggleQuantumTunnel, this::openQuantumTunnelSettings);
+        addEntry(() -> getTeleportLabel(), this::toggleTeleport, this::openTeleportSettings);
         layoutButtons();
     }
 
@@ -141,7 +141,7 @@ public class VisionMenuScreen extends Screen {
     private void toggleScaffold() { VisionClient.getScaffoldHack().toggle(); }
     private void toggleQuickCharge() { VisionClient.getQuickChargeHack().toggle(); }
     private void toggleItemMagnet() { VisionClient.getItemMagnetHack().toggle(); }
-    private void toggleQuantumTunnel() { VisionClient.getQuantumTunnelHack().toggle(); }
+    private void toggleTeleport() { VisionClient.getTeleportHack().toggle(); }
 
     // Settings open methods
     private void openSpeedSettings() { this.minecraft.setScreen(new SpeedSettingsScreen(this)); }
@@ -154,7 +154,7 @@ public class VisionMenuScreen extends Screen {
     private void openNoFallSettings() { this.minecraft.setScreen(new HackSettingsScreen(this, "Threshold", () -> VisionClient.getSettings().noFallThreshold,
             v -> { VisionClient.getSettings().noFallThreshold = v; }, VisionClient::saveSettings, 2.0D)); }
     private void openXRaySettings() { this.minecraft.setScreen(new XRaySettingsScreen(this)); }
-    private void openQuantumTunnelSettings() { this.minecraft.setScreen(new QuantumTunnelSettingsScreen(this)); }
+    private void openTeleportSettings() { this.minecraft.setScreen(new TeleportSettingsScreen(this)); }
     
 
     // Label helpers
@@ -179,5 +179,5 @@ public class VisionMenuScreen extends Screen {
     private StringTextComponent getScaffoldLabel() { return new StringTextComponent((VisionClient.getScaffoldHack().isEnabled() ? "Disable" : "Enable") + " Scaffold"); }
     private StringTextComponent getQuickChargeLabel() { return new StringTextComponent((VisionClient.getQuickChargeHack().isEnabled() ? "Disable" : "Enable") + " QuickCharge"); }
     private StringTextComponent getItemMagnetLabel() { return new StringTextComponent((VisionClient.getItemMagnetHack().isEnabled() ? "Disable" : "Enable") + " ItemMagnet"); }
-    private StringTextComponent getQuantumTunnelLabel() { return new StringTextComponent((VisionClient.getQuantumTunnelHack().isEnabled() ? "Disable" : "Enable") + " QuantumTunnel"); }
+    private StringTextComponent getTeleportLabel() { return new StringTextComponent((VisionClient.getTeleportHack().isEnabled() ? "Disable" : "Enable") + " Teleport"); }
 }
