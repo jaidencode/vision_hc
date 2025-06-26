@@ -37,6 +37,11 @@ public class HackSettings {
     /** Target Z coordinate for TeleportHack. */
     public double teleportZ = 0.0D;
 
+    /** Detection range for AutoDodgeHack. */
+    public double dodgeDetectionRange = 4.0D;
+    /** Sideways push strength for AutoDodgeHack. */
+    public double dodgeStrength = 0.6D;
+
 
 
     /** Helper to check if a block should be highlighted. */
