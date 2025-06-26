@@ -35,18 +35,18 @@ public class AutoDodgeHack extends ActionBase {
                 player.getBoundingBox().inflate(range))) {
             Vector3d motion = arrow.getDeltaMovement();
             if (motion.lengthSqr() == 0) continue;
-            Vector3d toPlayer = pos.subtract(arrow.position());
-            if (toPlayer.length() > range) continue;
-            Vector3d dir = motion.normalize();
-            double dot = dir.dot(toPlayer.normalize());
-            if (dot > 0.8) {
-                Vector3d dodgePos = findBestDodge(world, pos, arrow.position(), dir, step);
-                if (dodgePos != null) {
-                    Vector3d delta = dodgePos.subtract(pos);
-                    player.setDeltaMovement(player.getDeltaMovement().add(delta));
-                    sendMovement(player);
-                    break;
-                }
+
+            Vector3d start = arrow.position();
+            Vector3d end = start.add(motion.scale(20.0D));
+
+            if (!willCollide(pos, start, end, 1.0D)) continue;
+
+            Vector3d dodgePos = findBestDodge(world, pos, start, end, step);
+            if (dodgePos != null) {
+                Vector3d delta = dodgePos.subtract(pos);
+                player.setDeltaMovement(player.getDeltaMovement().add(delta));
+                sendMovement(player);
+                break;
             }
         }
     }
@@ -65,7 +65,7 @@ public class AutoDodgeHack extends ActionBase {
      * is both valid to stand on and furthest from the incoming arrow path.
      */
     private Vector3d findBestDodge(ClientWorld world, Vector3d playerPos,
-                                   Vector3d arrowPos, Vector3d arrowDir,
+                                   Vector3d arrowStart, Vector3d arrowEnd,
                                    double step) {
         Vector3d[] dirs = new Vector3d[] {
                 new Vector3d(1, 0, 0), new Vector3d(-1, 0, 0),
@@ -79,7 +79,7 @@ public class AutoDodgeHack extends ActionBase {
         for (Vector3d d : dirs) {
             Vector3d candidate = playerPos.add(d.scale(step));
             if (!isValidLocation(world, candidate)) continue;
-            double dist = distanceFromLine(candidate, arrowPos, arrowDir);
+            double dist = distanceFromSegment(candidate, arrowStart, arrowEnd);
             if (dist > bestDist) {
                 bestDist = dist;
                 bestPos = candidate;
@@ -96,10 +96,17 @@ public class AutoDodgeHack extends ActionBase {
         return world.getBlockState(feet).isAir() && world.getBlockState(head).isAir();
     }
 
-    private double distanceFromLine(Vector3d point, Vector3d linePoint, Vector3d lineDir) {
-        Vector3d toPoint = point.subtract(linePoint);
-        double t = toPoint.dot(lineDir);
-        Vector3d proj = lineDir.scale(t);
-        return toPoint.subtract(proj).length();
+    private double distanceFromSegment(Vector3d point, Vector3d start, Vector3d end) {
+        Vector3d lineDir = end.subtract(start);
+        double length = lineDir.lengthSqr();
+        if (length == 0.0D) return point.distanceTo(start);
+        double t = point.subtract(start).dot(lineDir) / length;
+        t = Math.max(0.0D, Math.min(1.0D, t));
+        Vector3d proj = start.add(lineDir.scale(t));
+        return point.distanceTo(proj);
+    }
+
+    private boolean willCollide(Vector3d playerPos, Vector3d start, Vector3d end, double radius) {
+        return distanceFromSegment(playerPos, start, end) < radius;
     }
 }

@@ -144,6 +144,12 @@ public class VisionOverlay {
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
         }
+        if (VisionClient.getInventoryPreviewHack().isEnabled()) {
+            String text = "InvPreview";
+            int w = mc.font.width(text);
+            mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
+            y += mc.font.lineHeight;
+        }
         if (VisionClient.getTeleportHack().isEnabled()) {
             String text = "Teleport";
             int w = mc.font.width(text);
