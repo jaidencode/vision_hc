@@ -28,7 +28,7 @@ public class VisionKeybind {
     public static KeyBinding nameTagsKey;
     public static KeyBinding scaffoldKey;
     public static KeyBinding quickChargeKey;
-    public static KeyBinding itemMagnetKey;
+    public static KeyBinding legacyPvpKey;
     public static KeyBinding teleportKey;
     public static KeyBinding menuKey;
 
@@ -53,7 +53,7 @@ public class VisionKeybind {
         nameTagsKey = new KeyBinding("key.vision.nametags", GLFW.GLFW_KEY_F6, "key.categories.vision");
         scaffoldKey = new KeyBinding("key.vision.scaffold", GLFW.GLFW_KEY_F7, "key.categories.vision");
         quickChargeKey = new KeyBinding("key.vision.quickcharge", GLFW.GLFW_KEY_F9, "key.categories.vision");
-        itemMagnetKey = new KeyBinding("key.vision.itemmagnet", GLFW.GLFW_KEY_F11, "key.categories.vision");
+        legacyPvpKey = new KeyBinding("key.vision.legacypvp", GLFW.GLFW_KEY_F11, "key.categories.vision");
         teleportKey = new KeyBinding("key.vision.teleport", GLFW.GLFW_KEY_F12, "key.categories.vision");
         menuKey = new KeyBinding("key.vision.menu", GLFW.GLFW_KEY_BACKSLASH, "key.categories.vision");
         ClientRegistry.registerKeyBinding(speedKey);
@@ -76,7 +76,7 @@ public class VisionKeybind {
         ClientRegistry.registerKeyBinding(nameTagsKey);
         ClientRegistry.registerKeyBinding(scaffoldKey);
         ClientRegistry.registerKeyBinding(quickChargeKey);
-        ClientRegistry.registerKeyBinding(itemMagnetKey);
+        ClientRegistry.registerKeyBinding(legacyPvpKey);
         ClientRegistry.registerKeyBinding(teleportKey);
         ClientRegistry.registerKeyBinding(menuKey);
     }
