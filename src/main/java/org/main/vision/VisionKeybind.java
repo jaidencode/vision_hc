@@ -23,14 +23,12 @@ public class VisionKeybind {
     public static KeyBinding autoSprintKey;
     public static KeyBinding autoRespawnKey;
     public static KeyBinding bowAimbotKey;
-    public static KeyBinding healthDisplayKey;
     public static KeyBinding rubberBanderKey;
     public static KeyBinding seeBarrierKey;
     public static KeyBinding nameTagsKey;
     public static KeyBinding scaffoldKey;
-    public static KeyBinding perspectiveSwapKey;
     public static KeyBinding quickChargeKey;
-    public static KeyBinding ghostPredictKey;
+    public static KeyBinding itemMagnetKey;
     public static KeyBinding menuKey;
 
     static void register() {
@@ -49,14 +47,12 @@ public class VisionKeybind {
         autoSprintKey = new KeyBinding("key.vision.autosprint", GLFW.GLFW_KEY_C, "key.categories.vision");
         autoRespawnKey = new KeyBinding("key.vision.autorespawn", GLFW.GLFW_KEY_R, "key.categories.vision");
         bowAimbotKey = new KeyBinding("key.vision.bowaimbot", GLFW.GLFW_KEY_X, "key.categories.vision");
-        healthDisplayKey = new KeyBinding("key.vision.healthdisplay", GLFW.GLFW_KEY_U, "key.categories.vision");
         rubberBanderKey = new KeyBinding("key.vision.rubberbander", GLFW.GLFW_KEY_Y, "key.categories.vision");
         seeBarrierKey = new KeyBinding("key.vision.seebarrier", GLFW.GLFW_KEY_I, "key.categories.vision");
         nameTagsKey = new KeyBinding("key.vision.nametags", GLFW.GLFW_KEY_F6, "key.categories.vision");
         scaffoldKey = new KeyBinding("key.vision.scaffold", GLFW.GLFW_KEY_F7, "key.categories.vision");
-        perspectiveSwapKey = new KeyBinding("key.vision.perspectiveswap", GLFW.GLFW_KEY_F8, "key.categories.vision");
         quickChargeKey = new KeyBinding("key.vision.quickcharge", GLFW.GLFW_KEY_F9, "key.categories.vision");
-        ghostPredictKey = new KeyBinding("key.vision.ghostpredict", GLFW.GLFW_KEY_F10, "key.categories.vision");
+        itemMagnetKey = new KeyBinding("key.vision.itemmagnet", GLFW.GLFW_KEY_F11, "key.categories.vision");
         menuKey = new KeyBinding("key.vision.menu", GLFW.GLFW_KEY_BACKSLASH, "key.categories.vision");
         ClientRegistry.registerKeyBinding(speedKey);
         ClientRegistry.registerKeyBinding(jumpKey);
@@ -73,14 +69,12 @@ public class VisionKeybind {
         ClientRegistry.registerKeyBinding(autoSprintKey);
         ClientRegistry.registerKeyBinding(autoRespawnKey);
         ClientRegistry.registerKeyBinding(bowAimbotKey);
-        ClientRegistry.registerKeyBinding(healthDisplayKey);
         ClientRegistry.registerKeyBinding(rubberBanderKey);
         ClientRegistry.registerKeyBinding(seeBarrierKey);
         ClientRegistry.registerKeyBinding(nameTagsKey);
         ClientRegistry.registerKeyBinding(scaffoldKey);
-        ClientRegistry.registerKeyBinding(perspectiveSwapKey);
         ClientRegistry.registerKeyBinding(quickChargeKey);
-        ClientRegistry.registerKeyBinding(ghostPredictKey);
+        ClientRegistry.registerKeyBinding(itemMagnetKey);
         ClientRegistry.registerKeyBinding(menuKey);
     }
 }

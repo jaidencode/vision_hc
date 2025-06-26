@@ -15,8 +15,12 @@ public class QuickChargeHack extends ActionBase {
         // Attempt to reset the attack cooldown so the next hit is critical
         try {
             player.resetAttackStrengthTicker();
+            java.lang.reflect.Field f = net.minecraft.entity.player.PlayerEntity.class.getDeclaredField("attackStrengthTicker");
+            f.setAccessible(true);
+            int full = (int) (player.getCurrentItemAttackStrengthDelay() + 1);
+            f.setInt(player, full);
         } catch (Throwable t) {
-            // Fallback: ignore if the method is unavailable
+            // ignore if reflection fails
         }
     }
 }
