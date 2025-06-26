@@ -138,8 +138,8 @@ public class VisionOverlay {
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;
         }
-        if (VisionClient.getItemMagnetHack().isEnabled()) {
-            String text = "ItemMagnet";
+        if (VisionClient.getLegacyPvpHack().isEnabled()) {
+            String text = "1.8-PVP";
             int w = mc.font.width(text);
             mc.font.draw(ms, text, width - w - 5, y, 0xFFAA55FF);
             y += mc.font.lineHeight;

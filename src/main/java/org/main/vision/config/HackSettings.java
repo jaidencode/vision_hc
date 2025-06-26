@@ -30,6 +30,9 @@ public class HackSettings {
     /** List of block ids highlighted by XRayHack. */
     public java.util.List<String> xrayBlocks = new java.util.ArrayList<>();
 
+    /** Damage multiplier for LegacyPvpHack. */
+    public double pvpDamageMultiplier = 1.0D;
+
     /** Target X coordinate for TeleportHack. */
     public double teleportX = 0.0D;
     /** Target Y coordinate for TeleportHack. */
